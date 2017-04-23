@@ -1,0 +1,49 @@
+﻿<link rel="import" href="/bower_components/polymer/polymer-element.html" />
+<link rel="import" href="/bower_components/polymer/lib/elements/dom-repeat.html" />
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html" />
+
+<dom-module id="test-component">
+
+    <template>
+        <h3>[[text]]</h3>
+
+        <div>Repositories I found:</div>
+        <ul>
+            <template is="dom-repeat" items="[[racers]]">
+                <li>{{item.Name}}</li>
+            </template>
+        </ul>
+
+        <iron-ajax
+            auto
+            id="requestRepos"
+            url="/api/TestApi/Racer"
+            handle-as="json"
+            on-response="handleResponse">
+        </iron-ajax>
+    </template>
+
+    <script>
+        class TestComponent extends Polymer.Element {
+            static get is() { return "test-component"; }
+
+            static get properties() {
+                return {
+                    text: {
+                        type: String,
+                        value: "Amazing!"
+                    },
+                    racers: {
+                        type: Array
+                    }
+                };
+            }
+
+            handleResponse(data) {
+                this.racers = data.detail.response;
+            }
+        }
+
+        customElements.define(TestComponent.is, TestComponent);
+    </script>
+</dom-module>

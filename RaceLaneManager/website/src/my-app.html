@@ -1,0 +1,156 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer">
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[pageId]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <template is="dom-repeat" items="{{pages}}">
+                <a name="{{item.id}}" href="{{item.href}}">{{item.name}}</a>
+            </template>
+          <!--<a name="racers" href="/racers">Racers</a>
+          <a name="races" href="/races">Races</a>-->
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>[[page.name]]</div>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[pageId]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+          <rlm-racers name="racers"></rlm-racers>
+          <rlm-races name="races"></rlm-races>
+          <my-view404 name="view404"></my-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app',
+
+      properties: {
+        pageId: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageIdChanged',
+        },
+        page: {
+            type: Object
+        },
+        pages: {
+            type: Array,
+            value: [
+                { id: 'racers', name: 'Racers', path: "rlm-racers.html", href: '/racers' },
+                { id: 'races', name: 'Races', path: "rlm-races.html", href: '/races' }
+            ]
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routePageChanged: function(pageId) {
+        this.pageId = pageId || this.pages[0].id;
+
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+
+      _pageIdChanged: function(pageId) {
+          // Load page import on demand. Show 404 page if fails
+          for (var i = 0; i < this.pages.length; i++) {
+              if (this.pages[i].id == pageId) {
+                  this.page = this.pages[i];
+                  break;
+              }
+          }
+
+          var resolvedPageUrl = this.resolveUrl(this.page.path);
+          this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function() {
+        this.page = 'view404';
+      },
+    });
+  </script>
+</dom-module>
