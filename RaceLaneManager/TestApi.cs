@@ -10,14 +10,14 @@ namespace RaceLaneManager.Model
     public class TestApiController : ApiController
     {
         [HttpGet]
-        public IList<Racer> Racer()
+        public IList<Car> Racer()
         {
-            IList<Racer> racers = new List<Racer>();
+            IList<Car> racers = new List<Car>();
 
-            racers.Add(new Racer() { Name = "Joseph", Den = "Wolf", CarNumber = 2 });
-            racers.Add(new Racer() { Name = "Brenden", Den = "Wolf", CarNumber = 1 });
-            racers.Add(new Racer() { Name = "Owen", Den = "Wolf", CarNumber = 3 });
-            racers.Add(new Racer() { Name = "Adam", Den = "Wolf", CarNumber = 4 });
+            racers.Add(new Car() { Owner = "Joseph", Den = "Wolf", CarNumber = 2 });
+            racers.Add(new Car() { Owner = "Brenden", Den = "Wolf", CarNumber = 1 });
+            racers.Add(new Car() { Owner = "Owen", Den = "Wolf", CarNumber = 3 });
+            racers.Add(new Car() { Owner = "Adam", Den = "Wolf", CarNumber = 4 });
 
             return racers;
         }

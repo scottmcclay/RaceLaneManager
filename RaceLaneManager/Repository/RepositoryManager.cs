@@ -8,12 +8,12 @@ namespace RaceLaneManager.Repository
 {
     public static class RepositoryManager
     {
-        private static IRaceEventRepository _repo = null;
-        public static IRaceEventRepository GetDefaultRepository()
+        private static IRlmRepository _repo = null;
+        public static IRlmRepository GetDefaultRepository()
         {
             if (_repo == null)
             {
-                _repo = new InMemoryRaceEventRepository();
+                _repo = new InMemoryRlmRepository();
             }
 
             return _repo;

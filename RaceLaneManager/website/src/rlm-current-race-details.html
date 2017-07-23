@@ -1,0 +1,244 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html" />
+<link rel="import" href="../bower_components/paper-styles/typography.html" />
+<link rel="import" href="../bower_components/paper-styles/shadow.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../bower_components/paper-card/paper-card.html" />
+<link rel="import" href="shared-styles.html" />
+
+<dom-module id="rlm-current-race-details">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .vertical-section-container {
+                @apply(--layout-vertical);
+            }
+
+            .horizontal-section-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-center-justified);
+                @apply(--layout-wrap);
+            }
+
+            .horizontal-section {
+                background-color: white;
+                padding: 24px;
+                margin-right: 24px;
+                min-width: 100px;
+
+                @apply(--shadow-elevation-2dp);
+            }
+
+            .vertical-section {
+                background-color: white;
+                padding: 24px;
+                margin-right: 24px;
+                min-width: 100px;
+
+                @apply(--shadow-elevation-2dp);
+            }
+
+            .racer-column {
+                display: inline-block;
+                padding: 24px;
+                margin-right: 24px;
+                vertical-align: top;
+            }
+        </style>
+
+        <custom-style>
+            <style is="custom-style">
+                .flex-horizontal {
+                    @apply --layout-horizontal;
+                }
+
+                .flex-vertical {
+                    @apply --layout-vertical;
+                }
+
+                .flexchild {
+                    @apply --layout-flex;
+                }
+                .paper-font-title { @apply --paper-font-title; }
+                .paper-font-body2 { @apply --paper-font-body2; }
+                .paper-font-body1 { @apply --paper-font-body1; }
+                .paper-font-display1 { @apply --paper-font-display1; }
+                .paper-font-display4 { @apply --paper-font-display4; }
+                .paper-font-headline { @apply --paper-font-headline; }
+            </style>
+        </custom-style>
+        <div class="vertical-section-container">
+            <div class="flexchild">
+                <div class="horizontal-section-container">
+                    <div class="flexchild paper-font-display1" style="text-align: center; line-height: 120px;">
+                        Race 5
+                    </div>
+                    <div class="flexchild paper-font-display4">
+                        2:01:39
+                    </div>
+                </div>
+            </div>
+            <div class="flexchild">
+                <div class="horizontal-section-container">
+                    <template is="dom-repeat" items="{{lanes}}" as="lane">
+                        <div class="flexchild">
+                            <div class="container flex-vertical">
+                                <div class="flexchild paper-font-headline" style="text-align: center;">Lane {{lane.lane}}</div>
+                                <div class="card flexchild">
+                                    <div class="container flex-vertical">
+                                        <div class="flexchild">
+                                            <div class="paper-font-title">{{lane.car}}</div>
+                                            <div class="paper-font-body1">{{lane.name}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card flexchild">
+                                    Foo
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'rlm-current-race-details',
+
+            properties: {
+                tournament: {
+                    type: Object,
+                    reflectToAttribute: true,
+                },
+                lanes: {
+                    type: Array,
+                    value: [
+                        {
+                            lane: 1,
+                            car: 'Ghost',
+                            name: 'Brenden M.',
+                            time: 0,
+                            history: [
+                                {
+                                    race: 1,
+                                    time: 6.253,
+                                    lane: 3,
+                                    place: 2,
+                                    points: 2,
+                                },
+                                {
+                                    race: 2,
+                                    time: 5.75,
+                                    lane: 4,
+                                    place: 1,
+                                    points: 3,
+                                },
+                                {
+                                    race: 3,
+                                    time: 6.125,
+                                    lane: 2,
+                                    place: 2,
+                                    points: 2,
+                                },
+                            ],
+                        },
+                        {
+                            lane: 2,
+                            car: 'Black Night',
+                            name: 'Owen A.',
+                            time: 0,
+                            history: [
+                                {
+                                    race: 1,
+                                    time: 5.74,
+                                    lane: 1,
+                                    place: 1,
+                                    points: 3,
+                                },
+                                {
+                                    race: 2,
+                                    time: 5.79,
+                                    lane: 3,
+                                    place: 3,
+                                    points: 1,
+                                },
+                                {
+                                    race: 3,
+                                    time: 6.122,
+                                    lane: 4,
+                                    place: 1,
+                                    points: 3,
+                                }
+                            ],
+                        },
+                        {
+                            lane: 3,
+                            car: 'Viper',
+                            name: 'Sean J.',
+                            time: 0,
+                            history: [
+                               {
+                                   race: 1,
+                                   time: 6.301,
+                                   lane: 4,
+                                   place: 3,
+                                   points: 1,
+                               },
+                               {
+                                   race: 2,
+                                   time: 5.76,
+                                   lane: 2,
+                                   place: 2,
+                                   points: 2,
+                               },
+                               {
+                                   race: 3,
+                                   time: 6.122,
+                                   lane: 1,
+                                   place: 3,
+                                   points: 1,
+                               }
+                            ],
+                        },
+                        {
+                            lane: 4,
+                            car: 'Lightning',
+                            name: 'Noob',
+                            time: 0,
+                            history: [
+                               {
+                                   race: 1,
+                                   time: 7.503,
+                                   lane: 2,
+                                   place: 4,
+                                   points: 0,
+                               },
+                               {
+                                   race: 2,
+                                   time: 7.325,
+                                   lane: 1,
+                                   place: 4,
+                                   points: 0,
+                               },
+                               {
+                                   race: 3,
+                                   time: 7.625,
+                                   lane: 3,
+                                   place: 4,
+                                   points: 0,
+                               },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+    </script>
+</dom-module>

@@ -14,9 +14,20 @@ namespace RaceLaneManager
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseWelcomePage(new WelcomePageOptions()
+            app.Map("/tournament", spa =>
             {
-                Path = new PathString("/welcome")
+                spa.Use((context, next) =>
+                {
+                    context.Request.Path = new PathString("/index.html");
+                    context.Request.PathBase = new PathString("");
+
+                    return next();
+                });
+
+                FileServerOptions o = new FileServerOptions();
+                o.RequestPath = PathString.Empty;
+                o.FileSystem = new PhysicalFileSystem(@"./website");
+                spa.UseFileServer(o);
             });
 
             FileServerOptions options = new FileServerOptions();

@@ -10,7 +10,7 @@ namespace RaceLaneManager.Model
     {
         public int RaceNum { get; set; }
         public Lane Lane { get; set; }
-        public Racer Racer { get; set; }
+        public Car Car { get; set; }
         public long ElapsedTime { get; set; }
     }
 }

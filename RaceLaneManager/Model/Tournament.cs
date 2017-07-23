@@ -6,22 +6,24 @@ using System.Threading.Tasks;
 
 namespace RaceLaneManager.Model
 {
-    public class RaceEvent
+    public class Tournament
     {
         private Lane[] _lanes;
-        private List<Racer> _racers = new List<Racer>();
+        private List<Car> _cars = new List<Car>();
         private List<RaceLaneAssignment> _assignments = new List<RaceLaneAssignment>();
 
         public int ID { get; set; }
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public IList<Lane> Lanes { get { return _lanes; } }
-        public IList<Racer> Racers { get { return _racers; } }
+        public int NumLanes { get { return _lanes.Length; } }
+        public IList<Car> Cars { get { return _cars; } }
         public int NumRaces { get; private set; }
         public IEnumerable<RaceLaneAssignment> Assignments { get; }
 
-        public RaceEvent(int numLanes)
+        public Tournament(string name, int numLanes)
         {
+            this.Name = name;
             _lanes = new Lane[numLanes];
 
             for (int i = 0; i < numLanes; i++)
@@ -35,31 +37,31 @@ namespace RaceLaneManager.Model
             _assignments.Clear();
         }
 
-        public void AddRacer(Racer racer)
+        public void AddCar(Car car)
         {
             if (_assignments.Count > 0)
             {
-                throw new InvalidOperationException("Race Lane Assignments must be cleared before adding users.");
+                throw new InvalidOperationException("Race Lane Assignments must be cleared before adding cars.");
             }
 
-            _racers.Add(racer);
+            _cars.Add(car);
         }
 
-        public Racer RemoveRacer(int racerID)
+        public Car RemoveCar(int carId)
         {
-            Racer racer = _racers.Where(r => r.ID == racerID).SingleOrDefault();
+            Car car = _cars.Where(r => r.ID == carId).SingleOrDefault();
 
-            if (racer != null)
+            if (car != null)
             {
-                _racers.Remove(racer);
+                _cars.Remove(car);
             }
 
-            return racer;
+            return car;
         }
 
-        public void RemoveRacer(Racer racer)
+        public void RemoveCar(Car car)
         {
-            _racers.Remove(racer);
+            _cars.Remove(car);
         }
     }
 }

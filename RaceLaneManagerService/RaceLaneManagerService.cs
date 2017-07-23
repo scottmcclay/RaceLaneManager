@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ServiceProcess;
+using RaceLaneManager;
 
 namespace RaceLaneManager
 {

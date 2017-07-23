@@ -1,0 +1,116 @@
+<link rel="import" href="../bower_components/polymer/polymer.html" />
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html" />
+<link rel="import" href="../bower_components/paper-styles/typography.html" />
+<link rel="import" href="../bower_components/paper-styles/shadow.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="shared-styles.html" />
+
+<dom-module id="rlm-cars">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            paper-fab {
+                position: fixed;
+                right: 25px;
+                bottom: 30px;
+            }
+
+            .horizontal-section-container {
+                @apply(--layout-horizontal);
+                @apply(--layout-center-justified);
+                @apply(--layout-wrap);
+            }
+
+            .horizontal-section {
+                background-color: white;
+                padding: 24px;
+                margin-right: 24px;
+                min-width: 100px;
+
+                @apply(--shadow-elevation-2dp);
+            }
+
+            .racer-column {
+                display: inline-block;
+                padding: 24px;
+                margin-right: 24px;
+                vertical-align: top;
+            }
+        </style>
+
+        <custom-style>
+            <style is="custom-style">
+                .flex-horizontal {
+                    @apply --layout-horizontal;
+                }
+                .flexchild {
+                    @apply --layout-flex;
+                }
+            </style>
+        </custom-style>
+
+        <template is="dom-repeat" items="{{tournament.cars}}" as="car">
+            <div class="card" on-tap="togglecar" id="car{{car.id}}">
+                <div class="container flex-horizontal">
+                    <div class="flexchild">
+                        <div paper-font-caption>{{car.name}}</div>
+                        <div class="circle">#{{car.number}}</div>
+                    </div>
+                    <div class="flexchild">
+                        <div paper-font-caption>Points</div>
+                        <div>{{car.points}}</div>
+                    </div>
+                    <div class="flexchild">
+                        <div paper-font-caption>Den</div>
+                        <div>{{car.denRank}}</div>
+                    </div>
+                    <div class="flexchild">
+                        <div paper-font-caption>Overall</div>
+                        <div>{{car.overallRank}}</div>
+                    </div>
+                    <div>
+                        <paper-icon-button icon="icons:more-vert"></paper-icon-button>
+                    </div>
+                </div>
+                <iron-collapse id="collapsecar{{car.id}}">
+                    <template is="dom-repeat" items="{{car.races}}" as="race">
+                        <div class="car-column">
+                            <iron-collapse opened="false">
+                                <div paper-font-caption>Race {{race.number}}</div>
+                                <div>
+                                    <div>Lane {{race.lane}}</div>
+                                </div>
+                            </iron-collapse>
+                        </div>
+                    </template>
+                </iron-collapse>
+            </div>
+        </template>
+    </template>
+
+    <script>
+    Polymer({
+        is: 'rlm-cars',
+
+        properties: {
+            tournament: {
+                type: Object,
+                reflectToAttribute: true,
+            }
+        },
+
+        togglecar: function (e) {
+            var collapseArea = this.$$('#collapse' + e.currentTarget.id);
+            if (collapseArea) {
+                collapseArea.opened = !collapseArea.opened;
+            }
+        },
+    });
+    </script>
+</dom-module>

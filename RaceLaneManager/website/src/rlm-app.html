@@ -1,0 +1,614 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html" />
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html" />
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html" />
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html" />
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html" />
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html" />
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html" />
+<link rel="import" href="../bower_components/app-route/app-location.html" />
+<link rel="import" href="../bower_components/app-route/app-route.html" />
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html" />
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html" />
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html" />
+<link rel="import" href="../bower_components/paper-item/paper-item.html" />
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html" />
+<link rel="import" href="../bower_components/iron-icons/notification-icons.html" />
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="../bower_components/paper-button/paper-button.html" />
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html" />
+<link rel="import" href="../bower_components/neon-animation/web-animations.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="my-icons.html" />
+<link rel="import" href="rlm-cars.html" />
+<link rel="import" href="rlm-races.html" />
+<link rel="import" href="rlm-home.html" />
+<link rel="import" href="rlm-settings.html" />
+
+<dom-module id="rlm-app">
+    <template>
+        <style>
+            :host {
+                --app-primary-color: #4285f4;
+                --app-secondary-color: black;
+                display: block;
+            }
+
+            app-header {
+                @apply --layout-fixed-top;
+                color: #fff;
+                background-color: var(--app-primary-color);
+            }
+
+                app-header paper-icon-button {
+                    --paper-icon-button-ink-color: white;
+                }
+
+            .drawer-list {
+                margin: 0 20px;
+            }
+
+            .drawer-list a {
+                display: block;
+                padding: 0 16px;
+                text-decoration: none;
+                color: var(--app-secondary-color);
+                line-height: 40px;
+            }
+
+            :focus {
+                outline: none;
+            }
+
+            .drawer-list a.iron-selected {
+                color: black;
+                font-weight: bold;
+            }
+        </style>
+
+        <app-location route="{{route}}"></app-location>
+        <app-route route="{{route}}"
+                   pattern="/tournament/:tournamentId"
+                   data="{{routeData}}"
+                   tail="{{subroute}}"></app-route>
+        <app-route route="{{subroute}}"
+                   pattern="/:view"
+                   data="{{subrouteData}}"></app-route>
+
+        <app-drawer-layout force-narrow fullbleed>
+            <app-drawer id="drawer" slot="drawer">
+                <app-toolbar>
+                    <div main-title>Tournaments</div>
+                </app-toolbar>
+                <iron-selector selected="{{routeData.tournamentId}}" attr-for-selected="tournament-id" class="drawer-list" role="navigation">
+                    <template is="dom-repeat" items="{{tournaments}}">
+                        <a tournament-id="{{item.ID}}" href="/tournament/{{item.ID}}/home">{{item.Name}}</a>
+                    </template>
+                </iron-selector>
+                <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
+                        <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Sign in</div>
+                    </paper-button>
+                </paper-item>
+                <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
+                        <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
+                    </paper-button>
+                </paper-item>
+                <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
+                        <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Sign out</div>
+                    </paper-button>
+                </paper-item>
+            </app-drawer>
+
+           <app-header-layout>
+                <app-header reveals condenses effects="waterfall" slot="header">
+                    <app-toolbar>
+                        <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+                        <div>Pack 675</div>
+                        <div main-title style="text-align: center;">[[selectedTournament.Name]]</div>
+                        <paper-icon-button icon="home" on-tap="_homeTap"></paper-icon-button>
+                        <paper-icon-button icon="notification:drive-eta" on-tap="_carsTap"></paper-icon-button>
+                        <paper-icon-button icon="notification:event-available" on-tap="_racesTap"></paper-icon-button>
+                        <paper-icon-button icon="settings" on-tap="_settingsTap"></paper-icon-button>
+                    </app-toolbar>
+                </app-header>
+
+               <!-- Main content -->
+               <iron-pages selected="[[subrouteData.view]]"
+                           attr-for-selected="name"
+                           fallback-selection="view404"
+                           role="main">
+                   <rlm-home name="home" tournament="{{selectedTournament}}"></rlm-home>
+                   <rlm-cars name="cars" tournament="{{selectedTournament}}"></rlm-cars>
+                   <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
+                   <rlm-settings name="settings" tournament="{{selectedTournament}}"></rlm-settings>
+                   <my-view404 name="view404"></my-view404>
+               </iron-pages>
+            </app-header-layout>
+        </app-drawer-layout>
+                <!--<paper-dropdown-menu label="Tournament" no-label-float>
+                    <paper-listbox class="dropdown-content" selected="{{routeData.tournamentId}}" attr-for-selected="tournamentId" fallback-selection="1">
+                        <template is="dom-repeat" items="{{tournaments}}">
+                            <paper-item tournamentId$="{{item.ID}}" style="cursor: pointer;">{{item.Name}}</paper-item>
+                        </template>
+                        <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
+                                <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
+                                <div style="display: inline-block; vertical-align: middle;">Sign in</div>
+                            </paper-button>
+                        </paper-item>
+                        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
+                                <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
+                                <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
+                            </paper-button>
+                        </paper-item>
+                        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
+                                <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
+                                <div style="display: inline-block; vertical-align: middle;">Sign out</div>
+                            </paper-button>
+                        </paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>-->
+
+        <!--<app-drawer-layout fullbleed>
+            <!-- Drawer content
+            <app-drawer id="drawer" slot="drawer">
+                <app-toolbar>
+                    <div main-title>Tournaments</div>
+                </app-toolbar>
+                <div style="padding-left: 16px;">
+                    <paper-dropdown-menu label="Tournament" no-label-float>
+                        <paper-listbox class="dropdown-content" selected="{{routeData.tournamentId}}" attr-for-selected="tournamentId" fallback-selection="1">
+                            <template is="dom-repeat" items="{{tournaments}}">
+                                <paper-item tournamentId$="{{item.ID}}" style="cursor: pointer;">{{item.Name}}</paper-item>
+                            </template>
+                            <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
+                                    <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
+                                    <div style="display: inline-block; vertical-align: middle;">Sign in</div>
+                                </paper-button>
+                            </paper-item>
+                            <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
+                                    <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
+                                    <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
+                                </paper-button>
+                            </paper-item>
+                            <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
+                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
+                                    <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
+                                    <div style="display: inline-block; vertical-align: middle;">Sign out</div>
+                                </paper-button>
+                            </paper-item>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </div>
+                <iron-selector selected="{{subrouteData.view}}" attr-for-selected="pageName" fallback-selection="standings" class="drawer-list" role="navigation">
+                    <a pageName="standings" href="/tournament/{{routeData.tournamentId}}/standings">Standings</a>
+                    <a pageName="cars" href="/tournament/{{routeData.tournamentId}}/cars">Cars</a>
+                    <a pageName="races" href="/tournament/{{routeData.tournamentId}}/races">Races</a>
+                    <template is="dom-if" if="{{isAdmin}}" restamp>
+                        <a pageName="configure" href="/tournament/{{routeData.tournamentId}}/configure">Configure</a>
+                    </template>
+                </iron-selector>
+            </app-drawer> -->
+
+
+        <paper-dialog id="createTournamentDialog" modal>
+            <h2>Create Tournament</h2>
+            <paper-input id="createTournamentName" label="Name" autofocus required auto-validate error-message="Name cannot be blank"></paper-input>
+            <paper-input id="createTournamentNumLanes" label="Number Of Lanes" type="number" min="1" auto-validate error-message="There must be at least one lane"></paper-input>
+            <div id="createTournamentErrorMessage" style="color: red;"></div>
+            <div class="buttons">
+                <paper-button on-tap="_doCreateTournament">Create</paper-button>
+                <paper-button dialog-dismiss>Cancel</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="signInDialog" modal>
+            <h2>Sign In</h2>
+            <paper-input id="authName" label="ID" autofocus required auto-validate error-message="ID cannot be blank"></paper-input>
+            <paper-input id="authPassword" label="Password:" required auto-validate error-message="Password cannot be blank"></paper-input>
+            <div id="authErrorMessage" style="color: red;"></div>
+            <div class="buttons">
+                <paper-button on-tap="_doSignIn">Sign In</paper-button>
+                <paper-button dialog-dismiss>Cancel</paper-button>
+            </div>
+        </paper-dialog>
+
+        <iron-ajax
+                   id="authAjax"
+                   url="/api/auth/authenticate"
+                   method="POST"
+                   content-type="application/json"
+                   body='{"name": "", "password": ""}'
+                   on-response="_authResponse"
+                   on-error="_authError">
+        </iron-ajax>
+
+        <iron-ajax url="/api/tournaments" content-type="application/json" auto on-response="_tournamentsResponse"></iron-ajax>
+        <iron-ajax
+                   id="createTournamentAjax"
+                   url="/api/tournaments"
+                   method="POST"
+                   content-type="application/json"
+                   on-response="_tournamentsPostResponse"
+                   on-error="_tournamentsPostError"></iron-ajax>
+    </template>
+
+    <script>
+        function checkAdminCookie() {
+            var cookies = document.cookie.split(';');
+            var cookieName = 'admin=';
+            var cookieValue = null;
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                while (cookie.charAt(0) == ' ') {
+                    cookie = cookie.substring(1);
+                }
+
+                if (cookie.indexOf(cookieName) == 0) {
+                    cookieValue = cookie.substring(cookieName.length, cookie.length);
+                    break;
+                }
+            }
+
+            if (cookieValue == null) {
+                return false;
+            }
+
+            return (cookieValue == 'true');
+        }
+
+        function setAdminCookie() {
+            document.cookie = 'admin=true';
+        }
+
+        function deleteAdminCookie() {
+            document.cookie = 'admin=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+
+        Polymer({
+            is: 'rlm-app',
+
+            properties: {
+                tournaments: {
+                    type: Array,
+                    value: function() {
+                        return [];
+                    },
+                },
+                //tournaments: {
+                //    type: Array,
+                //    value: function () {
+                //        //return [];
+                //        return [
+                //            {
+                //                "id": 1,
+                //                "name": '2017',
+                //                "numLanes": 4,
+                //                "cars": [
+                //                    {
+                //                        id: 1,
+                //                        name: 'Brenden',
+                //                        number: 5,
+                //                        races: [
+                //                            { number: 1, lane: 2, time: null, place: null },
+                //                            { number: 3, lane: 3, time: null, place: null },
+                //                            { number: 6, lane: 1, time: null, place: null },
+                //                            { number: 8, lane: 4, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 2,
+                //                        name: 'Joseph',
+                //                        number: 7,
+                //                        races: [
+                //                            { number: 1, lane: 3, time: null, place: null },
+                //                            { number: 4, lane: 1, time: null, place: null },
+                //                            { number: 6, lane: 4, time: null, place: null },
+                //                            { number: 9, lane: 2, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 3,
+                //                        name: 'Adam',
+                //                        number: 10,
+                //                        races: [
+                //                            { number: 3, lane: 1, time: null, place: null },
+                //                            { number: 5, lane: 3, time: null, place: null },
+                //                            { number: 8, lane: 2, time: null, place: null },
+                //                            { number: 10, lane: 4, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 4,
+                //                        name: 'Sean',
+                //                        number: 3,
+                //                        races: [
+                //                            { number: 2, lane: 2, time: null, place: null },
+                //                            { number: 4, lane: 3, time: null, place: null },
+                //                            { number: 7, lane: 1, time: null, place: null },
+                //                            { number: 9, lane: 4, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 5,
+                //                        name: 'Owen',
+                //                        number: 4,
+                //                        races: [
+                //                            { number: 1, lane: 1, time: null, place: null },
+                //                            { number: 3, lane: 4, time: null, place: null },
+                //                            { number: 6, lane: 2, time: null, place: null },
+                //                            { number: 8, lane: 3, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 6,
+                //                        name: 'Kai',
+                //                        number: 103,
+                //                        races: [
+                //                            { number: 1, lane: 4, time: null, place: null },
+                //                            { number: 4, lane: 2, time: null, place: null },
+                //                            { number: 6, lane: 3, time: null, place: null },
+                //                            { number: 9, lane: 1, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 7,
+                //                        name: 'Ian',
+                //                        number: 15,
+                //                        races: [
+                //                            { number: 2, lane: 3, time: null, place: null },
+                //                            { number: 5, lane: 1, time: null, place: null },
+                //                            { number: 7, lane: 4, time: null, place: null },
+                //                            { number: 10, lane: 2, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 8,
+                //                        name: 'Luca',
+                //                        number: 21,
+                //                        races: [
+                //                            { number: 2, lane: 4, time: null, place: null },
+                //                            { number: 5, lane: 2, time: null, place: null },
+                //                            { number: 7, lane: 3, time: null, place: null },
+                //                            { number: 10, lane: 1, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 9,
+                //                        name: 'Ford',
+                //                        number: 1,
+                //                        races: [
+                //                            { number: 3, lane: 2, time: null, place: null },
+                //                            { number: 5, lane: 4, time: null, place: null },
+                //                            { number: 8, lane: 1, time: null, place: null },
+                //                            { number: 10, lane: 3, time: null, place: null },
+                //                        ],
+                //                    },
+                //                    {
+                //                        id: 10,
+                //                        name: 'Wylie',
+                //                        number: 2,
+                //                        races: [
+                //                            { number: 2, lane: 1, time: null, place: null },
+                //                            { number: 4, lane: 4, time: null, place: null },
+                //                            { number: 7, lane: 2, time: null, place: null },
+                //                            { number: 9, lane: 3, time: null, place: null },
+                //                        ],
+                //                    },
+                //                ],
+                //                "races": [
+                //                    [5, 1, 2, 6],
+                //                    [10, 4, 7, 8],
+                //                    [3, 9, 1, 5],
+                //                    [2, 6, 4, 10],
+                //                    [7, 8, 3, 9],
+                //                    [1, 5, 6, 2],
+                //                    [4, 10, 8, 7],
+                //                    [9, 3, 5, 1],
+                //                    [6, 2, 10, 4],
+                //                    [8, 7, 9, 3],
+                //                ],
+                //            },
+                //            {
+                //                "id": 2,
+                //                "name": '2017 Siblings',
+                //                "numLanes": 3,
+                //                "cars": [
+                //                    { id: 1, name: 'Sydney', number: 6 },
+                //                    { id: 2, name: 'Cole', number: 12 },
+                //                    { id: 3, name: 'Devin', number: 8 },
+                //                ],
+                //                "races": [
+                //                    [1, 2, 3],
+                //                    [2, 3, 1],
+                //                    [3, 1, 2],
+                //                ],
+                //            },
+                //        ];
+                //    },
+                //},
+                selectedTournament: Object,
+                viewName: String,
+                isAdmin: {
+                    type: Boolean,
+                    value: false,
+                },
+            },
+
+            observers: [
+              '_routeTournamentIdChanged(routeData.tournamentId)',
+              '_subrouteViewChanged(subrouteData.view)',
+            ],
+
+            ready: function() {
+                this.isAdmin = checkAdminCookie();
+            },
+
+            _toggleDrawer: function() {
+                this.$.drawer.toggle();
+            },
+
+            _homeTap: function() {
+                this._navigate('home');
+            },
+
+            _racesTap: function() {
+                this._navigate('races');
+            },
+
+            _carsTap: function() {
+                this._navigate('cars');
+            },
+
+            _settingsTap: function() {
+                this._navigate('settings');
+            },
+
+            _navigate: function (view) {
+                if (this.selectedTournament == null) {
+                    this.set('route.path', '/');
+                }
+                else {
+                    this.set('route.path', '/tournament/' + this.selectedTournament.ID + '/' + view);
+                }
+            },
+
+            _newTournamentTap: function () {
+                // get the highest event ID
+                //var newTournamentId = 0;
+                //for (var i = 0; i < this.tournaments.length; i++) {
+                //    if (this.tournaments[i].id > newTournamentId) {
+                //        newTournamentId = this.tournaments[i].id;
+                //    }
+                //}
+
+                //newTournamentId++;
+
+                this.$.createTournamentName.value = "";
+                this.$.createTournamentNumLanes.value = 4;
+                this.$.createTournamentErrorMessage.innerText = "";
+                this.$.createTournamentDialog.open();
+
+            },
+
+            _doCreateTournament: function() {
+                var createTournamentAjax = this.$.createTournamentAjax;
+                createTournamentAjax.body = { "name": this.$.createTournamentName.value, "lanes": this.$.createTournamentNumLanes.value };
+                createTournamentAjax.generateRequest();
+            },
+
+            _tournamentsPostResponse: function(e) {
+                var newTournament = e.detail.response;
+
+                this.push('tournaments', newTournament);
+                this.$.createTournamentDialog.close();
+
+                setTimeout(function (ctx) {
+                    // use a timeout to allow the list of tournaments to re-populate dom elements, then select the new tournament
+                    ctx.set('route.path', '/tournament/' + newTournament.ID + '/settings');
+                }, 10, this);
+            },
+
+            _tournamentsPostError: function(e) {
+                this.$.createTournamentErrorMessage.innerText = "Unable to create tournament";
+            },
+
+            _signInTap: function () {
+                var signInDialog = this.$.signInDialog;
+                signInDialog.open();
+            },
+
+            _doSignIn: function () {
+                var request = this.$.authAjax;
+                request.body = { "name": this.$.authName.value, "password": this.$.authPassword.value };
+                request.generateRequest();
+            },
+
+            _authResponse: function(e) {
+                this.isAdmin = true;
+                setAdminCookie();
+                this.$.signInDialog.close();
+            },
+
+            _authError: function(e) {
+                this.$.authErrorMessage.innerText = "Unable to sign-in.";
+            },
+
+            _signOutTap: function () {
+                deleteAdminCookie();
+                this.isAdmin = false;
+            },
+
+            _tournamentsResponse: function(e) {
+                this.tournaments = e.detail.response;
+            },
+
+            _getTournamentById: function (tournamentId) {
+                if (this.tournaments != null) {
+                    for (var i = 0; i < this.tournaments.length; i++) {
+                        if (this.tournaments[i].ID == tournamentId) {
+                            return this.tournaments[i];
+                        }
+                    }
+                }
+
+                return null;
+            },
+
+            _routeTournamentIdChanged: function (tournamentId) {
+                var e = this._getTournamentById(tournamentId);
+
+                if (e == null) {
+                    this.selectedTournament = e;
+                }
+                else if ((this.selectedTournament == null) || (this.selectedTournament.ID != e.ID)) {
+                    this.selectedTournament = e;
+                    this.set('subrouteData.view', 'home');
+                }
+
+                this.$.drawer.close();
+            },
+
+            _subrouteViewChanged: function (view) {
+                var map = {
+                    'home': 'Home',
+                    'cars': 'Cars',
+                    'races': 'Races',
+                    'settings': 'Settings',
+                };
+
+                this.viewName = map[view];
+            },
+
+            _showPage404: function () {
+                this.page = 'view404';
+            },
+
+            _showPanel404: function () {
+                this.panel = 'view404';
+            }
+        });
+    </script>
+</dom-module>

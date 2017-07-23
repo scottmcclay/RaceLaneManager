@@ -1,0 +1,69 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html" />
+<link rel="import" href="../bower_components/paper-styles/typography.html" />
+<link rel="import" href="../bower_components/paper-styles/shadow.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="shared-styles.html" />
+<link rel="import" href="rlm-standings-list.html" />
+<link rel="import" href="rlm-current-race-details.html" />
+<link rel="import" href="rlm-up-next-list.html" />
+
+<dom-module id="rlm-home">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+            .horizontal-flex-container {
+                @apply(--layout-horizontal);
+            }
+
+            .flexchild {
+                @apply(--layout-flex);
+            }
+        </style>
+
+        <div class="horizontal-flex-container">
+            <div>
+                <rlm-standings-list tournament="{{tournament}}" style="background-color: #dbdbdb;"></rlm-standings-list>
+            </div>
+            <div class="flexchild">
+                <rlm-current-race-details tournament="{{tournament}}"></rlm-current-race-details>
+            </div>
+            <div>
+                <rlm-up-next-list tournament="{{tournament}}" style="background-color: #dbdbdb;"></rlm-up-next-list>
+            </div>
+        </div>
+    </template>
+
+    <script>
+    Polymer({
+        is: 'rlm-home',
+
+        properties: {
+            tournament: {
+                type: Object,
+                reflectToAttribute: true,
+                observer: '_tournamentChanged',
+            },
+
+            currentRace: {
+                type: Object,
+                value: {
+                    raceNum: 4,
+                    lanes: [
+                        {
+                            carName: 'Ghost',
+                            racerName: 'Brenden M.',
+                        }
+                    ]
+                }
+            },
+        },
+
+        _tournamentChanged: function (tournament) {
+        },
+    });
+    </script>
+</dom-module>
