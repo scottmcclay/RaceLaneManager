@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-styles/typography.html" />
 <link rel="import" href="../bower_components/paper-styles/shadow.html" />
 <link rel="import" href="../bower_components/paper-styles/default-theme.html" />
+<link rel="import" href="../bower_components/paper-styles/paper-material-style.html" />
 <link rel="import" href="../bower_components/paper-item/paper-item.html" />
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
@@ -50,6 +51,10 @@
                 margin-right: 24px;
                 vertical-align: top;
             }
+
+            .test {
+                @apply(--shadow-elevation-2dp);
+            }
         </style>
 
         <custom-style>
@@ -75,20 +80,32 @@
                 .paper-font-display1 { @apply --paper-font-display1; }
             </style>
         </custom-style>
-        <div class="item">
-            <div style="text-align: center;" class="paper-font-headline">
+        <div class="item shadow test">
+            <div style="text-align: center; margin-bottom: 10px;" class="paper-font-headline">
                 Standings
             </div>
-            <template is="dom-repeat" items="{{standings}}" as="racer">
-                <div class="card">
-                    <div class="container flex-vertical">
-                        <div class="flexchild">
-                            <div class="paper-font-title">{{racer.car}}</div>
-                            <div class="paper-font-body1">{{racer.name}}</div>
-                        </div>
+            <div style="display: table; width: 100%;">
+                <template is="dom-repeat" items="{{standings}}" as="racer">
+                    <div style="display: table-row;">
+                        <div style="display: table-cell; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{racer.car}}</div>
+                        <div style="display: table-cell; text-align: right; padding-left: 15px; white-space: nowrap;">{{racer.points}} pts</div>
                     </div>
-                </div>
-            </template>
+                </template>
+            </div>
+            <!--<div class="vertical-section-container flex-vertical">
+                <template is="dom-repeat" items="{{standings}}" as="racer">
+                    <div class="card flexchild" style="margin-top: 15px; margin-bottom: 5px;">
+                        <div style="display: table; width: 100%;">
+                            <div style="display: table-row;">
+                                <div class="paper-font-body2" style="display: table-cell;">{{racer.position}}</div>
+                                <div class="paper-font-body2" style="display: table-cell; text-align: right;">{{racer.points}} pts</div>
+                            </div>
+                        </div>
+                        <div class="paper-font-title">{{racer.car}}</div>
+                        <div class="paper-font-body1">{{racer.name}}</div>
+                    </div>
+                </template>
+            </div>-->
         </div>
     </template>
 
@@ -105,16 +122,19 @@
                     type: Array,
                     value: [
                         {
+                            position: "1st",
                             car: 'Ghost',
                             name: 'Brenden M.',
-                            point: 13,
+                            points: 13,
                         },
                         {
+                            position: "2nd",
                             car: 'Black Night',
                             name: 'Owen A.',
                             points: 10,
                         },
                         {
+                            position: "3rd",
                             car: 'Viper',
                             name: 'Sean J.',
                             points: 9,

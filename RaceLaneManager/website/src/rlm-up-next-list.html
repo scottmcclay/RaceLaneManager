@@ -3,14 +3,14 @@
 <link rel="import" href="../bower_components/paper-styles/shadow.html" />
 <link rel="import" href="../bower_components/paper-styles/default-theme.html" />
 <link rel="import" href="../bower_components/paper-item/paper-item.html" />
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="shared-styles.html" />
 
 <dom-module id="rlm-up-next-list">
     <template>
-        <style include="shared-styles">
+        <style include="shared-styles iron-flex">
             :host {
                 display: block;
                 padding: 10px;
@@ -77,28 +77,19 @@
         </custom-style>
         <div class="item">
             <div style="text-align: center;" class="paper-font-headline">
-                Upcoming
+                Up Next
             </div>
             <template is="dom-repeat" items="{{races}}" as="race">
                 <div class="card">
-                    <div class="container flex-vertical">
-                        <div class="flexchild">
-                            <div class="paper-font-title">Race {{race.number}}</div>
-                            <div class="horizontal-section-container">
-                                <div class="container flex-vertical">
-                                    <div class="flexchild">Lane</div>
-                                    <template is="dom-repeat" items="{{race.cars}}" as="car">
-                                        <div class="paper-font-body1 flexchild">{{car.lane}}</div>
-                                    </template>
-                                </div>
-                                <div class="flexchild container flex-vertical">
-                                    <div class="flexchild">Racer</div>
-                                    <template is="dom-repeat" items="{{race.cars}}" as="car">
-                                        <div class="paper-font-body1 flexchild">{{car.racerName}}</div>
-                                    </template>
-                                </div>
+                    <div class="paper-font-title">Race {{race.number}}</div>
+                    <div>Lineup</div>
+                    <div style="display: table;">
+                        <template is="dom-repeat" items="{{race.cars}}" as="car">
+                            <div style="display: table-row;">
+                                <div class="paper-font-body1 layout flex" style="display: table-cell; padding-right: 10px;">{{car.lane}}</div>
+                                <div class="paper-font-body1 layout flex" style="display: table-cell; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{car.racerName}}</div>
                             </div>
-                        </div>
+                        </template>
                     </div>
                 </div>
             </template>
