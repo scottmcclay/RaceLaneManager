@@ -1,0 +1,42 @@
+﻿rlm-cars {
+    :host {
+        display: block;
+        padding: 10px;
+    }
+
+    paper-fab {
+        position: fixed;
+        right: 25px;
+        bottom: 30px;
+    }
+
+    .horizontal-section-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        @apply(--layout-wrap);
+    }
+
+    .horizontal-section {
+        background-color: white;
+        padding: 24px;
+        margin-right: 24px;
+        min-width: 100px;
+
+        @apply(--shadow-elevation-2dp);
+    }
+
+    .racer-column {
+        display: inline-block;
+        padding: 24px;
+        margin-right: 24px;
+        vertical-align: top;
+    }
+
+    .flex-horizontal {
+        @apply --layout-horizontal;
+    }
+
+    .flexchild {
+        @apply --layout-flex;
+    }
+}

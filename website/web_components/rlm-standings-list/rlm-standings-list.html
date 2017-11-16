@@ -1,13 +1,14 @@
-﻿<link rel="import" href="../bower_components/polymer/polymer.html" />
-<link rel="import" href="../bower_components/paper-styles/typography.html" />
-<link rel="import" href="../bower_components/paper-styles/shadow.html" />
-<link rel="import" href="../bower_components/paper-styles/default-theme.html" />
-<link rel="import" href="../bower_components/paper-styles/paper-material-style.html" />
-<link rel="import" href="../bower_components/paper-item/paper-item.html" />
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html" />
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
-<link rel="import" href="shared-styles.html" />
+﻿<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/polymer-ts/polymer-ts.html" />
+<link rel="import" href="/bower_components/paper-styles/typography.html" />
+<link rel="import" href="/bower_components/paper-styles/shadow.html" />
+<link rel="import" href="/bower_components/paper-styles/default-theme.html" />
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="/shared-styles.html" />
 
 <dom-module id="rlm-standings-list">
     <template>
@@ -18,13 +19,13 @@
             }
 
             .vertical-section-container {
-                @apply(--layout-vertical);
+                @apply --layout-vertical;
             }
 
             .horizontal-section-container {
-                @apply(--layout-horizontal);
-                @apply(--layout-center-justified);
-                @apply(--layout-wrap);
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+                @apply --layout-wrap;
             }
 
             .horizontal-section {
@@ -33,7 +34,7 @@
                 margin-right: 24px;
                 min-width: 100px;
 
-                @apply(--shadow-elevation-2dp);
+                @apply --shadow-elevation-2dp;
             }
 
             .vertical-section {
@@ -42,7 +43,7 @@
                 margin-right: 24px;
                 min-width: 100px;
 
-                @apply(--shadow-elevation-2dp);
+                @apply --shadow-elevation-2dp;
             }
 
             .racer-column {
@@ -53,7 +54,7 @@
             }
 
             .test {
-                @apply(--shadow-elevation-2dp);
+                @apply --shadow-elevation-2dp;
             }
         </style>
 
@@ -80,15 +81,16 @@
                 .paper-font-display1 { @apply --paper-font-display1; }
             </style>
         </custom-style>
+
         <div class="item shadow test">
             <div style="text-align: center; margin-bottom: 10px;" class="paper-font-headline">
                 Standings
             </div>
             <div style="display: table; width: 100%;">
-                <template is="dom-repeat" items="{{standings}}" as="racer">
+                <template is="dom-repeat" items="{{standings}}">
                     <div style="display: table-row;">
-                        <div style="display: table-cell; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{racer.car}}</div>
-                        <div style="display: table-cell; text-align: right; padding-left: 15px; white-space: nowrap;">{{racer.points}} pts</div>
+                        <div style="display: table-cell; max-width: 100px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{item.car}}</div>
+                        <div style="display: table-cell; text-align: right; padding-left: 15px; white-space: nowrap;">{{item.points}} pts</div>
                     </div>
                 </template>
             </div>
@@ -108,40 +110,9 @@
             </div>-->
         </div>
     </template>
-
-    <script>
-        Polymer({
-            is: 'rlm-standings-list',
-
-            properties: {
-                tournament: {
-                    type: Object,
-                    reflectToAttribute: true,
-                },
-                standings: {
-                    type: Array,
-                    value: [
-                        {
-                            position: "1st",
-                            car: 'Ghost',
-                            name: 'Brenden M.',
-                            points: 13,
-                        },
-                        {
-                            position: "2nd",
-                            car: 'Black Night',
-                            name: 'Owen A.',
-                            points: 10,
-                        },
-                        {
-                            position: "3rd",
-                            car: 'Viper',
-                            name: 'Sean J.',
-                            points: 9,
-                        }
-                    ]
-                },
-            },
-        });
-    </script>
 </dom-module>
+
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/standing.js"></script>
+<script type="text/javascript" src="rlm-standings-list.js"></script>
+

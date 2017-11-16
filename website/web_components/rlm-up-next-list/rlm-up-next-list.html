@@ -1,0 +1,171 @@
+﻿<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/paper-styles/typography.html" />
+<link rel="import" href="/bower_components/paper-styles/shadow.html" />
+<link rel="import" href="/bower_components/paper-styles/default-theme.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="/shared-styles.html" />
+
+<dom-module id="rlm-up-next-list">
+    <template>
+        <style include="shared-styles iron-flex">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .vertical-section-container {
+                @apply --layout-vertical;
+            }
+
+            .horizontal-section-container {
+                @apply --layout-horizontal;
+                @apply --layout-center-justified;
+                @apply --layout-wrap;
+            }
+
+            .horizontal-section {
+                background-color: white;
+                padding: 24px;
+                margin-right: 24px;
+                min-width: 100px;
+
+                @apply --shadow-elevation-2dp;
+            }
+
+            .vertical-section {
+                background-color: white;
+                padding: 24px;
+                margin-right: 24px;
+                min-width: 100px;
+
+                @apply --shadow-elevation-2dp;
+            }
+
+            .racer-column {
+                display: inline-block;
+                padding: 24px;
+                margin-right: 24px;
+                vertical-align: top;
+            }
+        </style>
+
+        <custom-style>
+            <style is="custom-style">
+                .flex-horizontal {
+                    @apply --layout-horizontal;
+                }
+
+                .flex-vertical {
+                    @apply --layout-vertical;
+                }
+
+                .flexchild {
+                    @apply --layout-flex;
+                }
+
+                .paper-font-headline {
+                    @apply --paper-font-headline;
+                }
+                .paper-font-title { @apply --paper-font-title; }
+                .paper-font-body2 { @apply --paper-font-body2; }
+                .paper-font-body1 { @apply --paper-font-body1; }
+                .paper-font-display1 { @apply --paper-font-display1; }
+            </style>
+        </custom-style>
+        <div class="item">
+            <div style="text-align: center;" class="paper-font-headline">
+                Up Next
+            </div>
+            <template is="dom-repeat" items="{{nextRaces}}" as="race">
+                <div class="card">
+                    <div class="paper-font-title">Race {{race.raceNum}}</div>
+                    <div>Lineup</div>
+                    <div style="display: table;">
+                        <template is="dom-repeat" items="{{race.lanes}}" as="lane">
+                            <div style="display: table-row;">
+                                <div class="paper-font-body1 layout flex" style="display: table-cell; padding-right: 10px;">{{lane.number}}</div>
+                                <div class="paper-font-body1 layout flex" style="display: table-cell; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{lane.racer}}</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <script>
+        // Polymer({
+        //     is: 'rlm-up-next-list',
+
+        //     properties: {
+        //         tournament: {
+        //             type: Object,
+        //             reflectToAttribute: true,
+        //         },
+        //         races: {
+        //             type: Array,
+        //             value: [
+        //                 {
+        //                     number: 5,
+        //                     cars: [
+        //                         {
+        //                             carName: 'Viper',
+        //                             racerName: 'Sean J.',
+        //                             lane: 1,
+        //                         },
+        //                         {
+        //                             carName: 'Black Night',
+        //                             racerName: 'Owen A.',
+        //                             lane: 2,
+        //                         },
+        //                         {
+        //                             carName: 'Lightning',
+        //                             racerName: 'Noob',
+        //                             lane: 3,
+        //                         },
+        //                         {
+        //                             carName: 'Ghost',
+        //                             racerName: 'Brenden M.',
+        //                             lane: 4,
+        //                         },
+        //                     ]
+        //                 },
+        //                 {
+        //                     number: 5,
+        //                     cars: [
+        //                         {
+        //                             carName: 'Viper',
+        //                             racerName: 'Sean J.',
+        //                             lane: 1,
+        //                         },
+        //                         {
+        //                             carName: 'Black Night',
+        //                             racerName: 'Owen A.',
+        //                             lane: 2,
+        //                         },
+        //                         {
+        //                             carName: 'Lightning',
+        //                             racerName: 'Noob',
+        //                             lane: 3,
+        //                         },
+        //                         {
+        //                             carName: 'Ghost',
+        //                             racerName: 'Brenden M.',
+        //                             lane: 4,
+        //                         },
+        //                     ]
+        //                 },
+        //             ]
+        //         },
+        //     },
+        // });
+    </script>
+</dom-module>
+
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/next-race.js"></script>
+<script type="text/javascript" src="/models/next-race-lane-assignment.js"></script>
+<script type="text/javascript" src="rlm-up-next-list.js"></script>

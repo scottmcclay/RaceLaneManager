@@ -32,6 +32,10 @@
     "paper-dropdown-menu": "^2.0.0",
     "app-route": "https://github.com/PolymerElements/app-route.git#1",
     "web-animations-js": "^2.3.1",
-    "paper-card": "PolymerElements/paper-card#2"
+    "paper-card": "PolymerElements/paper-card#2",
+    "paper-styles": "^2.0.0",
+    "polymer-ts": "^0.2.2"
+  },
+  "devDependencies": {
   }
 }

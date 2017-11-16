@@ -14,6 +14,8 @@ namespace RaceLaneManager
     {
         public void Configuration(IAppBuilder app)
         {
+            app.MapSignalR();
+
             app.Map("/tournament", spa =>
             {
                 spa.Use((context, next) =>

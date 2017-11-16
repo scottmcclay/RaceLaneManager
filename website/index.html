@@ -75,18 +75,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         );
 
         if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-          script.onload = onload;
-          document.head.appendChild(script);
+          var webcomponents = document.createElement('script');
+          webcomponents.async = true;
+          webcomponents.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          webcomponents.onload = onload;
+          document.head.appendChild(webcomponents);
         } else {
           onload();
         }
       })();
     </script>
 
-    <link rel="import" href="/src/rlm-app.html">
+    <link rel="import" href="/bower_components/polymer/polymer.html">
+    <link rel="import" href="/bower_components/polymer-ts/polymer-ts.html">
+    <link rel="import" href="/web_components/rlm-app/rlm-app.html">
 
     <style>
       body {

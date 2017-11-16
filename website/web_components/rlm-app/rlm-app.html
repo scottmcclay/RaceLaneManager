@@ -8,33 +8,33 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/polymer/polymer.html" />
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html" />
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html" />
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html" />
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html" />
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html" />
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html" />
-<link rel="import" href="../bower_components/app-route/app-location.html" />
-<link rel="import" href="../bower_components/app-route/app-route.html" />
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html" />
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html" />
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html" />
-<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
-<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html" />
-<link rel="import" href="../bower_components/paper-item/paper-item.html" />
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html" />
-<link rel="import" href="../bower_components/iron-icons/notification-icons.html" />
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html" />
-<link rel="import" href="../bower_components/paper-button/paper-button.html" />
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html" />
-<link rel="import" href="../bower_components/neon-animation/web-animations.html" />
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html" />
-<link rel="import" href="my-icons.html" />
-<link rel="import" href="rlm-cars.html" />
-<link rel="import" href="rlm-races.html" />
-<link rel="import" href="rlm-home.html" />
-<link rel="import" href="rlm-settings.html" />
+<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html" />
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html" />
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html" />
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html" />
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html" />
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html" />
+<link rel="import" href="/bower_components/app-route/app-location.html" />
+<link rel="import" href="/bower_components/app-route/app-route.html" />
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html" />
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html" />
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html" />
+<link rel="import" href="/bower_components/iron-icons/notification-icons.html" />
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="/bower_components/paper-button/paper-button.html" />
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html" />
+<link rel="import" href="/bower_components/neon-animation/web-animations.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/my-icons.html" />
+<link rel="import" href="/web_components/rlm-cars/rlm-cars.html" />
+<link rel="import" href="/web_components/rlm-races/rlm-races.html" />
+<link rel="import" href="/web_components/rlm-home/rlm-home.html" />
+<link rel="import" href="/web_components/rlm-settings/rlm-settings.html" />
 
 <dom-module id="rlm-app">
     <template>
@@ -97,19 +97,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </template>
                 </iron-selector>
                 <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signInTap">
                         <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
                         <div style="display: inline-block; vertical-align: middle;">Sign in</div>
                     </paper-button>
                 </paper-item>
                 <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="newTournamentTap">
                         <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
                         <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
                     </paper-button>
                 </paper-item>
                 <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signOutTap">
                         <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
                         <div style="display: inline-block; vertical-align: middle;">Sign out</div>
                     </paper-button>
@@ -122,10 +122,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
                         <div>Pack 675</div>
                         <div main-title style="text-align: center;">[[selectedTournament.Name]]</div>
-                        <paper-icon-button icon="home" on-tap="_homeTap"></paper-icon-button>
-                        <paper-icon-button icon="notification:drive-eta" on-tap="_carsTap"></paper-icon-button>
-                        <paper-icon-button icon="notification:event-available" on-tap="_racesTap"></paper-icon-button>
-                        <paper-icon-button icon="settings" on-tap="_settingsTap"></paper-icon-button>
+                        <paper-icon-button icon="home" on-tap="homeTap"></paper-icon-button>
+                        <paper-icon-button icon="notification:drive-eta" on-tap="carsTap"></paper-icon-button>
+                        <paper-icon-button icon="notification:event-available" on-tap="racesTap"></paper-icon-button>
+                        <paper-icon-button icon="settings" on-tap="settingsTap"></paper-icon-button>
                     </app-toolbar>
                 </app-header>
 
@@ -138,7 +138,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    <rlm-cars name="cars" tournament="{{selectedTournament}}"></rlm-cars>
                    <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
                    <rlm-settings name="settings" tournament="{{selectedTournament}}"></rlm-settings>
-                   <my-view404 name="view404"></my-view404>
                </iron-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -218,7 +217,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input id="createTournamentNumLanes" label="Number Of Lanes" type="number" min="1" auto-validate error-message="There must be at least one lane"></paper-input>
             <div id="createTournamentErrorMessage" style="color: red;"></div>
             <div class="buttons">
-                <paper-button on-tap="_doCreateTournament">Create</paper-button>
+                <paper-button on-tap="doCreateTournament">Create</paper-button>
                 <paper-button dialog-dismiss>Cancel</paper-button>
             </div>
         </paper-dialog>
@@ -229,7 +228,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input id="authPassword" label="Password:" required auto-validate error-message="Password cannot be blank"></paper-input>
             <div id="authErrorMessage" style="color: red;"></div>
             <div class="buttons">
-                <paper-button on-tap="_doSignIn">Sign In</paper-button>
+                <paper-button on-tap="doSignIn">Sign In</paper-button>
                 <paper-button dialog-dismiss>Cancel</paper-button>
             </div>
         </paper-dialog>
@@ -240,20 +239,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    method="POST"
                    content-type="application/json"
                    body='{"name": "", "password": ""}'
-                   on-response="_authResponse"
-                   on-error="_authError">
+                   on-response="authResponse"
+                   on-error="authError">
         </iron-ajax>
 
-        <iron-ajax url="/api/tournaments" content-type="application/json" auto on-response="_tournamentsResponse"></iron-ajax>
+        <iron-ajax url="/api/tournaments" content-type="application/json" auto on-response="tournamentsResponse"></iron-ajax>
         <iron-ajax
                    id="createTournamentAjax"
                    url="/api/tournaments"
                    method="POST"
                    content-type="application/json"
-                   on-response="_tournamentsPostResponse"
-                   on-error="_tournamentsPostError"></iron-ajax>
+                   on-response="tournamentsPostResponse"
+                   on-error="tournamentsPostError"></iron-ajax>
     </template>
 
+    <!--
     <script>
         function checkAdminCookie() {
             var cookies = document.cookie.split(';');
@@ -611,4 +611,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         });
     </script>
+-->
 </dom-module>
+
+<script src="/Scripts/jquery-1.6.4.min.js"></script>
+<script src="/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="rlm-app.js"></script>
