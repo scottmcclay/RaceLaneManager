@@ -114,7 +114,7 @@
     <Compile Include="WebApiConfig.cs" />
     <Compile Include="WebApi\AuthController.cs" />
     <Compile Include="WebApi\CarsController.cs" />
-    <Compile Include="WebApi\TestHub.cs" />
+    <Compile Include="WebApi\RlmHub.cs" />
     <Compile Include="WebApi\TournamentsController.cs" />
   </ItemGroup>
   <ItemGroup>

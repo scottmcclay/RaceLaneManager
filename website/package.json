@@ -15,6 +15,7 @@
     "eslint-plugin-html": "^1.7.0",
     "gulp": "^3.9.1",
     "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.3",
     "node-sass": "^4.5.3",
     "polymer-elements-typings": "^1.0.1"
