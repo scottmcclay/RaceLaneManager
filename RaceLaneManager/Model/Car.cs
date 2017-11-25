@@ -9,6 +9,7 @@ namespace RaceLaneManager.Model
     public class Car
     {
         public int ID { get; set; }
+        public string Name { get; set; }
         public string Owner { get; set; }
         public string Den { get; set; }
         public int CarNumber { get; set; }

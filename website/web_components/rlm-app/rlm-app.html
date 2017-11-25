@@ -137,90 +137,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    <rlm-home name="home" tournament="{{selectedTournament}}"></rlm-home>
                    <rlm-cars name="cars" tournament="{{selectedTournament}}"></rlm-cars>
                    <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
-                   <rlm-settings name="settings" tournament="{{selectedTournament}}"></rlm-settings>
+                   <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
                </iron-pages>
             </app-header-layout>
         </app-drawer-layout>
-                <!--<paper-dropdown-menu label="Tournament" no-label-float>
-                    <paper-listbox class="dropdown-content" selected="{{routeData.tournamentId}}" attr-for-selected="tournamentId" fallback-selection="1">
-                        <template is="dom-repeat" items="{{tournaments}}">
-                            <paper-item tournamentId$="{{item.ID}}" style="cursor: pointer;">{{item.Name}}</paper-item>
-                        </template>
-                        <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
-                                <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
-                                <div style="display: inline-block; vertical-align: middle;">Sign in</div>
-                            </paper-button>
-                        </paper-item>
-                        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
-                                <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
-                                <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
-                            </paper-button>
-                        </paper-item>
-                        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
-                                <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
-                                <div style="display: inline-block; vertical-align: middle;">Sign out</div>
-                            </paper-button>
-                        </paper-item>
-                    </paper-listbox>
-                </paper-dropdown-menu>-->
-
-        <!--<app-drawer-layout fullbleed>
-            <!-- Drawer content
-            <app-drawer id="drawer" slot="drawer">
-                <app-toolbar>
-                    <div main-title>Tournaments</div>
-                </app-toolbar>
-                <div style="padding-left: 16px;">
-                    <paper-dropdown-menu label="Tournament" no-label-float>
-                        <paper-listbox class="dropdown-content" selected="{{routeData.tournamentId}}" attr-for-selected="tournamentId" fallback-selection="1">
-                            <template is="dom-repeat" items="{{tournaments}}">
-                                <paper-item tournamentId$="{{item.ID}}" style="cursor: pointer;">{{item.Name}}</paper-item>
-                            </template>
-                            <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signInTap">
-                                    <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
-                                    <div style="display: inline-block; vertical-align: middle;">Sign in</div>
-                                </paper-button>
-                            </paper-item>
-                            <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_newTournamentTap">
-                                    <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
-                                    <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
-                                </paper-button>
-                            </paper-item>
-                            <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.ID}}">
-                                <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="_signOutTap">
-                                    <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
-                                    <div style="display: inline-block; vertical-align: middle;">Sign out</div>
-                                </paper-button>
-                            </paper-item>
-                        </paper-listbox>
-                    </paper-dropdown-menu>
-                </div>
-                <iron-selector selected="{{subrouteData.view}}" attr-for-selected="pageName" fallback-selection="standings" class="drawer-list" role="navigation">
-                    <a pageName="standings" href="/tournament/{{routeData.tournamentId}}/standings">Standings</a>
-                    <a pageName="cars" href="/tournament/{{routeData.tournamentId}}/cars">Cars</a>
-                    <a pageName="races" href="/tournament/{{routeData.tournamentId}}/races">Races</a>
-                    <template is="dom-if" if="{{isAdmin}}" restamp>
-                        <a pageName="configure" href="/tournament/{{routeData.tournamentId}}/configure">Configure</a>
-                    </template>
-                </iron-selector>
-            </app-drawer> -->
-
-
-        <paper-dialog id="createTournamentDialog" modal>
-            <h2>Create Tournament</h2>
-            <paper-input id="createTournamentName" label="Name" autofocus required auto-validate error-message="Name cannot be blank"></paper-input>
-            <paper-input id="createTournamentNumLanes" label="Number Of Lanes" type="number" min="1" auto-validate error-message="There must be at least one lane"></paper-input>
-            <div id="createTournamentErrorMessage" style="color: red;"></div>
-            <div class="buttons">
-                <paper-button on-tap="doCreateTournament">Create</paper-button>
-                <paper-button dialog-dismiss>Cancel</paper-button>
-            </div>
-        </paper-dialog>
 
         <iron-ajax
                    id="authAjax"

@@ -8,15 +8,12 @@ namespace RaceLaneManager.Model
 {
     public class Tournament
     {
-        private Lane[] _lanes;
         private List<Car> _cars = new List<Car>();
         private List<RaceLaneAssignment> _assignments = new List<RaceLaneAssignment>();
 
         public int ID { get; set; }
-        public DateTime Date { get; set; }
         public string Name { get; set; }
-        public IList<Lane> Lanes { get { return _lanes; } }
-        public int NumLanes { get { return _lanes.Length; } }
+        public int NumLanes { get; set; }
         public IList<Car> Cars { get { return _cars; } }
         public int NumRaces { get; private set; }
         public IEnumerable<RaceLaneAssignment> Assignments { get; }
@@ -24,12 +21,7 @@ namespace RaceLaneManager.Model
         public Tournament(string name, int numLanes)
         {
             this.Name = name;
-            _lanes = new Lane[numLanes];
-
-            for (int i = 0; i < numLanes; i++)
-            {
-                _lanes[i] = new Lane(i + 1, true);
-            }
+            this.NumLanes = numLanes;
         }
 
         public void ClearAssignments()
@@ -49,6 +41,11 @@ namespace RaceLaneManager.Model
 
         public Car RemoveCar(int carId)
         {
+            if (_assignments.Count > 0)
+            {
+                throw new InvalidOperationException("Race Lane Assignments must be cleared before removing cars.");
+            }
+
             Car car = _cars.Where(r => r.ID == carId).SingleOrDefault();
 
             if (car != null)
@@ -61,6 +58,11 @@ namespace RaceLaneManager.Model
 
         public void RemoveCar(Car car)
         {
+            if (_assignments.Count > 0)
+            {
+                throw new InvalidOperationException("Race Lane Assignments must be cleared before removing cars.");
+            }
+
             _cars.Remove(car);
         }
     }

@@ -10,7 +10,6 @@ namespace RaceLaneManager.WebApi
     {
         public RlmHub()
         {
-            Debug.WriteLine("RlmHub:Ctor");
         }
 
         public void RequestGetTournaments()
@@ -28,6 +27,15 @@ namespace RaceLaneManager.WebApi
             repo.AddTournament(t);
 
             Clients.All.tournamentsUpdated(repo.GetAllTournaments());
+        }
+
+        public void RequestUpdateTournament(int tournamentID, string newName, int numLanes)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+
+            Tournament t = repo.UpdateTournament(tournamentID, newName, numLanes);
+
+            Clients.All.tournamentUpdated(t);
         }
     }
 }

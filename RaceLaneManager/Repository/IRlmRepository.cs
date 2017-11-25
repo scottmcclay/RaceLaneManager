@@ -9,6 +9,6 @@ namespace RaceLaneManager.Repository
         Tournament GetTournament(int tournamentId);
         Tournament AddTournament(Tournament tournament);
         Tournament DeleteTournament(int tournamentId);
-        bool UpdateTournament(Tournament tournament);
+        Tournament UpdateTournament(int tournamentId, string newName, int numLanes);
     }
 }

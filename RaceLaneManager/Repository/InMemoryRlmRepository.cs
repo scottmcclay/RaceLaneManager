@@ -39,9 +39,18 @@ namespace RaceLaneManager.Repository
             return tournament;
         }
 
-        public bool UpdateTournament(Tournament tournament)
+        public Tournament UpdateTournament(int tournamentId, string newName, int numLanes)
         {
-            return true;
+            Tournament tournament = _tournaments.Where(t => t.ID == tournamentId).SingleOrDefault();
+            if (tournament == null)
+            {
+                return null;
+            }
+
+            tournament.Name = newName;
+            tournament.NumLanes = numLanes;
+
+            return tournament;
         }
 
         public Tournament DeleteTournament(int tournamentId)

@@ -1,11 +1,14 @@
 <link rel="import" href="/bower_components/polymer/polymer.html" />
 <link rel="import" href="/bower_components/paper-input/paper-input.html" />
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html" />
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html" />
 <link rel="import" href="/shared-styles.html" />
+<link rel="import" href="/web_components/rlm-tournament-settings/rlm-tournament-settings.html" />
 
 <dom-module id="rlm-settings">
 
     <template>
-        <style include="shared-styles">
+        <style include="shared-styles iron-flex">
             :host {
                 display: block;
                 padding: 10px;
@@ -13,28 +16,17 @@
         </style>
 
         <div class="card">
-            <paper-input label="Name" required auto-validate error-message="Name cannot be blank" value="{{tournament.Name}}"></paper-input>
-            <paper-input label="Number Of Lanes" type="number" min="1" auto-validate error-message="There must be at least one lane" value="{{tournament.NumLanes}}"></paper-input>
+            <paper-input label="Name" value="[[tournamentName]]" readonly="true"></paper-input>
+            <paper-input label="Number Of Lanes" type="number" min="1" value="[[numLanes]]" readonly="true"></paper-input>
         </div>
 
+        <paper-fab icon="icons:create" style="position: fixed; bottom: 20px; right: 20px;" on-tap="editSettings"></paper-fab>
+
+        <rlm-tournament-settings id="tournamentSettings" title="Edit Tournament"></rlm-tournament-settings>
     </template>
-
-    <script>
-        Polymer({
-            is: 'rlm-settings',
-
-            properties: {
-                tournament: {
-                    type: Object,
-                    reflectToAttribute: true,
-                    notify: true,
-                    observer: '_tournamentChanged',
-                },
-            },
-
-            _tournamentChanged: function (tournament) {
-            },
-        });
-    </script>
-
 </dom-module>
+
+<script type="text/javascript" src="/models/publisher.js"></script>
+<script type="text/javascript" src="/models/rlm-hub.js"></script>
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="rlm-settings.js"></script>

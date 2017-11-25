@@ -1,7 +1,7 @@
 ﻿@component("rlm-app")
 class RlmApp extends polymer.Base implements polymer.Element {
 
-    @property({ notify: true })
+    @property({ type: RlmHub, notify: true })
     hub: RlmHub;
 
     @property({ reflectToAttribute: true, notify: true })
@@ -39,7 +39,8 @@ class RlmApp extends polymer.Base implements polymer.Element {
             this.viewName = 'Races';
             break;
 
-            case 'settings': 'Settings';
+            case 'settings':
+            this.viewName = 'Settings';
             break;
 
             case 'home':
@@ -54,12 +55,13 @@ class RlmApp extends polymer.Base implements polymer.Element {
         //let connection: SignalR.Hub.Connection = this.$.hubConnection();
         this.hub = new RlmHub();
         this.hub.initialize($.hubConnection());
-        this.hub.on('proxyReady', this.proxyReady, this);
+        this.hub.on('hubReady', this.hubReady, this);
         this.hub.on('tournamentsUpdated', this.tournamentsUpdated, this);
         this.hub.on('getTournamentsResponse', this.getTournamentsResponse, this);
+        this.hub.on('tournamentUpdated', this.tournamentUpdated, this);
     }
 
-    proxyReady(): void {
+    hubReady(): void {
         this.hub.requestGetTournaments();
     }
 
@@ -129,43 +131,29 @@ class RlmApp extends polymer.Base implements polymer.Element {
     }
 
     private displayTournaments(tournaments: Array<Tournament>): void {
-        this.tournaments = tournaments;
+        // override Polymer's dirty checking
+        let temp = tournaments;
+        this.tournaments = [];
+        this.tournaments = temp;
     }
 
     newTournamentTap(): void {
         this.hub.createTournament('New Tournament', 4);
-        // this.$.createTournamentName.value = "";
-        // this.$.createTournamentNumLanes.value = 4;
-        // this.$.createTournamentErrorMessage.innerText = "";
-        // this.$.createTournamentDialog.open();
-    }
-
-    doCreateTournament(): void {
-        this.hub.createTournament(this.$.createTournamentName.value, this.$.createTournamentNumLanes.value);
-        // let createTournamentAjax = this.$.createTournamentAjax;
-        // createTournamentAjax.body = { "name": this.$.createTournamentName.value, "lanes": this.$.createTournamentNumLanes.value };
-        // createTournamentAjax.generateRequest();
     }
 
     tournamentsUpdated(tournaments: Array<Tournament>): void {
-        //console.log('Tournament added to host: name = ' + tournament.name);
         this.displayTournaments(tournaments);
     }
 
-    tournamentsPostResponse(e: any): void {
-        let newTournament = e.detail.response;
-
-        this.push('tournaments', newTournament);
-        this.$.createTournamentDialog.close();
-
-        setTimeout(function (ctx: any) {
-            // use a timeout to allow the list of tournaments to re-populate dom elements, then select the new tournament
-            ctx.set('route.path', '/tournament/' + newTournament.ID + '/settings');
-        }, 10, this);
-    }
-
-    tournamentsPostError(e: any): void {
-        this.$.createTournamentErrorMessage.innerText = "Unable to create tournament";
+    tournamentUpdated(tournament: Tournament): void {
+        let index: number;
+        for (index = 0; index < this.tournaments.length; index++) {
+            if (this.tournaments[index].id === tournament.id) {
+                this.splice('tournaments', index, 1, tournament);
+                break;
+            }
+        }
+        this.displayTournaments(this.tournaments);
     }
 
     signInTap(): void {
@@ -192,10 +180,6 @@ class RlmApp extends polymer.Base implements polymer.Element {
     signOutTap(): void {
         this.deleteAdminCookie();
         this.isAdmin = false;
-    }
-
-    tournamentsResponse(e: any): void {
-        //this.tournaments = e.detail.response;
     }
 
     getTournamentById(tournamentId: number): Tournament {

@@ -26,7 +26,6 @@ namespace RaceLaneManager.WebApi
             string name = json.name;
 
             Tournament tournament = new Tournament(name, lanes);
-            tournament.Date = DateTime.Now;
 
             tournament = RepositoryManager.GetDefaultRepository().AddTournament(tournament);
             HttpResponseMessage response = Request.CreateResponse<Tournament>(HttpStatusCode.Created, tournament);
