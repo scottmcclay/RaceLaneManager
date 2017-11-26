@@ -109,6 +109,7 @@
     <Compile Include="Repository\InMemoryRlmRepository.cs" />
     <Compile Include="Repository\IRlmRepository.cs" />
     <Compile Include="Repository\RepositoryManager.cs" />
+    <Compile Include="Repository\RlmFileRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TestApi.cs" />
     <Compile Include="WebApiConfig.cs" />
