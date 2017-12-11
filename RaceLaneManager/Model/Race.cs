@@ -1,37 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RaceLaneManager.Model
 {
-    public class Race
+    public interface IRace
     {
-        private RaceLaneAssignment[] _assignments;
+        int RaceNumber { get; }
+        IEnumerable<ILaneAssignment> LaneAssignments { get; }
+    }
 
-        public IList<RaceLaneAssignment> Assignments { get { return _assignments; } }
+    public class Race : IRace
+    {
+        public List<LaneAssignment> LaneAssignmentData { get; set; }
+        public int RaceNumber { get; set; }
+        public IEnumerable<ILaneAssignment> LaneAssignments { get { return this.LaneAssignmentData; } }
 
-        public Race(int numLanes)
+        public Race()
         {
-            _assignments = new RaceLaneAssignment[numLanes];
-        }
-
-        public void AssignLanes(IList<RaceLaneAssignment> assignments)
-        {
-            if (assignments.Count() != _assignments.Length)
-            {
-                throw new ArgumentException(
-                    string.Format("Number of assignments ({0}) does not match the number of lanes ({1})",
-                        assignments.Count(),
-                        _assignments.Length),
-                    "assignments");
-            }
-
-            for (int i = 0; i < _assignments.Length; i++)
-            {
-                _assignments[i] = assignments[i];
-            }
+            this.LaneAssignmentData = new List<LaneAssignment>();
         }
     }
 }

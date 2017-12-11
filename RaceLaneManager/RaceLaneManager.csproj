@@ -103,8 +103,9 @@
     <Compile Include="Model\Car.cs" />
     <Compile Include="Model\Lane.cs" />
     <Compile Include="Model\Race.cs" />
-    <Compile Include="Model\RaceLaneAssignment.cs" />
+    <Compile Include="Model\LaneAssignment.cs" />
     <Compile Include="Model\Tournament.cs" />
+    <Compile Include="Model\TournamentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\InMemoryRlmRepository.cs" />
     <Compile Include="Repository\IRlmRepository.cs" />
@@ -114,9 +115,7 @@
     <Compile Include="TestApi.cs" />
     <Compile Include="WebApiConfig.cs" />
     <Compile Include="WebApi\AuthController.cs" />
-    <Compile Include="WebApi\CarsController.cs" />
     <Compile Include="WebApi\RlmHub.cs" />
-    <Compile Include="WebApi\TournamentsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

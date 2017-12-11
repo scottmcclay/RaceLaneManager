@@ -1,0 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/paper-input/paper-input.html" />
+<link rel="import" href="/bower_components/paper-button/paper-button.html" />
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html" />
+
+<dom-module id="rlm-edit-car">
+    <template>
+        <div id="rlmEditCarDialogHolder">
+            <paper-dialog id="editCarDialog" modal>
+                <h2>[[title]]</h2>
+                <paper-input id="carName" label="Name" autofocus required auto-validate error-message="Name cannot be blank" value="{{carName}}"></paper-input>
+                <paper-input id="carNumber" label="Number" type="number" value="{{carNumber}}"></paper-input>
+                <paper-input id="carOwner" label="Owner" value="{{carOwner}}"></paper-input>
+                <paper-input id="carDen" label="Den" value="{{carDen}}"></paper-input>
+                <div id="editCarErrorMessage" style="color: red;">[[errorMessage]]</div>
+                <div class="buttons">
+                    <paper-button on-tap="saveTapped">[[saveText]]</paper-button>
+                    <paper-button on-tap="cancelTapped">[[cancelText]]</paper-button>
+                </div>
+            </paper-dialog>
+        </div>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="/models/car.js"></script>
+<script type="text/javascript" src="rlm-edit-car.js"></script>

@@ -55,10 +55,10 @@ class RlmApp extends polymer.Base implements polymer.Element {
         //let connection: SignalR.Hub.Connection = this.$.hubConnection();
         this.hub = new RlmHub();
         this.hub.initialize($.hubConnection());
-        this.hub.on('hubReady', this.hubReady, this);
-        this.hub.on('tournamentsUpdated', this.tournamentsUpdated, this);
-        this.hub.on('getTournamentsResponse', this.getTournamentsResponse, this);
-        this.hub.on('tournamentUpdated', this.tournamentUpdated, this);
+        this.hub.on(RlmHub.HUB_READY, this.hubReady, this);
+        this.hub.on(RlmHub.TOURNAMENTS_UPDATED, this.tournamentsUpdated, this);
+        this.hub.on(RlmHub.GET_TOURNAMENTS_RESPONSE, this.getTournamentsResponse, this);
+        this.hub.on(RlmHub.TOURNAMENT_UPDATED, this.tournamentUpdated, this);
     }
 
     hubReady(): void {

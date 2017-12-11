@@ -16,7 +16,7 @@ class RlmSettings extends polymer.Base implements polymer.Element {
     @observe('hub')
     hubChanged(): void {
         if (this.hub) {
-            this.hub.on('tournamentUpdated', this.tournamentUpdated, this);
+            this.hub.on(RlmHub.TOURNAMENT_UPDATED, this.tournamentUpdated, this);
         }
     }
 

@@ -6,6 +6,7 @@ using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.FileSystems;
 using System.Web.Http;
 using System.Diagnostics;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(RaceLaneManager.Startup))]
 
@@ -17,7 +18,9 @@ namespace RaceLaneManager
         {
             Debug.WriteLine("Mapping signalr");
 
-            app.MapSignalR();
+            HubConfiguration hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
+            app.MapSignalR(hubConfiguration);
 
             Debug.WriteLine("Mapping /tournament");
             app.Map("/tournament", spa =>

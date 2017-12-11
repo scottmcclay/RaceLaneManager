@@ -14,28 +14,44 @@ namespace RaceLaneManager.WebApi
 
         public void RequestGetTournaments()
         {
-            Clients.Caller.getTournamentsResponse(RepositoryManager.GetDefaultRepository().GetAllTournaments());
+            Clients.Caller.getTournamentsResponse(TournamentManager.GetTournaments());
         }
 
         public void RequestAddTournament(string name, int numLanes)
         {
             Debug.WriteLine("Creating tournament \"{0}\" with {1} lanes", name, numLanes);
 
-            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+            TournamentManager.AddTournament(name, numLanes);
 
-            Tournament t = new Tournament(name, numLanes);
-            repo.AddTournament(t);
-
-            Clients.All.tournamentsUpdated(repo.GetAllTournaments());
+            Clients.All.tournamentsUpdated(TournamentManager.GetTournaments());
         }
 
         public void RequestUpdateTournament(int tournamentID, string newName, int numLanes)
         {
-            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+            ITournament tournament = TournamentManager.UpdateTournament(tournamentID, newName, numLanes);
 
-            Tournament t = repo.UpdateTournament(tournamentID, newName, numLanes);
+            Clients.All.tournamentUpdated(tournament);
+        }
 
-            Clients.All.tournamentUpdated(t);
+        public void RequestGetCars(int tournamentID)
+        {
+            Clients.Caller.getCarsResponse(TournamentManager.GetCars(tournamentID));
+        }
+
+        public void RequestAddCar(int tournamentID, Car car)
+        {
+            Debug.WriteLine("Adding car \"{0}\" to tournament {1}", car.Name, tournamentID);
+
+            TournamentManager.AddCar(tournamentID, car);
+
+            Clients.All.carsUpdated(tournamentID, TournamentManager.GetCars(tournamentID));
+        }
+
+        public void RequestUpdateCar(int tournamentID, Car car)
+        {
+            ICar updatedCar = TournamentManager.UpdateCar(tournamentID, car);
+
+            Clients.All.carUpdated(tournamentID, updatedCar);
         }
     }
 }

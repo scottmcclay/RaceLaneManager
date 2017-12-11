@@ -11,58 +11,25 @@ namespace RaceLaneManager.Repository
     {
         private static List<Tournament> _tournaments = new List<Tournament>();
 
-        public IList<Tournament> GetAllTournaments()
+        public IEnumerable<int> GetAllTournamentIDs()
         {
-            return _tournaments;
+            return _tournaments.Select(t => t.ID).ToList();
         }
 
-        public Tournament GetTournament(int tournamentId)
+        public Tournament LoadTournament(int tournamentID)
         {
-            return _tournaments.Where(t => t.ID == tournamentId).Single();
+            return _tournaments.Where(t => t.ID == tournamentID).Single();
         }
 
-        public Tournament AddTournament(Tournament tournament)
+        public void SaveTournament(Tournament tournament)
         {
-            // find an ID to assign to this new Tournament
-            int maxID = 0;
-            foreach (Tournament t in _tournaments)
+            for (int i = 0; i < _tournaments.Count; i++)
             {
-                if (t.ID > maxID)
+                if (_tournaments[i].ID == tournament.ID)
                 {
-                    maxID = t.ID;
+                    _tournaments[i] = tournament;
                 }
             }
-
-            tournament.ID = maxID + 1;
-            _tournaments.Add(tournament);
-
-            return tournament;
-        }
-
-        public Tournament UpdateTournament(int tournamentId, string newName, int numLanes)
-        {
-            Tournament tournament = _tournaments.Where(t => t.ID == tournamentId).SingleOrDefault();
-            if (tournament == null)
-            {
-                return null;
-            }
-
-            tournament.Name = newName;
-            tournament.NumLanes = numLanes;
-
-            return tournament;
-        }
-
-        public Tournament DeleteTournament(int tournamentId)
-        {
-            Tournament tournament = _tournaments.Where(t => t.ID == tournamentId).Single();
-            if (tournament == null)
-            {
-                throw new ArgumentException(string.Format("Tournament with ID {0} was not found.", tournamentId), "tournamentId");
-            }
-
-            _tournaments.Remove(tournament);
-            return tournament;
         }
     }
 }

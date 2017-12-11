@@ -135,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            fallback-selection="view404"
                            role="main">
                    <rlm-home name="home" tournament="{{selectedTournament}}"></rlm-home>
-                   <rlm-cars name="cars" tournament="{{selectedTournament}}"></rlm-cars>
+                   <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
                    <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
                    <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
                </iron-pages>
@@ -170,4 +170,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <script type="text/javascript" src="/models/publisher.js"></script>
 <script type="text/javascript" src="/models/rlm-hub.js"></script>
 <script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/car.js"></script>
 <script type="text/javascript" src="rlm-app.js"></script>

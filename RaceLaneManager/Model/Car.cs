@@ -6,12 +6,42 @@ using System.Threading.Tasks;
 
 namespace RaceLaneManager.Model
 {
-    public class Car
+    public interface ICar
+    {
+        int ID { get; }
+        string Name { get; }
+        string Owner { get; }
+        string Den { get; }
+        int CarNumber { get; }
+    }
+
+    public class Car : ICar
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public string Owner { get; set; }
         public string Den { get; set; }
         public int CarNumber { get; set; }
+
+        public static Car From(ICar car)
+        {
+            return new Car()
+            {
+                ID = car.ID,
+                Name = car.Name,
+                CarNumber = car.CarNumber,
+                Owner = car.Owner,
+                Den = car.Den
+            };
+        }
+
+        public void CopyFrom(ICar car)
+        {
+            this.ID = car.ID;
+            this.Name = car.Name;
+            this.Owner = car.Owner;
+            this.Den = car.Den;
+            this.CarNumber = car.CarNumber;
+        }
     }
 }

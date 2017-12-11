@@ -14,4 +14,14 @@ class Car {
             carNumber: payload.CarNumber
         };
     }
+    
+    static getCarsFromPayload(payload: any): Array<Car> {
+        let cars: Array<Car> = new Array<Car>();
+        
+        for (let t of payload) {
+            cars.push(Car.fromPayload(t));
+        }
+
+        return cars;
+    }
 }

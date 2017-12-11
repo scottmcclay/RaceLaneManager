@@ -9,8 +9,9 @@ namespace RaceLaneManager.Repository
 {
     public class RlmFileRepository : IRlmRepository
     {
-        private string dataPath;
-        private readonly string tournamentsDirectoryName = "RlmTournaments";
+        private Object _lock = new Object();
+        private string _dataPath;
+        private readonly string _tournamentsDirectoryName = "RlmTournaments";
 
         public RlmFileRepository()
         {
@@ -29,102 +30,65 @@ namespace RaceLaneManager.Repository
 
         private void CreateTournamentsDirectory(string rootPath)
         {
-            this.dataPath = Path.Combine(rootPath, this.tournamentsDirectoryName);
-            Debug.WriteLine("Data path: {0}", this.dataPath);
-
-            if (!Directory.Exists(dataPath))
+            lock (_lock)
             {
-                Directory.CreateDirectory(dataPath);
+                this._dataPath = Path.Combine(rootPath, this._tournamentsDirectoryName);
+                Debug.WriteLine(string.Format("Data path: {0}", this._dataPath));
+
+                if (!Directory.Exists(_dataPath))
+                {
+                    Directory.CreateDirectory(_dataPath);
+                }
             }
         }
 
-        private IEnumerable<int> ReadAllTournamentIDs()
+        public IEnumerable<int> GetAllTournamentIDs()
         {
             List<int> result = new List<int>();
 
-            DirectoryInfo di = new DirectoryInfo(this.dataPath);
-            foreach (FileInfo fi in di.GetFiles())
+            lock (_lock)
             {
-                string nameWithoutExtension = fi.Name.Replace(".json", "");
-                result.Add(int.Parse(nameWithoutExtension));
-            }
-
-            return result;
-        }
-
-        private Tournament ReadTournament(int tournamentID)
-        {
-            string fileName = string.Format("{0}.json", tournamentID);
-            string filePath = Path.Combine(this.dataPath, fileName);
-            string json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject(json, typeof(Tournament)) as Tournament;
-        }
-
-        private void WriteTournament(Tournament tournament, bool overwrite = true)
-        {
-            string fileName = string.Format("{0}.json", tournament.ID);
-            string filePath = Path.Combine(this.dataPath, fileName);
-            if ((overwrite == false) && File.Exists(filePath))
-            {
-                throw new ArgumentException(string.Format("Tournament with ID {0} already exists.", tournament.ID));
-            }
-
-            string json = JsonConvert.SerializeObject(tournament, Formatting.Indented);
-            File.WriteAllText(filePath, json);
-        }
-
-        public Tournament AddTournament(Tournament tournament)
-        {
-            // find an ID to assign to this new Tournament
-            int maxID = 0;
-            foreach (int i in ReadAllTournamentIDs())
-            {
-                if (i > maxID)
+                DirectoryInfo di = new DirectoryInfo(this._dataPath);
+                foreach (FileInfo fi in di.GetFiles())
                 {
-                    maxID = i;
+                    string nameWithoutExtension = fi.Name.Replace(".json", "");
+                    result.Add(int.Parse(nameWithoutExtension));
                 }
             }
 
-            tournament.ID = maxID + 1;
-
-            WriteTournament(tournament, false);
-            return tournament;
-        }
-
-        public Tournament DeleteTournament(int tournamentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IList<Tournament> GetAllTournaments()
-        {
-            List<Tournament> result = new List<Tournament>();
-
-            foreach (int i in ReadAllTournamentIDs())
-            {
-                result.Add(GetTournament(i));
-            }
-
             return result;
         }
 
-        public Tournament GetTournament(int tournamentID)
+        public Tournament LoadTournament(int tournamentID)
         {
-            return ReadTournament(tournamentID);
-        }
+            string fileName = string.Format("{0}.json", tournamentID);
+            string filePath = Path.Combine(this._dataPath, fileName);
+            string json = string.Empty;
 
-        public Tournament UpdateTournament(int tournamentID, string newName, int numLanes)
-        {
-            Tournament tournament = ReadTournament(tournamentID);
-            if (tournament == null)
+            lock (_lock)
             {
-                throw new ArgumentException(string.Format("Tournament with ID {0} does not exist.", tournamentID));
+                json = File.ReadAllText(filePath);
             }
 
-            tournament.Name = newName;
-            tournament.NumLanes = numLanes;
-            WriteTournament(tournament);
-            return tournament;
+            return JsonConvert.DeserializeObject(json, typeof(Tournament)) as Tournament;
         }
+
+        public void SaveTournament(Tournament tournament)
+        {
+            string fileName = string.Format("{0}.json", tournament.ID);
+            string filePath = Path.Combine(this._dataPath, fileName);
+            //if ((overwrite == false) && File.Exists(filePath))
+            //{
+            //    throw new ArgumentException(string.Format("Tournament with ID {0} already exists.", tournament.ID));
+            //}
+
+            string json = JsonConvert.SerializeObject(tournament, Formatting.Indented);
+
+            lock (_lock)
+            {
+                File.WriteAllText(filePath, json);
+            }
+        }
+
     }
 }

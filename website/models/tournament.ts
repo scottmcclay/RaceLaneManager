@@ -29,4 +29,14 @@
 
         return tournament;
     }
+
+    static getTournamentsFromPayload(payload: any): Array<Tournament> {
+        let tournaments: Array<Tournament> = new Array<Tournament>();
+
+        for (let t of payload) {
+            tournaments.push(Tournament.fromPayload(t));
+        }
+
+        return tournaments;
+    }
 }
