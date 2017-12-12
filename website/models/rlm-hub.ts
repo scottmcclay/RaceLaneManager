@@ -3,6 +3,11 @@ class RlmCarsUpdatedEvent {
     cars: Array<Car>;
 }
 
+class RlmCarUpdatedEvent {
+    tournamentId: number;
+    car: Car;
+}
+
 class RlmHub extends Publisher {
     private connection: SignalR.Hub.Connection;
     private proxy: SignalR.Hub.Proxy;
@@ -87,7 +92,12 @@ class RlmHub extends Publisher {
         this.fire(RlmHub.CARS_UPDATED, { 'tournamentId': tournamentId, 'cars': Car.getCarsFromPayload(payload) });
     }
 
-    carUpdated(payload: any): void {
-        this.fire(RlmHub.CAR_UPDATED, Car.fromPayload(payload));
+    carUpdated(tournamentId: number, payload: any): void {
+        this.fire(RlmHub.CAR_UPDATED, { 'tournamentId': tournamentId, 'car': Car.fromPayload(payload) });
+    }
+
+    requestDeleteCar(tournamentId: number, carId: number) {
+        this.proxy.invoke('RequestDeleteCar', tournamentId, carId)
+            .fail(function (e) { throw new Error('Delete car failed: ' + e); });
     }
 }

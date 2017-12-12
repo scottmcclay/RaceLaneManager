@@ -151,5 +151,23 @@ namespace RaceLaneManager.Model
 
             return updatedCar;
         }
+
+        public static ICar DeleteCar(int tournamentID, int carID)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+            Car deletedCar = null;
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+
+                deletedCar = tournament.CarData.Where(c => c.ID == carID).SingleOrDefault();
+                tournament.CarData.Remove(deletedCar);
+
+                repo.SaveTournament(tournament);
+            }
+
+            return deletedCar;
+        }
     }
 }

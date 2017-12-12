@@ -58,7 +58,7 @@
         </custom-style>
 
         <template is="dom-repeat" items="{{cars}}" as="car">
-            <div class="card" on-tap="togglecar" id="car{{car.id}}">
+            <div class="card" id="car{{car.id}}">
                 <div class="container flex-horizontal">
                     <div class="flexchild">
                         <div paper-font-caption>{{car.carNumber}}</div>
@@ -73,8 +73,8 @@
                         <paper-menu-button>
                             <paper-icon-button icon="icons:more-vert" slot="dropdown-trigger" alt="menu"></paper-icon-button>
                             <paper-listbox slot="dropdown-content">
-                                <paper-item>Edit</paper-item>
-                                <paper-item>Delete</paper-item>
+                                <paper-button car-id="[[car.id]]" on-tap="editCar">Edit</paper-button>
+                                <paper-button car-id="[[car.id]]" on-tap="deleteCar">Delete</paper-button>
                             </paper-listbox>
                         </paper-menu-button>
                     </div>

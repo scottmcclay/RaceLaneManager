@@ -22,8 +22,8 @@ class RlmSettings extends polymer.Base implements polymer.Element {
 
     ready(): void {
         let settings = this.$.tournamentSettings;
-        settings.addEventListener(RlmTournamentSettings.SAVE_TAPPED, this.saveSettings.bind(this));
-        settings.addEventListener(RlmTournamentSettings.CANCEL_TAPPED, this.cancelEditSettings.bind(this));
+        settings.addEventListener(RlmTournamentSettings.SAVE_TAPPED, this.saveSettings.bind(this), {passive: true});
+        settings.addEventListener(RlmTournamentSettings.CANCEL_TAPPED, this.cancelEditSettings.bind(this), {passive: true});
     }
 
     tournamentUpdated(tournament: Tournament): void {

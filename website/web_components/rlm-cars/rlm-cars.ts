@@ -15,8 +15,8 @@ class RlmCars extends polymer.Base implements polymer.Element {
     ready(): void {
         console.log("rlm-cars.ready");
         let editDialog = this.$.rlmEditCar;
-        editDialog.addEventListener(RlmEditCar.SAVE_TAPPED, this.saveCar.bind(this));
-        editDialog.addEventListener(RlmEditCar.CANCEL_TAPPED, this.cancelEditCar.bind(this));
+        editDialog.addEventListener(RlmEditCar.SAVE_TAPPED, this.saveCar.bind(this), {passive: true});
+        editDialog.addEventListener(RlmEditCar.CANCEL_TAPPED, this.cancelEditCar.bind(this), {passive: true});
     }
 
     @observe('hub')
@@ -63,8 +63,20 @@ class RlmCars extends polymer.Base implements polymer.Element {
         }
     }
 
-    carUpdated(car: Car): void {
+    carUpdated(e: RlmCarUpdatedEvent): void {
+        if (e.tournamentId === this.tournamentId) {
+            let index = -1;
+            for (let i = 0; i < this.cars.length; i++) {
+                if (this.cars[i].id === e.car.id) {
+                    index = i;
+                    break;
+                }
+            }
 
+            if (index >= 0) {
+                this.splice('cars', index, 1, e.car);
+            }
+        }
     }
 
     addCar(): void {
@@ -96,6 +108,30 @@ class RlmCars extends polymer.Base implements polymer.Element {
 
     cancelEditCar(): void {
         this.$.rlmEditCar.close();
+    }
+
+    editCar(e: any): void {
+        let id: number = e.target.carId;
+        console.log('editCar ' + id);
+
+        let car: Car = undefined;
+        this.cars.forEach(c => { if (c.id === id) car = c; });
+
+        if (car !== undefined) {
+            let editDialog: RlmEditCar = this.$.rlmEditCar as RlmEditCar;
+            editDialog.title = "Edit Car";
+            this.actionIsAdd = false;
+            editDialog.car = car;
+            editDialog.open();
+        }
+        else {
+            console.error("Unable to find car with ID " + id);
+        }
+    }
+
+    deleteCar(e: any): void {
+        console.log('deleteCar ' + e.target.carId);
+        this.hub.requestDeleteCar(this.tournamentId, e.target.carId);
     }
 }
 

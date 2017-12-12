@@ -53,5 +53,12 @@ namespace RaceLaneManager.WebApi
 
             Clients.All.carUpdated(tournamentID, updatedCar);
         }
+
+        public void RequestDeleteCar(int tournamentID, int carID)
+        {
+            ICar deletedCar = TournamentManager.DeleteCar(tournamentID, carID);
+
+            Clients.All.carsUpdated(tournamentID, TournamentManager.GetCars(tournamentID));
+        }
     }
 }

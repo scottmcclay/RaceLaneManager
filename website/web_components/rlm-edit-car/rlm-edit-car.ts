@@ -41,9 +41,9 @@ class RlmEditCar extends polymer.Base implements polymer.Element {
 
     set car(car: Car) {
         if (car) {
-            this.carId
+            this.carId = car.id;
             this.set('carName', car.name);
-            this.set('carNumber', car.carNumber.toString);
+            this.set('carNumber', car.carNumber.toString());
             this.set('carOwner', car.owner);
             this.set('carDen', car.den);
         }
