@@ -19,6 +19,8 @@ class RlmHub extends Publisher {
     static readonly GET_CARS_RESPONSE: string = 'getCarsResponse';
     static readonly CARS_UPDATED: string = 'carsUpdated';
     static readonly CAR_UPDATED: string = 'carUpdated';
+    static readonly GET_CURRENT_RACE_RESPONSE: string = 'getCurrentRaceResponse';
+    static readonly CURRENT_RACE_UPDATED: string = 'currentRaceUpdated';
 
     initialize(hubConnection: SignalR.Hub.Connection): void {
         this.connection = hubConnection;
@@ -36,6 +38,8 @@ class RlmHub extends Publisher {
         this.proxy.on('getCarsResponse', this.getCarsResponse.bind(this));
         this.proxy.on('carsUpdated', this.carsUpdated.bind(this));
         this.proxy.on('carUpdated', this.carUpdated.bind(this));
+        this.proxy.on('getCurrentRaceResponse', this.getCurrentRaceResponse.bind(this));
+        this.proxy.on('currentRaceUpdated', this.currentRaceUpdated.bind(this));
     }
 
     createTournament(name: string, numLanes: number): void {
@@ -99,5 +103,20 @@ class RlmHub extends Publisher {
     requestDeleteCar(tournamentId: number, carId: number) {
         this.proxy.invoke('RequestDeleteCar', tournamentId, carId)
             .fail(function (e) { throw new Error('Delete car failed: ' + e); });
+    }
+
+    requestGetCurrentRace(tournamentId: number) {
+        this.proxy.invoke('RequestGetCurrentRace', tournamentId)
+            .fail(function(e) { throw new Error('Get current race failed: ' + e); });
+    }
+
+    getCurrentRaceResponse(payload: any): void {
+        console.log("RlmHub:getCurrentRaceResponse");
+        this.fire(RlmHub.GET_CURRENT_RACE_RESPONSE, Race.fromPayload(payload));
+    }
+
+    currentRaceUpdated(tournamentId: number, payload: any): void {
+        console.log("RlmHub:currentRaceUpdated");
+        this.fire(RlmHub.CURRENT_RACE_UPDATED, {'tournamenId': tournamentId, 'race': Race.fromPayload(payload)});
     }
 }

@@ -134,7 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            attr-for-selected="name"
                            fallback-selection="view404"
                            role="main">
-                   <rlm-home name="home" tournament="{{selectedTournament}}"></rlm-home>
+                   <rlm-home name="home" tournament="{{selectedTournament.id}}" hub="{{hub}}"></rlm-home>
                    <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
                    <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
                    <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>

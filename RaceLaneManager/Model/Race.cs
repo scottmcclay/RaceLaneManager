@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RaceLaneManager.Model
 {
@@ -10,6 +11,7 @@ namespace RaceLaneManager.Model
 
     public class Race : IRace
     {
+        [JsonIgnore]
         public List<LaneAssignment> LaneAssignmentData { get; set; }
         public int RaceNumber { get; set; }
         public IEnumerable<ILaneAssignment> LaneAssignments { get { return this.LaneAssignmentData; } }

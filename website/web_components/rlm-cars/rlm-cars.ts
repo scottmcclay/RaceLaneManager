@@ -114,6 +114,8 @@ class RlmCars extends polymer.Base implements polymer.Element {
         let id: number = e.target.carId;
         console.log('editCar ' + id);
 
+        //e.target.
+
         let car: Car = undefined;
         this.cars.forEach(c => { if (c.id === id) car = c; });
 

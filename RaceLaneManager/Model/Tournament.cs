@@ -23,6 +23,7 @@ namespace RaceLaneManager.Model
         TournamentState State { get; }
         IEnumerable<ICar> Cars { get; }
         IEnumerable<IRace> Races { get; }
+        int CurrentRace { get; }
     }
 
     public class Tournament : ITournament
@@ -39,12 +40,15 @@ namespace RaceLaneManager.Model
         [JsonIgnore]
         public List<Race> RaceData { get; set; }
         public IEnumerable<IRace> Races { get { return this.RaceData; } }
+        public int CurrentRace { get; set; }
 
         public Tournament()
         {
+            this.State = TournamentState.PreEvent;
             this.CarData = new List<Car>();
             this.RaceData = new List<Race>();
             this.State = TournamentState.PreEvent;
+            this.CurrentRace = -1;
         }
     }
 }

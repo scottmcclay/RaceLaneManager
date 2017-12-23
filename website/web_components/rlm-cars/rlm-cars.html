@@ -44,6 +44,22 @@
                 margin-right: 24px;
                 vertical-align: top;
             }
+
+            .edit-car-menu-item-button {
+                display: block;
+            }
+
+            .delete-car-menu-item-button {
+                display: block;
+            }
+
+            .car-field {
+                margin: auto;
+            }
+
+            paper-menu-button {
+                padding: 0px;
+            }
         </style>
 
         <custom-style>
@@ -60,21 +76,24 @@
         <template is="dom-repeat" items="{{cars}}" as="car">
             <div class="card" id="car{{car.id}}">
                 <div class="container flex-horizontal">
-                    <div class="flexchild">
+                    <div class="flexchild car-field">
                         <div paper-font-caption>{{car.carNumber}}</div>
                     </div>
-                    <div class="flexchild">
+                    <div class="flexchild car-field">
                             <div paper-font-caption>{{car.name}}</div>
                     </div>
-                    <div class="flexchild">
+                    <div class="flexchild car-field">
+                        <div paper-font-caption>{{car.owner}}</div>
+                    </div>
+                    <div class="flexchild car-field">
                         <div paper-font-caption>{{car.den}}</div>
                     </div>
                     <div class="flexchild">
                         <paper-menu-button>
                             <paper-icon-button icon="icons:more-vert" slot="dropdown-trigger" alt="menu"></paper-icon-button>
                             <paper-listbox slot="dropdown-content">
-                                <paper-button car-id="[[car.id]]" on-tap="editCar">Edit</paper-button>
-                                <paper-button car-id="[[car.id]]" on-tap="deleteCar">Delete</paper-button>
+                                <paper-button class="edit-car-menu-item-button" car-id="[[car.id]]" on-tap="editCar">Edit</paper-button>
+                                <paper-button class="delete-car-menu-item-button" car-id="[[car.id]]" on-tap="deleteCar">Delete</paper-button>
                             </paper-listbox>
                         </paper-menu-button>
                     </div>

@@ -128,6 +128,12 @@ class RlmApp extends polymer.Base implements polymer.Element {
 
     getTournamentsResponse(tournaments: Array<Tournament>): void {
         this.displayTournaments(tournaments);
+
+        // restore the selected tournament from the URL
+        let routeData: any = this.get('routeData');
+        if (routeData && routeData.tournamentId) {
+            this.routeTournamentIdChanged(routeData.tournamentId, 0);
+        }
     }
 
     private displayTournaments(tournaments: Array<Tournament>): void {
