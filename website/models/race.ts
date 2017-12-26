@@ -1,10 +1,18 @@
+enum RaceState {
+    NotStarted,
+    Racing,
+    Done
+}
+
 class Race {
     raceNum: number;
+    state: RaceState;
     laneAssignments: Array<LaneAssignment>;
 
     static fromPayload(payload: any): Race {
         return {
             raceNum: payload.RaceNumber,
+            state: payload.State,
             laneAssignments: LaneAssignment.getLaneAssignmentsFromPayload(payload.LaneAssignments)
         };
     }

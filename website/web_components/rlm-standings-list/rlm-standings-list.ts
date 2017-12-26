@@ -1,28 +1,56 @@
 @component('rlm-standings-list')
 class RlmStandingsList extends polymer.Base implements polymer.Element {
 
-    @property({type: Tournament, reflectToAttribute: true, notify: true})
-    tournament: Tournament;
+    @property({ type: RlmHub, notify: true, reflectToAttribute: true})
+    hub: RlmHub;
 
-    @property({type: Array})
+    @property({ type: Number, reflectToAttribute: true, notify: true })
+    tournamentId: number;
+
+    @property({ type: [Standing], notify: true })
     standings: Array<Standing>;
 
-    constructor() {
-        super();
+    @observe('hub')
+    hubChanged(): void {
+        console.log("rlm-standings-list.hubChanged");
+        if (this.hub) {
+            this.hub.on(RlmHub.HUB_READY, this.hubReady, this);
+            this.hub.on(RlmHub.GET_STANDINGS_RESPONSE, this.getStandingsResponse, this);
+            this.hub.on(RlmHub.STANDINGS_UPDATED, this.standingsUpdated, this);
+        }
 
-        this.standings = new Array<Standing>();
-        this.populateSampleData();
+        this.getStandings();
     }
 
-    populateSampleData() {
-        this.push('standings', {position: '1st', car: 'Ghost', name: 'Brenden M.', points: 13});
-        this.push('standings', {position: '2nd', car: 'Black Knight of the desert', name: 'Owen A.', points: 10});
-        this.push('standings', {position: '3rd', car: 'Viper', name: 'Sean J.', points: 9});
-        this.push('standings', {position: '4th', car: 'Phantom', name: 'Sean J.', points: 7});
-        this.push('standings', {position: '5th', car: 'Vector', name: 'Sean J.', points: 6});
-        this.push('standings', {position: '6th', car: 'Lightning', name: 'Sean J.', points: 4});
-        this.push('standings', {position: '7th', car: 'Cosmo', name: 'Sean J.', points: 2});
-        this.push('standings', {position: '8th', car: 'Aurora', name: 'Sean J.', points: 1});
+    hubReady(): void {
+        console.log("rlm-standings-list.hubReady");
+        this.getStandings();
+    }
+
+    @observe('tournamentId')
+    tournamentIdChanged(): void {
+        console.log("rlm-standings-list.tournamentIdChanged");
+        this.getStandings();
+    }
+
+    private getStandings(): void {
+        console.log("rlm-standings-list.getStandings");
+        this.standings = [];
+
+        if (this.tournamentId && this.hub) {
+            console.log("rlm-standings-list.getStandings: calling requestGetStandings");
+            this.hub.requestGetStandings(this.tournamentId);
+        }
+    }
+
+    getStandingsResponse(standings: Array<Standing>): void {
+        this.set('standings', standings);
+    }
+
+    standingsUpdated(e: RlmStandingsUpdatedEvent): void {
+        if (e.tournamentId === this.tournamentId) {
+            this.set('standings', e.standings);
+        }
     }
 }
 

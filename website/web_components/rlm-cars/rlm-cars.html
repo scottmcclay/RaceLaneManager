@@ -3,6 +3,7 @@
 <link rel="import" href="/bower_components/paper-styles/typography.html" />
 <link rel="import" href="/bower_components/paper-styles/shadow.html" />
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html" />
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html" />
@@ -55,6 +56,14 @@
 
             .car-field {
                 margin: auto;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .car-field>div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             paper-menu-button {
@@ -63,12 +72,17 @@
         </style>
 
         <custom-style>
-            <style is="custom-style">
+            <style is="custom-style" include="shared-styles iron-flex iron-flex-alignment">
                 .flex-horizontal {
                     @apply --layout-horizontal;
                 }
                 .flexchild {
                     @apply --layout-flex;
+                }
+
+                .card {
+                    margin: 10px;
+                    padding: 5px;
                 }
             </style>
         </custom-style>
@@ -76,19 +90,16 @@
         <template is="dom-repeat" items="{{cars}}" as="car">
             <div class="card" id="car{{car.id}}">
                 <div class="container flex-horizontal">
-                    <div class="flexchild car-field">
-                        <div paper-font-caption>{{car.carNumber}}</div>
+                    <div class="flex car-field">
+                        <div paper-font-caption>{{car.name}}</div>
                     </div>
-                    <div class="flexchild car-field">
-                            <div paper-font-caption>{{car.name}}</div>
-                    </div>
-                    <div class="flexchild car-field">
+                    <div class="flex car-field">
                         <div paper-font-caption>{{car.owner}}</div>
                     </div>
-                    <div class="flexchild car-field">
+                    <div class="flex car-field">
                         <div paper-font-caption>{{car.den}}</div>
                     </div>
-                    <div class="flexchild">
+                    <div>
                         <paper-menu-button>
                             <paper-icon-button icon="icons:more-vert" slot="dropdown-trigger" alt="menu"></paper-icon-button>
                             <paper-listbox slot="dropdown-content">

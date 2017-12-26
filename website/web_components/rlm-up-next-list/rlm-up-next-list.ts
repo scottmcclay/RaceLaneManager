@@ -1,38 +1,56 @@
 @component("rlm-up-next-list")
 class RlmUpNextList extends polymer.Base implements polymer.Element {
 
-    @property({type: Tournament, reflectToAttribute: true, notify: true})
-    tournament: Tournament;
+    @property({ type: RlmHub, notify: true, reflectToAttribute: true})
+    hub: RlmHub;
 
-    @property({type: [NextRace], notify: true})
-    nextRaces: Array<NextRace>;
+    @property({ type: Number, reflectToAttribute: true, notify: true })
+    tournamentId: number;
 
-    constructor() {
-        super();
-        this.nextRaces = new Array<NextRace>();
-        this.populateDummyData();
+    @property({type: [Race], notify: true})
+    nextRaces: Array<Race>;
+
+    @observe('hub')
+    hubChanged(): void {
+        console.log("rlm-up-next-list.hubChanged");
+        if (this.hub) {
+            this.hub.on(RlmHub.HUB_READY, this.hubReady, this);
+            this.hub.on(RlmHub.GET_NEXT_RACES_RESPONSE, this.getNextRacesResponse, this);
+            this.hub.on(RlmHub.NEXT_RACES_UPDATED, this.nextRacesUpdated, this);
+        }
+
+        this.getNextRaces();
     }
 
-    populateDummyData() {
-        let nextRace: NextRace = new NextRace();
-        nextRace.raceNum = 6;
-        nextRace.lanes.push({lane: 1, car: 'Viper', racer: 'Sean J.'});
-        nextRace.lanes.push({lane: 2, car: 'Black Night', racer: 'Owen A.'});
-        nextRace.lanes.push({lane: 3, car: 'Lightning', racer: 'Noob'});
-        nextRace.lanes.push({lane: 4, car: 'Ghost', racer: 'Brenden M.'});
-        nextRace.lanes.push({lane: 5, car: 'Vector', racer: 'Bryce H.'});
-        nextRace.lanes.push({lane: 6, car: 'Phantom', racer: 'Someone with a really really really long name'});
-        this.push('nextRaces', nextRace);
+    hubReady(): void {
+        console.log("rlm-up-next-list.hubReady");
+        this.getNextRaces();
+    }
 
-        let anotherRace: NextRace = new NextRace();
-        anotherRace.raceNum = 7;
-        anotherRace.lanes.push({lane: 1, car: 'Phantom', racer: 'Someone with a really really really long name'});
-        anotherRace.lanes.push({lane: 2, car: 'Vector', racer: 'Bryce H.'});
-        anotherRace.lanes.push({lane: 3, car: 'Viper', racer: 'Sean J.'});
-        anotherRace.lanes.push({lane: 4, car: 'Lightning', racer: 'Noob'});
-        anotherRace.lanes.push({lane: 5, car: 'Black Night', racer: 'Owen A.'});
-        anotherRace.lanes.push({lane: 6, car: 'Ghost', racer: 'Brenden M.'});
-        this.push('nextRaces', anotherRace);
+    @observe('tournamentId')
+    tournamentIdChanged(): void {
+        console.log("rlm-up-next-list.tournamentIdChanged");
+        this.getNextRaces();
+    }
+
+    private getNextRaces(): void {
+        console.log("rlm-up-next-list.getNextRaces");
+        this.nextRaces = [];
+
+        if (this.tournamentId && this.hub) {
+            console.log("rlm-up-next-list.getNextRaces: calling requestGetNextRaces");
+            this.hub.requestGetNextRaces(this.tournamentId);
+        }
+    }
+
+    getNextRacesResponse(nextRaces: Array<Race>): void {
+        this.set('nextRaces', nextRaces);
+    }
+
+    nextRacesUpdated(e: RlmNextRacesUpdatedEvent): void {
+        if (e.tournamentId === this.tournamentId) {
+            this.set('nextRaces', e.nextRaces);
+        }
     }
 }
 

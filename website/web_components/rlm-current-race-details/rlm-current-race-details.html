@@ -64,7 +64,7 @@
             <div class="layout flex">
                 <div class="layout horizontal center-justified">
                     <div class="flex self-center paper-font-display1" style="text-align: center; line-height: 120px; padding-bottom: 30px;">
-                        Race 5
+                        Race {{currentRace.raceNum}}
                     </div>
                     <div class="self-center paper-font-display4" style="padding-bottom: 30px;">
                         Lining Up
@@ -81,17 +81,17 @@
                         <div class="points-column">Points</div>
                     </div>
                 </div>
-                <template is="dom-repeat" items="{{lanes}}" as="lane">
+                <template is="dom-repeat" items="{{currentRace.laneAssignments}}" as="laneAssignment">
                     <div class="layout horizontal center">
-                        <div class="lane-number-column paper-font-headline">Lane {{lane.lane}}</lane></div>
+                        <div class="lane-number-column paper-font-headline">Lane {{laneAssignment.lane}}</lane></div>
                         <div class="card layout horizontal flex center">
-                            <div class="car-column wrap">
-                                <div class="car-name layout flex wrap">{{lane.car.name}}</div>
-                                <div class="paper-font-body1">{{lane.car.owner}}</div>
+                            <div class="car-column">
+                                <div class="car-name layout flex wrap">{{laneAssignment.car.name}}</div>
+                                <div class="paper-font-body1">{{laneAssignment.car.owner}}</div>
                             </div>
-                            <div class="time-column">5.673 sec</div>
-                            <div class="position-column">3</div>
-                            <div class="points-column">15</div>
+                            <div class="time-column">{{laneAssignment.elapsedTime}} sec</div>
+                            <div class="position-column">{{laneAssignment.position}}</div>
+                            <div class="points-column">{{laneAssignment.points}}</div>
                         </div>
                     </div>
                 </template>

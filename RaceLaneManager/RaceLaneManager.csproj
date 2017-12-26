@@ -100,10 +100,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcreteConverter.cs" />
+    <Compile Include="Engines\RaceGenerator.cs" />
     <Compile Include="Model\Car.cs" />
     <Compile Include="Model\Lane.cs" />
     <Compile Include="Model\Race.cs" />
     <Compile Include="Model\LaneAssignment.cs" />
+    <Compile Include="Model\Standing.cs" />
     <Compile Include="Model\Tournament.cs" />
     <Compile Include="Model\TournamentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,12 +118,14 @@
     <Compile Include="TestApi.cs" />
     <Compile Include="WebApiConfig.cs" />
     <Compile Include="WebApi\AuthController.cs" />
+    <Compile Include="DTOs\RlmGetRacesResopnse.cs" />
     <Compile Include="WebApi\RlmHub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

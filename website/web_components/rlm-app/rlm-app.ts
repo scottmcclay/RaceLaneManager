@@ -39,6 +39,10 @@ class RlmApp extends polymer.Base implements polymer.Element {
             this.viewName = 'Races';
             break;
 
+            case 'editrace':
+            this.viewName = "Edit Race";
+            break;
+
             case 'settings':
             this.viewName = 'Settings';
             break;
@@ -115,6 +119,10 @@ class RlmApp extends polymer.Base implements polymer.Element {
 
     settingsTap(): void {
         this.navigate('settings');
+    }
+
+    editRaceTap(): void {
+        this.navigate('editrace');
     }
 
     navigate(view: string): void {

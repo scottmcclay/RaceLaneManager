@@ -30,11 +30,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html" />
 <link rel="import" href="/bower_components/neon-animation/web-animations.html" />
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
 <link rel="import" href="/my-icons.html" />
 <link rel="import" href="/web_components/rlm-cars/rlm-cars.html" />
 <link rel="import" href="/web_components/rlm-races/rlm-races.html" />
 <link rel="import" href="/web_components/rlm-home/rlm-home.html" />
 <link rel="import" href="/web_components/rlm-settings/rlm-settings.html" />
+<link rel="import" href="/web_components/rlm-edit-race/rlm-edit-race.html" />
 
 <dom-module id="rlm-app">
     <template>
@@ -124,7 +126,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div main-title style="text-align: center;">[[selectedTournament.name]]</div>
                         <paper-icon-button icon="home" on-tap="homeTap"></paper-icon-button>
                         <paper-icon-button icon="notification:drive-eta" on-tap="carsTap"></paper-icon-button>
-                        <paper-icon-button icon="notification:event-available" on-tap="racesTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:assignment" on-tap="racesTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:input" on-tap="editRaceTap"></paper-icon-button>
                         <paper-icon-button icon="settings" on-tap="settingsTap"></paper-icon-button>
                     </app-toolbar>
                 </app-header>
@@ -134,9 +137,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            attr-for-selected="name"
                            fallback-selection="view404"
                            role="main">
-                   <rlm-home name="home" tournament="{{selectedTournament.id}}" hub="{{hub}}"></rlm-home>
+                   <rlm-home name="home" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-home>
                    <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
-                   <rlm-races name="races" tournament="{{selectedTournament}}"></rlm-races>
+                   <rlm-races name="races" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-races>
+                   <rlm-edit-race name="editrace" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-edit-race>
                    <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
                </iron-pages>
             </app-header-layout>

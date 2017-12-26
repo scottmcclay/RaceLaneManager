@@ -20,6 +20,8 @@ namespace RaceLaneManager.Model
         int ID { get; }
         string Name { get; }
         int NumLanes { get; }
+        int NumCars { get; }
+        int NumRaces { get; }
         TournamentState State { get; }
         IEnumerable<ICar> Cars { get; }
         IEnumerable<IRace> Races { get; }
@@ -31,6 +33,8 @@ namespace RaceLaneManager.Model
         public int ID { get; set; }
         public string Name { get; set; }
         public int NumLanes { get; set; }
+        public int NumCars { get { return this.CarData.Count; } }
+        public int NumRaces { get { return this.RaceData.Count; } }
         public TournamentState State { get; set; }
 
         [JsonIgnore]

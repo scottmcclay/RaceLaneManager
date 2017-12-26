@@ -19,13 +19,13 @@
 
         <div class="layout horizontal">
             <div>
-                <rlm-standings-list tournament="{{tournament}}" style="background-color: #dbdbdb; margin-top: 100px; width: 215px;"></rlm-standings-list>
+                <rlm-standings-list tournament-id="{{tournamentId}}" hub="{{hub}}" style="background-color: #dbdbdb; margin-top: 100px; width: 215px;"></rlm-standings-list>
             </div>
             <div class="layout flex">
-                <rlm-current-race-details tournament="{{tournament}}"></rlm-current-race-details>
+                <rlm-current-race-details tournament-id="{{tournamentId}}" hub="{{hub}}"></rlm-current-race-details>
             </div>
             <div>
-                <rlm-up-next-list tournament="{{tournament}}" style="background-color: #dbdbdb; margin-top: 100px; width: 160px;"></rlm-up-next-list>
+                <rlm-up-next-list tournament-id="{{tournamentId}}" hub="{{hub}}" style="background-color: #dbdbdb; margin-top: 100px; width: 160px;"></rlm-up-next-list>
             </div>
         </div>
     </template>

@@ -15,35 +15,32 @@
                 display: block;
                 padding: 10px;
             }
+
+            .card {
+                margin: 5px 5px 10px 5px;
+                padding-top: 5px;
+                padding-left: 5px;
+            }
+
+            .title {
+                text-align: center;
+                @apply --paper-font-headline;
+            }
+
+            .next-race-title {
+                @apply --paper-font-title;
+                margin-left: 5px;
+            }
+
+            .next-race-racer {
+                @apply --paper-font-body1;
+                margin-left: 10px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         </style>
 
-        <custom-style>
-            <style is="custom-style">
-                .card {
-                    margin: 5px 5px 10px 5px;
-                    padding-top: 5px;
-                    padding-left: 5px;
-                }
-
-                .title {
-                    text-align: center;
-                    @apply --paper-font-headline;
-                }
-
-                .next-race-title {
-                    @apply --paper-font-title;
-                    margin-left: 5px;
-                }
-
-                .next-race-racer {
-                    @apply --paper-font-body1;
-                    margin-left: 10px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            </style>
-        </custom-style>
         <div class="item">
             <div class="title">
                 Coming Up
@@ -51,8 +48,8 @@
             <template is="dom-repeat" items="{{nextRaces}}" as="race">
                 <div class="card">
                     <div class="next-race-title">Race {{race.raceNum}}</div>
-                        <template is="dom-repeat" items="{{race.lanes}}" as="lane">
-                            <div class="next-race-racer">{{lane.racer}}</div>
+                        <template is="dom-repeat" items="{{race.laneAssignments}}" as="laneAssignment">
+                            <div class="next-race-racer">{{laneAssignment.car.owner}}</div>
                         </template>
                     </div>
                 </div>

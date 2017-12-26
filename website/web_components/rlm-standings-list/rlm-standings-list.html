@@ -13,40 +13,36 @@
 
 <dom-module id="rlm-standings-list">
     <template>
-        <style include="shared-styles">
+        <style include="shared-styles iron-flex iron-flex-alignment">
             :host {
                 display: block;
                 padding: 10px;
             }
+
+            .card { margin: 5px;}
+
+            .title {
+                @apply --paper-font-headline;
+                text-align: center;
+            }
+            .place-column {
+                @apply --paper-font-body1;
+                margin-right: 5px;
+                width: 25px;
+            }
+
+            .car-column {
+                @apply --paper-font-body1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .points-column {
+                @apply --paper-font-body1;
+                margin-left: 5px;
+            }
         </style>
-
-        <custom-style>
-            <style is="custom-style" include="shared-styles iron-flex iron-flex-alignment">
-                .card { margin: 5px;}
-
-                .title {
-                    @apply --paper-font-headline;
-                    text-align: center;
-                }
-                .place-column {
-                    @apply --paper-font-body1;
-                    margin-right: 5px;
-                    width: 25px;
-                }
-
-                .car-column {
-                    @apply --paper-font-body1;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-
-                .points-column {
-                    @apply --paper-font-body1;
-                    margin-left: 5px;
-                }
-            </style>
-        </custom-style>
 
         <div class="item">
             <div class="title">Standings</div>
@@ -54,7 +50,7 @@
                 <template is="dom-repeat" items="{{standings}}">
                     <div class="layout horizontal">
                         <div class="place-column">{{item.position}}</div>
-                        <div class="car-column layout flex">{{item.car}}</div>
+                        <div class="car-column layout flex">{{item.car.name}}</div>
                         <div class="points-column">{{item.points}} pts</div>
                     </div>
                 </template>

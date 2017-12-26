@@ -1,0 +1,138 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/shared-styles.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html" />
+<link rel="import" href="/bower_components/paper-input/paper-input.html" />
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="/web_components/rlm-edit-race-dialog/rlm-edit-race-dialog.html" />
+
+<dom-module id="rlm-edit-race">
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+
+            .races-by-car {
+                margin-top: 30px;
+            }
+
+            .race-name-title {
+                @apply --paper-font-title;
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+
+            .lane-name-title {
+                @apply --paper-font-title;
+            }
+
+            .car-name-title {
+                @apply --paper-font-title;
+                align-self: center;
+            }
+
+            .car-name-cell {
+                @apply --paper-font-caption;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin: auto;
+                margin-left: 5px;
+            }
+
+            .race-menu-item-button {
+                display: block;
+            }
+
+            .race-field {
+                margin: auto;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .race-field>div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            paper-menu-button {
+                padding: 0px;
+            }
+
+            .card {
+                margin: 10px;
+                padding: 5px;
+            }
+            
+            .input-cell {
+                margin: 0px 5px;
+            }
+
+            .current-race-label {
+                align-self: center;
+            }
+        </style>
+
+      <h2>Edit Races</h2>
+
+        <div class="layout vertical">
+            <template is="dom-repeat" items="{{races}}" as="race">
+                <div class="card" id="race{{race.raceNum}}">
+                    <div class="layout horizontal">
+                        <div class="layout vertical">
+                            <div paper-font-caption class="race-name-title">Race {{race.raceNum}}</div>
+                            <div class="flex">
+                                <paper-dropdown-menu label="State">
+                                    <paper-listbox slot="dropdown-content" selected="{{race.state}}">
+                                        <paper-item>Not Started</paper-item>
+                                        <paper-item>Racing</paper-item>
+                                        <paper-item>Done</paper-item>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </div>
+                            <div class="flex current-race-label">
+                                <div hidden$="{{hideCurrentRaceDecorator(race.raceNum)}}">Current Race</div>
+                            </div>
+                        </div>
+                        <template is="dom-repeat" items="{{race.laneAssignments}}" as="laneAssignment">
+                            <div class="flex race-field card">
+                                <div class="layout vertical">
+                                    <div class="layout horizontal">
+                                        <div class="lane-title-cell">Lane {{laneAssignment.lane}}</div>
+                                        <div class="flex car-name-cell" paper-font-caption>{{laneAssignment.car.name}}</div>
+                                    </div>
+                                    <div class="layout horizontal">
+                                        <div class="flex input-cell"><paper-input type="number" label="Time" value="{{laneAssignment.elapsedTime}}"></paper-input></div>
+                                        <div class="flex input-cell"><paper-input type="number" label="Points" value="{{laneAssignment.points}}"></paper-input></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="race-field">
+                            <paper-menu-button dynamic-align>
+                                <paper-icon-button icon="icons:more-vert" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+                                <paper-listbox slot="dropdown-content">
+                                    <paper-button class="race-menu-item-button" race-num="[[race.raceNum]]" on-tap="saveRace">Save</paper-button>
+                                    <paper-button class="race-menu-item-button" race-num="[[race.raceNum]]" on-tap="revertRace">Revert</paper-button>
+                                    <paper-button class="race-menu-item-button" race-num="[[race.raceNum]]" on-tap="makeCurrentRace">Make Current</paper-button>
+                                </paper-listbox>
+                            </paper-menu-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <rlm-edit-race-dialog id="rlmEditRaceDialog" title="Edit Race"></rlm-edit-race-dialog>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="/models/race.js"></script>
+<script type="text/javascript" src="rlm-edit-race.js"></script>

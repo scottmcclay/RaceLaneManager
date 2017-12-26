@@ -2,6 +2,8 @@ class LaneAssignment {
     lane: number;
     car: Car;
     elapsedTime: number;
+    position: number;
+    points: number;
 
     static fromPayload(payload: any): LaneAssignment {
         let assignment = new LaneAssignment();
@@ -9,6 +11,8 @@ class LaneAssignment {
         assignment.lane = payload.Lane;
         assignment.car = Car.fromPayload(payload.Car);
         assignment.elapsedTime = payload.ElapsedTime;
+        assignment.position = payload.Position;
+        assignment.points = payload.Points;
 
         return assignment;
     }

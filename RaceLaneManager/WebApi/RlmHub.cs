@@ -3,6 +3,8 @@ using System;
 using System.Diagnostics;
 using RaceLaneManager.Model;
 using RaceLaneManager.Repository;
+using System.Collections.Generic;
+using RaceLaneManager.DTOs;
 
 namespace RaceLaneManager.WebApi
 {
@@ -59,6 +61,35 @@ namespace RaceLaneManager.WebApi
             ICar deletedCar = TournamentManager.DeleteCar(tournamentID, carID);
 
             Clients.All.carsUpdated(tournamentID, TournamentManager.GetCars(tournamentID));
+        }
+
+        public void RequestGenerateRaces(int tournamentID)
+        {
+            RlmGetRacesResponse response = TournamentManager.GenerateRaces(tournamentID);
+
+            Clients.All.racesUpdated(tournamentID, response);
+            Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+            Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+        }
+
+        public void RequestGetRaces(int tournamentID)
+        {
+            Clients.Caller.getRacesResponse(TournamentManager.GetRaces(tournamentID));
+        }
+
+        public void RequestGetCurrentRace(int tournamentID)
+        {
+            Clients.Caller.getCurrentRaceResponse(TournamentManager.GetCurrentRace(tournamentID));
+        }
+
+        public void RequestGetStandings(int tournamentID)
+        {
+            Clients.Caller.getStandingsResponse(TournamentManager.GetStandings(tournamentID));
+        }
+
+        public void RequestGetNextRaces(int tournamentID)
+        {
+            Clients.Caller.getNextRacesResponse(TournamentManager.GetNextRaces(tournamentID));
         }
     }
 }
