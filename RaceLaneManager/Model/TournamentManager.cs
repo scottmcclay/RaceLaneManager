@@ -385,11 +385,20 @@ namespace RaceLaneManager.Model
             {
                 orderedStandings[index].Value.Position = GetPositionText(position);
 
-                if (((index + 1) >= orderedStandings.Count()) ||
-                    (orderedStandings[index + 1].Value.AverageTime != orderedStandings[index].Value.AverageTime))
+                // figure out the next position
+                if ((index + 1) < orderedStandings.Count())
                 {
-                    position++;
+                    // this is not the end
+                    Standing current = orderedStandings[index].Value;
+                    Standing next = orderedStandings[index + 1].Value;
+
+                    if ((orderByPoints && (next.Points != current.Points)) ||
+                        (!orderByPoints && (next.AverageTime != current.AverageTime)))
+                    {
+                        position++;
+                    }
                 }
+
                 index++;
             }
 
