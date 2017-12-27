@@ -2,12 +2,16 @@ class Standing {
     car: Car;
     position: string;
     points: number;
+    averageTime: number;
+    averageTimeSeconds: number;
 
     static fromPayload(payload: any): Standing {
         return {
             car: Car.fromPayload(payload.Car),
             position: payload.Position,
-            points: payload.Points
+            points: payload.Points,
+            averageTime: payload.AverageTime,
+            averageTimeSeconds: payload.AverageTime / 1000
         };
     }
     

@@ -14,10 +14,10 @@ namespace RaceLaneManager.Model
         {
             IList<Car> racers = new List<Car>();
 
-            racers.Add(new Car() { Owner = "Joseph", Den = "Wolf", CarNumber = 2 });
-            racers.Add(new Car() { Owner = "Brenden", Den = "Wolf", CarNumber = 1 });
-            racers.Add(new Car() { Owner = "Owen", Den = "Wolf", CarNumber = 3 });
-            racers.Add(new Car() { Owner = "Adam", Den = "Wolf", CarNumber = 4 });
+            racers.Add(new Car() { Owner = "Joseph", Den = "Wolf" });
+            racers.Add(new Car() { Owner = "Brenden", Den = "Wolf" });
+            racers.Add(new Car() { Owner = "Owen", Den = "Wolf" });
+            racers.Add(new Car() { Owner = "Adam", Den = "Wolf" });
 
             return racers;
         }

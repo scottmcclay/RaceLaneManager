@@ -109,6 +109,7 @@ class RlmHub extends Publisher {
     static readonly STANDINGS_UPDATED: string = 'standingsUpdated';
     static readonly GET_NEXT_RACES_RESPONSE: string = 'getNextRaces';
     static readonly NEXT_RACES_UPDATED: string = 'nextRacesUpdated';
+    static readonly GET_TOURNAMENT_RESULTS_RESPONSE: string = 'getTournamentResultsResponse';
 
     initialize(hubConnection: SignalR.Hub.Connection): void {
         this.connection = hubConnection;
@@ -134,6 +135,7 @@ class RlmHub extends Publisher {
         this.proxy.on('standingsUpdated', this.standingsUpdated.bind(this));
         this.proxy.on('getNextRacesResponse', this.getNextRacesResponse.bind(this));
         this.proxy.on('nextRacesUpdated', this.nextRacesUpdated.bind(this));
+        this.proxy.on('requestGetTournamentResultsResponse', this.requestGetTournamentResultsResponse.bind(this));
     }
 
     createTournament(name: string, numLanes: number): void {
@@ -258,8 +260,38 @@ class RlmHub extends Publisher {
         this.fire(RlmHub.GET_NEXT_RACES_RESPONSE, Race.getRacesFromPayload(payload));
     }
 
-    nextRacesUpdated(tournamentId: number, payload: any) {
+    nextRacesUpdated(tournamentId: number, payload: any): void {
         console.log("RlmHub:nextRacesUpdated");
         this.fire(RlmHub.NEXT_RACES_UPDATED, {'tournamentId': tournamentId, 'nextRaces': Race.getRacesFromPayload(payload)});
+    }
+
+    setCurrentRace(tournamentId: number, raceNum: number): void {
+        this.proxy.invoke('RequestSetCurrentRace', tournamentId, raceNum)
+            .fail(function(e) { throw new Error('Set current race failed: ' + e); });
+    }
+
+    requestUpdateRace(tournamentId: number, race: Race): void {
+        this.proxy.invoke('RequestUpdateRace', tournamentId, Race.toPayload(race))
+            .fail(function(e) { throw new Error('Update race failed: ' + e); });
+    }
+
+    requestStartRace(tournamentId: number, raceNum: number): void {
+        this.proxy.invoke('RequestStartRace', tournamentId, raceNum)
+            .fail(function(e) { throw new Error('Start race failed: ' + e); });
+    }
+
+    requestStopRace(tournamentId: number, raceNum: number): void {
+        this.proxy.invoke('RequestStopRace', tournamentId, raceNum)
+            .fail(function(e) { throw new Error('Stop race failed: ' + e); });
+    }
+
+    requestGetTournamentResults(tournamentId: number): void {
+        this.proxy.invoke('RequestGetTournamentResults', tournamentId)
+            .fail(function(e) { throw new Error('Get tournament results failed: ' + e); });
+    }
+
+    requestGetTournamentResultsResponse(payload: any): void {
+        console.log("RlmHub:requestGetTournamentResultsResponse");
+        this.fire(RlmHub.GET_TOURNAMENT_RESULTS_RESPONSE, GroupResult.getGroupResultsFromPayload(payload));
     }
 }

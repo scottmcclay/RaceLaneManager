@@ -10,6 +10,9 @@ class RlmCurrentRaceDetails extends polymer.Base implements polymer.Element {
     @property({ type: Race })
     currentRace: Race;
 
+    @property({ type: String, notify: true, value: "Lining Up" })
+    raceStateText: string;
+
     private getDummyData() {
         // this.lanes = new Array<LaneAssignment>();
         // this.push('lanes', {lane: 1, car: {id: 1, name: 'Ghost', owner: 'Brenden M.', den: 'Bear', carNumber: 1}, elapsedTime: 0});
@@ -53,13 +56,32 @@ class RlmCurrentRaceDetails extends polymer.Base implements polymer.Element {
         }
     }
 
+    setRaceStateText(raceState: RaceState): void {
+        switch (raceState) {
+            case RaceState.Racing:
+                this.set('raceStateText', 'Racing');
+                break;
+
+            case RaceState.Done:
+                this.set('raceStateText', "Complete");
+                break;
+
+            case RaceState.NotStarted:
+            default:
+                this.set('raceStateText', 'Lining Up');
+                break;
+        }
+    }
+
     getCurrentRaceResponse(currentRace: Race): void {
         this.set('currentRace', currentRace);
+        this.setRaceStateText(currentRace.state);
     }
 
     currentRaceUpdated(e: RlmCurrentRaceUpdatedEvent): void {
         if (e.tournamentId === this.tournamentId) {
             this.set('currentRace', e.race);
+            this.setRaceStateText(e.race.state);
         }
     }
 }

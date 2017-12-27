@@ -52,7 +52,7 @@ namespace RaceLaneManager.Model
             this.CarData = new List<Car>();
             this.RaceData = new List<Race>();
             this.State = TournamentState.PreEvent;
-            this.CurrentRace = -1;
+            this.CurrentRace = 0;
         }
     }
 }

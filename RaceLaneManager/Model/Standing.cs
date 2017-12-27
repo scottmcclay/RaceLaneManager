@@ -11,6 +11,7 @@ namespace RaceLaneManager.Model
         ICar Car { get; }
         int Points { get; }
         string Position { get; }
+        long AverageTime { get; }
     }
 
     public class Standing : IStanding
@@ -18,5 +19,6 @@ namespace RaceLaneManager.Model
         public ICar Car { get; set; }
         public int Points { get; set; }
         public string Position { get; set; }
+        public long AverageTime { get; set; }
     }
 }

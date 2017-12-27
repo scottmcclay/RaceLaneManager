@@ -16,6 +16,14 @@ class Race {
             laneAssignments: LaneAssignment.getLaneAssignmentsFromPayload(payload.LaneAssignments)
         };
     }
+
+    static toPayload(race: Race): any {
+        return {
+            'RaceNumber': race.raceNum,
+            'State': race.state,
+            'LaneAssignments': race.laneAssignments
+        };
+    }
     
     static getRacesFromPayload(payload: any): Array<Race> {
         let races: Array<Race> = new Array<Race>();

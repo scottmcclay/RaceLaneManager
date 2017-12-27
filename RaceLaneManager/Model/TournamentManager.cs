@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using RaceLaneManager.Repository;
 using RaceLaneManager.Engines;
 using RaceLaneManager.DTOs;
@@ -205,7 +204,7 @@ namespace RaceLaneManager.Model
 
             if (rawRaces.GetLength(0) > 0)
             {
-                tournament.CurrentRace = 0;
+                tournament.CurrentRace = 1;
             }
         }
 
@@ -287,13 +286,11 @@ namespace RaceLaneManager.Model
             lock (_lock)
             {
                 Tournament tournament = repo.LoadTournament(tournamentID);
-                foreach (Race race in tournament.Races.OrderBy(r => r.RaceNumber))
+
+                // CurrentRace starts at 1
+                if (tournament.CurrentRace >= 1)
                 {
-                    if (race.State != RaceState.Done)
-                    {
-                        result = race;
-                        break;
-                    }
+                    result = tournament.RaceData[tournament.CurrentRace - 1];
                 }
             }
 
@@ -330,43 +327,73 @@ namespace RaceLaneManager.Model
             return string.Format("{0}th", position);
         }
 
-        public static IEnumerable<IStanding> GetStandings(Tournament tournament)
+        public static List<Standing> GetStandings(Tournament tournament, bool orderByPoints = true, string groupName = null)
         {
-            IEnumerable<IStanding> result = new List<Standing>();
+            List<Standing> result = new List<Standing>();
 
-            Dictionary<int, Standing> carPoints = new Dictionary<int, Standing>();
+            Dictionary<int, Standing> carStandingsDictionary = new Dictionary<int, Standing>();
+            Dictionary<int, List<long>> carTimes = new Dictionary<int, List<long>>();
             foreach (Car car in tournament.CarData)
             {
                 Standing standing = new Standing();
                 standing.Car = car;
                 standing.Points = 0;
-                carPoints.Add(car.ID, standing);
+                standing.AverageTime = 0;
+                carStandingsDictionary.Add(car.ID, standing);
+                carTimes.Add(car.ID, new List<long>());
             }
 
             foreach (Race race in tournament.RaceData)
             {
                 foreach (LaneAssignment assignment in race.LaneAssignmentData)
                 {
-                    carPoints[assignment.Car.ID].Points += assignment.Points;
+                    carStandingsDictionary[assignment.Car.ID].Points += assignment.Points;
+                    carTimes[assignment.Car.ID].Add(assignment.ElapsedTime);
                 }
             }
 
-            List<KeyValuePair<int, Standing>> orderedCarPoints = carPoints.OrderByDescending(cp => cp.Value.Points).ToList();
+            // calculate the average time for each car
+            foreach (int carID in carTimes.Keys)
+            {
+                long sum = 0;
+                foreach (long elapsedTime in carTimes[carID])
+                {
+                    sum += elapsedTime;
+                }
+
+                carStandingsDictionary[carID].AverageTime = sum / carTimes[carID].Count;
+            }
+
+            List<KeyValuePair<int, Standing>> orderedStandings = null;
+            if (orderByPoints)
+            {
+                orderedStandings = carStandingsDictionary.OrderByDescending(cp => cp.Value.Points).ToList();
+            }
+            else
+            {
+                orderedStandings = carStandingsDictionary.OrderBy(cp => cp.Value.AverageTime).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(groupName))
+            {
+                orderedStandings = orderedStandings.Where(s => s.Value.Car.Den == groupName).ToList();
+            }
+
             int index = 0;
             int position = 1;
-            while (index < orderedCarPoints.Count())
+            while (index < orderedStandings.Count())
             {
-                orderedCarPoints[index].Value.Position = GetPositionText(position);
+                orderedStandings[index].Value.Position = GetPositionText(position);
 
-                if (((index + 1) >= orderedCarPoints.Count()) || 
-                    (orderedCarPoints[index + 1].Value.Points != orderedCarPoints[index].Value.Points))
+                if (((index + 1) >= orderedStandings.Count()) ||
+                    (orderedStandings[index + 1].Value.AverageTime != orderedStandings[index].Value.AverageTime))
                 {
                     position++;
                 }
                 index++;
             }
 
-            result = orderedCarPoints.Select(o => o.Value);
+            result = orderedStandings.Select(o => o.Value).ToList();
 
             return result;
         }
@@ -394,21 +421,195 @@ namespace RaceLaneManager.Model
             {
                 Tournament tournament = repo.LoadTournament(tournamentID);
 
-                if (tournament.CurrentRace >= 0)
+                // CurrentRace starts at 1
+                if (tournament.CurrentRace > 0)
                 {
+                    if (tournament.CurrentRace < tournament.RaceData.Count)
+                    {
+                        result.Add(tournament.RaceData[tournament.CurrentRace]);
+                    }
+
                     if (tournament.CurrentRace + 1 < tournament.RaceData.Count)
                     {
                         result.Add(tournament.RaceData[tournament.CurrentRace + 1]);
-                    }
-
-                    if (tournament.CurrentRace + 2 < tournament.RaceData.Count)
-                    {
-                        result.Add(tournament.RaceData[tournament.CurrentRace + 2]);
                     }
                 }
             }
 
             return result;
+        }
+
+        public static void SetCurrentRace(int tournamentID, int raceNum)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+                Race race = tournament.RaceData.Where(r => r.RaceNumber == raceNum).Single();
+                tournament.CurrentRace = raceNum;
+                repo.SaveTournament(tournament);
+            }
+        }
+
+        public static void StartRace(int tournamentID, int raceNum)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+                Race race = tournament.RaceData.Where(r => r.RaceNumber == raceNum).Single();
+                tournament.CurrentRace = raceNum;
+                foreach (LaneAssignment assignment in race.LaneAssignmentData)
+                {
+                    assignment.ElapsedTime = 0;
+                    assignment.Points = 0;
+                    assignment.Position = 0;
+                }
+                race.State = RaceState.Racing;
+                repo.SaveTournament(tournament);
+            }
+        }
+
+        public static void StopRace(int tournamentID, int raceNum)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+                Race race = tournament.RaceData.Where(r => r.RaceNumber == raceNum).Single();
+                tournament.CurrentRace = raceNum;
+                race.State = RaceState.Done;
+                repo.SaveTournament(tournament);
+            }
+        }
+
+        public static IRace UpdateRace(int tournamentID, Race race)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+            Race updatedRace = null;
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+
+                updatedRace = tournament.RaceData.Where(r => r.RaceNumber == race.RaceNumber).Single();
+
+                if (updatedRace.LaneAssignmentData.Count != race.LaneAssignmentData.Count)
+                {
+                    throw new ArgumentException("Races do not have the same number of lane assignments");
+                }
+
+                updatedRace.State = race.State;
+                for (int i = 0; i < updatedRace.LaneAssignmentData.Count; i++)
+                {
+                    LaneAssignment to = updatedRace.LaneAssignmentData[i];
+                    LaneAssignment from = race.LaneAssignmentData[i];
+                    to.ElapsedTime = from.ElapsedTime;
+                    to.Points = from.Points;
+                    to.Position = from.Position;
+                }
+
+                repo.SaveTournament(tournament);
+            }
+
+            return updatedRace;
+        }
+
+        private static void CalculatePoints(ref Race race)
+        {
+            List<LaneAssignment> orderedLanes = race.LaneAssignmentData.OrderBy(a => a.ElapsedTime).ToList();
+            List<LaneAssignment> dnfs = orderedLanes.Where(l => l.ElapsedTime == 0).ToList();
+
+            // move the DNFs to the end
+            foreach (LaneAssignment assignment in dnfs)
+            {
+                orderedLanes.Remove(assignment);
+                orderedLanes.Add(assignment);
+            }
+
+            for (int position = 1; position <= orderedLanes.Count; position++)
+            {
+                int points = 0;
+                switch (position)
+                {
+                    case 1:
+                        points = 3;
+                        break;
+                    case 2:
+                        points = 2;
+                        break;
+                    case 3:
+                        points = 1;
+                        break;
+                    default:
+                        points = 0;
+                        break;
+                }
+
+                orderedLanes[position - 1].Points = points;
+                orderedLanes[position - 1].Position = position;
+            }
+        }
+
+        public static void UpdateRaceTime(int tournamentID, int raceNum, int lane, long elapsedTime)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+
+                Race race = tournament.RaceData.Where(r => r.RaceNumber == raceNum).Single();
+
+                if (lane > race.LaneAssignmentData.Count)
+                {
+                    throw new ArgumentException(string.Format("Lane {0} does not existin in race {1}", lane, race.RaceNumber));
+                }
+
+                race.LaneAssignmentData[lane - 1].ElapsedTime = elapsedTime;
+
+                CalculatePoints(ref race);
+
+                repo.SaveTournament(tournament);
+            }
+        }
+
+        private static List<GroupResults> GenerateTournamentResults(Tournament tournament)
+        {
+            List<GroupResults> results = new List<GroupResults>();
+
+            GroupResults overall = new GroupResults();
+            overall.GroupName = "Overall";
+            overall.Standings = GetStandings(tournament);
+            results.Add(overall);
+
+            foreach (string name in new string[] { "Tiger", "Wolf", "Bear", "Webelos I", "Webelos II" })
+            {
+                GroupResults groupResult = new GroupResults();
+                groupResult.GroupName = name;
+                groupResult.Standings = GetStandings(tournament, false, name);
+                results.Add(groupResult);
+            }
+
+            return results;
+        }
+
+        public static List<GroupResults> GetTournamentResults(int tournamentID)
+        {
+            IRlmRepository repo = RepositoryManager.GetDefaultRepository();
+            List<GroupResults> results = new List<GroupResults>();
+
+            lock (_lock)
+            {
+                Tournament tournament = repo.LoadTournament(tournamentID);
+
+                results = GenerateTournamentResults(tournament);
+            }
+
+            return results;
         }
     }
 }

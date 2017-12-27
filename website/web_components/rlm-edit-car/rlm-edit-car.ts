@@ -18,9 +18,6 @@ class RlmEditCar extends polymer.Base implements polymer.Element {
     carName: string;
 
     @property({ type: String, notify: true, reflectToAttribute: true })
-    carNumber: string;
-
-    @property({ type: String, notify: true, reflectToAttribute: true })
     carOwner: string;
 
     @property({ type: String, notify: true, reflectToAttribute: true })
@@ -33,7 +30,6 @@ class RlmEditCar extends polymer.Base implements polymer.Element {
         return {
             id: this.carId,
             name: this.carName,
-            carNumber: Number(this.carNumber),
             owner: this.carOwner,
             den: this.carDen
         }
@@ -43,14 +39,12 @@ class RlmEditCar extends polymer.Base implements polymer.Element {
         if (car) {
             this.carId = car.id;
             this.set('carName', car.name);
-            this.set('carNumber', car.carNumber.toString());
             this.set('carOwner', car.owner);
             this.set('carDen', car.den);
         }
         else {
             this.carId = undefined;
             this.set('carName', '');
-            this.set('carNumber', '');
             this.set('carOwner', '');
             this.set('carDen', '');
         }

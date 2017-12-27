@@ -37,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/web_components/rlm-home/rlm-home.html" />
 <link rel="import" href="/web_components/rlm-settings/rlm-settings.html" />
 <link rel="import" href="/web_components/rlm-edit-race/rlm-edit-race.html" />
+<link rel="import" href="/web_components/rlm-results/rlm-results.html" />
 
 <dom-module id="rlm-app">
     <template>
@@ -128,6 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-icon-button icon="notification:drive-eta" on-tap="carsTap"></paper-icon-button>
                         <paper-icon-button icon="icons:assignment" on-tap="racesTap"></paper-icon-button>
                         <paper-icon-button icon="icons:input" on-tap="editRaceTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:assessment" on-tap="resultsTap"></paper-icon-button>
                         <paper-icon-button icon="settings" on-tap="settingsTap"></paper-icon-button>
                     </app-toolbar>
                 </app-header>
@@ -141,6 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
                    <rlm-races name="races" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-races>
                    <rlm-edit-race name="editrace" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-edit-race>
+                   <rlm-results name="results" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-results>
                    <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
                </iron-pages>
             </app-header-layout>

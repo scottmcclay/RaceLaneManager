@@ -47,6 +47,7 @@ namespace RaceLaneManager.WebApi
             TournamentManager.AddCar(tournamentID, car);
 
             Clients.All.carsUpdated(tournamentID, TournamentManager.GetCars(tournamentID));
+            Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
         }
 
         public void RequestUpdateCar(int tournamentID, Car car)
@@ -54,6 +55,7 @@ namespace RaceLaneManager.WebApi
             ICar updatedCar = TournamentManager.UpdateCar(tournamentID, car);
 
             Clients.All.carUpdated(tournamentID, updatedCar);
+            Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
         }
 
         public void RequestDeleteCar(int tournamentID, int carID)
@@ -61,6 +63,7 @@ namespace RaceLaneManager.WebApi
             ICar deletedCar = TournamentManager.DeleteCar(tournamentID, carID);
 
             Clients.All.carsUpdated(tournamentID, TournamentManager.GetCars(tournamentID));
+            Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
         }
 
         public void RequestGenerateRaces(int tournamentID)
@@ -70,6 +73,7 @@ namespace RaceLaneManager.WebApi
             Clients.All.racesUpdated(tournamentID, response);
             Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
             Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+            Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
         }
 
         public void RequestGetRaces(int tournamentID)
@@ -90,6 +94,51 @@ namespace RaceLaneManager.WebApi
         public void RequestGetNextRaces(int tournamentID)
         {
             Clients.Caller.getNextRacesResponse(TournamentManager.GetNextRaces(tournamentID));
+        }
+
+        public void RequestSetCurrentRace(int tournamentID, int raceNum)
+        {
+            TournamentManager.SetCurrentRace(tournamentID, raceNum);
+
+            Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+            Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+        }
+
+        public void RequestUpdateRace(int tournamentID, Race race)
+        {
+            TournamentManager.UpdateRace(tournamentID, race);
+
+            Clients.All.racesUpdated(tournamentID, TournamentManager.GetRaces(tournamentID));
+            Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+            Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+            Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
+        }
+
+        public void RequestStartRace(int tournamentID, int raceNum)
+        {
+            TournamentManager.StartRace(tournamentID, raceNum);
+
+            Clients.All.racesUpdated(tournamentID, TournamentManager.GetRaces(tournamentID));
+            Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+            Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+
+            RaceMonitor.Monitor(tournamentID, raceNum);
+        }
+
+        public void RequestStopRace(int tournamentID, int raceNum)
+        {
+            RaceMonitor.Stop();
+
+            TournamentManager.StopRace(tournamentID, raceNum);
+
+            Clients.All.racesUpdated(tournamentID, TournamentManager.GetRaces(tournamentID));
+            Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+            Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
+        }
+
+        public void RequestGetTournamentResults(int tournamentID)
+        {
+            Clients.Caller.requestGetTournamentResultsResponse(TournamentManager.GetTournamentResults(tournamentID));
         }
     }
 }

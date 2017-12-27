@@ -66,8 +66,8 @@
                     <div class="flex self-center paper-font-display1" style="text-align: center; line-height: 120px; padding-bottom: 30px;">
                         Race {{currentRace.raceNum}}
                     </div>
-                    <div class="self-center paper-font-display4" style="padding-bottom: 30px;">
-                        Lining Up
+                    <div class="self-center paper-font-display4" style="padding-bottom: 30px; margin-right: 20px;">
+                        {{raceStateText}}
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                                 <div class="car-name layout flex wrap">{{laneAssignment.car.name}}</div>
                                 <div class="paper-font-body1">{{laneAssignment.car.owner}}</div>
                             </div>
-                            <div class="time-column">{{laneAssignment.elapsedTime}} sec</div>
+                            <div class="time-column">{{laneAssignment.elapsedTimeSeconds}} sec</div>
                             <div class="position-column">{{laneAssignment.position}}</div>
                             <div class="points-column">{{laneAssignment.points}}</div>
                         </div>

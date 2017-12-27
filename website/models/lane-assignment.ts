@@ -17,6 +17,14 @@ class LaneAssignment {
         return assignment;
     }
 
+    get elapsedTimeSeconds(): number {
+        return this.elapsedTime / 1000;
+    }
+
+    set elapsedTimeSeconds(value: number) {
+        this.elapsedTime = value * 1000;
+    }
+
     static getLaneAssignmentsFromPayload(payload: any): Array<LaneAssignment> {
         let assignments: Array<LaneAssignment> = new Array<LaneAssignment>();
         

@@ -13,7 +13,6 @@ namespace RaceLaneManager.Model
         string Name { get; }
         string Owner { get; }
         string Den { get; }
-        int CarNumber { get; }
     }
 
     public class Car : ICar
@@ -22,7 +21,6 @@ namespace RaceLaneManager.Model
         public string Name { get; set; }
         public string Owner { get; set; }
         public string Den { get; set; }
-        public int CarNumber { get; set; }
 
         public static Car From(ICar car)
         {
@@ -30,7 +28,6 @@ namespace RaceLaneManager.Model
             {
                 ID = car.ID,
                 Name = car.Name,
-                CarNumber = car.CarNumber,
                 Owner = car.Owner,
                 Den = car.Den
             };
@@ -42,7 +39,6 @@ namespace RaceLaneManager.Model
             this.Name = car.Name;
             this.Owner = car.Owner;
             this.Den = car.Den;
-            this.CarNumber = car.CarNumber;
         }
     }
 }
