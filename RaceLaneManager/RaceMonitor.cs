@@ -3,8 +3,11 @@ using RaceLaneManager.Model;
 using RaceLaneManager.WebApi;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,8 +17,10 @@ namespace RaceLaneManager
     {
         private static Thread _monitorThread;
         private static Random _random;
+        private static SerialPort _serialPort;
+        private static bool _stopMonitoring = false;
 
-        public static void Monitor(int tournamentID, int raceNum)
+        public static void Monitor(string portName, int tournamentID, int raceNum)
         {
             if (_random == null)
             {
@@ -25,12 +30,80 @@ namespace RaceLaneManager
             // Get the SignalR Hub context
             IHubContext hub = GlobalHost.ConnectionManager.GetHubContext<RlmHub>();
 
+            // Open the serial port
+            Debug.WriteLine("Opening serial port {0}", portName);
+            _serialPort = new SerialPort(portName, 9600);
+            _serialPort.ReadTimeout = 100;
+            _serialPort.Open();
+
             // Start the monitor thread
-            _monitorThread = new Thread(() => MonitorFunction(tournamentID, raceNum, hub));
+            _stopMonitoring = false;
+            _monitorThread = new Thread(() => MonitorFunction(_serialPort, tournamentID, raceNum, hub));
             _monitorThread.Start();
         }
 
-        private static void MonitorFunction(int tournamentID, int raceNum, IHubContext hub)
+        private static void MonitorFunction(SerialPort port, int tournamentID, int raceNum, IHubContext hub)
+        {
+            Debug.WriteLine("Monitor thread started");
+
+            port.DiscardInBuffer();
+
+            while (!_stopMonitoring)
+            {
+                try
+                {
+                    string message = port.ReadLine();
+                    Debug.WriteLine(message);
+
+                    Regex r = new Regex(@"L(?<laneNum>\d) (?<time>\d{4})");
+                    Match m = r.Match(message);
+                    if (m.Success)
+                    {
+                        // update the race
+                        TournamentManager.UpdateRaceTime(tournamentID, raceNum, int.Parse(m.Groups["laneNum"].Value) + 1, long.Parse(m.Groups["time"].Value));
+
+                        // notify clients
+                        hub.Clients.All.racesUpdated(tournamentID, TournamentManager.GetRaces(tournamentID));
+                        hub.Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
+                        hub.Clients.All.standingsUpdated(tournamentID, TournamentManager.GetStandings(tournamentID));
+                    }
+                }
+                catch (TimeoutException)
+                {
+                    // nothing wrong with a timeout, just continue
+                }
+            }
+
+            Debug.WriteLine("Monitor thread ending");
+        }
+
+        public static void Stop()
+        {
+            if (_monitorThread != null)
+            {
+                Debug.WriteLine("Signaling monitor thread to end");
+                _stopMonitoring = true;
+                try
+                {
+                    _monitorThread.Join(500);
+                    Debug.WriteLine("Detected termination of monitor thread");
+                }
+                catch (TimeoutException ex)
+                {
+                    Debug.WriteLine("Unable to terminate monitor thread - {0}", ex.Message);
+                }
+                _monitorThread = null;
+
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+                _serialPort.Dispose();
+                _serialPort = null;
+            }
+        }
+
+        private static void SimulateRace(int tournamentID, int raceNum, IHubContext hub)
         {
             // generate simulation
             Dictionary<int, int> simLaneTimes = new Dictionary<int, int>();
@@ -78,15 +151,6 @@ namespace RaceLaneManager
             while (true)
             {
                 Thread.Sleep(500);
-            }
-        }
-
-        public static void Stop()
-        {
-            if (_monitorThread != null)
-            {
-                _monitorThread.Abort();
-                _monitorThread = null;
             }
         }
     }

@@ -122,7 +122,7 @@ namespace RaceLaneManager.WebApi
             Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
             Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
 
-            RaceMonitor.Monitor(tournamentID, raceNum);
+            RaceMonitor.Monitor("COM3", tournamentID, raceNum);
         }
 
         public void RequestStopRace(int tournamentID, int raceNum)
