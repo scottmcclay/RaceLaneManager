@@ -361,7 +361,10 @@ namespace RaceLaneManager.Model
                     sum += elapsedTime;
                 }
 
-                carStandingsDictionary[carID].AverageTime = sum / carTimes[carID].Count;
+                if (carTimes[carID].Count > 0)
+                {
+                    carStandingsDictionary[carID].AverageTime = sum / carTimes[carID].Count;
+                }
             }
 
             List<KeyValuePair<int, Standing>> orderedStandings = null;
