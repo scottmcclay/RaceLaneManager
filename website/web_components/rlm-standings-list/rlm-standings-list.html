@@ -1,0 +1,65 @@
+﻿<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/polymer-ts/polymer-ts.html" />
+<link rel="import" href="/bower_components/paper-styles/typography.html" />
+<link rel="import" href="/bower_components/paper-styles/shadow.html" />
+<link rel="import" href="/bower_components/paper-styles/default-theme.html" />
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="/shared-styles.html" />
+
+<dom-module id="rlm-standings-list">
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .card { margin: 5px;}
+
+            .title {
+                @apply --paper-font-headline;
+                text-align: center;
+            }
+            .place-column {
+                @apply --paper-font-body1;
+                margin-right: 5px;
+                width: 25px;
+            }
+
+            .car-column {
+                @apply --paper-font-body1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .points-column {
+                @apply --paper-font-body1;
+                margin-left: 5px;
+            }
+        </style>
+
+        <div class="item">
+            <div class="title">Standings</div>
+            <div class="card layout vertical">
+                <template is="dom-repeat" items="{{standings}}">
+                    <div class="layout horizontal">
+                        <div class="place-column">{{item.position}}</div>
+                        <div class="car-column layout flex">{{item.car.name}}</div>
+                        <div class="points-column">{{item.points}} pts</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/standing.js"></script>
+<script type="text/javascript" src="rlm-standings-list.js"></script>
+

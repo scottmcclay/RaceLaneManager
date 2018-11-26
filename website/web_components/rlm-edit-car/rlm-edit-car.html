@@ -1,0 +1,36 @@
+<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/paper-input/paper-input.html" />
+<link rel="import" href="/bower_components/paper-button/paper-button.html" />
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+
+<dom-module id="rlm-edit-car">
+    <template>
+        <div id="rlmEditCarDialogHolder">
+            <paper-dialog id="editCarDialog" modal>
+                <h2>[[title]]</h2>
+                <paper-input id="carName" label="Name" autofocus required auto-validate error-message="Name cannot be blank" value="{{carName}}" tabindex="0" autofocus='true'></paper-input>
+                <paper-input id="carOwner" label="Owner" value="{{carOwner}}" tabindex="0"></paper-input>
+                <paper-dropdown-menu label="Den" tabindex="0">
+                    <paper-listbox slot="dropdown-content" selected="{{carDen}}" attr-for-selected="den">
+                        <paper-item den="Tiger">Tiger</paper-item>
+                        <paper-item den="Wolf">Wolf</paper-item>
+                        <paper-item den="Bear">Bear</paper-item>
+                        <paper-item den="Webelos I">Webelos I</paper-item>
+                        <paper-item den="Webelos II">Webelos II</paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+                <div id="editCarErrorMessage" style="color: red;">[[errorMessage]]</div>
+                <div class="buttons">
+                    <paper-button on-tap="saveTapped">[[saveText]]</paper-button>
+                    <paper-button on-tap="cancelTapped">[[cancelText]]</paper-button>
+                </div>
+            </paper-dialog>
+        </div>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="/models/car.js"></script>
+<script type="text/javascript" src="rlm-edit-car.js"></script>

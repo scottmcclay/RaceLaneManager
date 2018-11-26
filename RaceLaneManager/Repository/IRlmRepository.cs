@@ -5,10 +5,8 @@ namespace RaceLaneManager.Repository
 {
     public interface IRlmRepository
     {
-        IList<Tournament> GetAllTournaments();
-        Tournament GetTournament(int tournamentId);
-        Tournament AddTournament(Tournament tournament);
-        Tournament DeleteTournament(int tournamentId);
-        bool UpdateTournament(Tournament tournament);
+        IEnumerable<int> GetAllTournamentIDs();
+        Tournament LoadTournament(int tournamentID);
+        void SaveTournament(Tournament tournament);
     }
 }

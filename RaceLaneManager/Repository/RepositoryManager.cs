@@ -13,7 +13,7 @@ namespace RaceLaneManager.Repository
         {
             if (_repo == null)
             {
-                _repo = new InMemoryRlmRepository();
+                _repo = new RlmFileRepository();
             }
 
             return _repo;

@@ -5,6 +5,8 @@ using Microsoft.Owin.Diagnostics;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Owin.FileSystems;
 using System.Web.Http;
+using System.Diagnostics;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(RaceLaneManager.Startup))]
 
@@ -14,6 +16,13 @@ namespace RaceLaneManager
     {
         public void Configuration(IAppBuilder app)
         {
+            Debug.WriteLine("Mapping signalr");
+
+            HubConfiguration hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
+            app.MapSignalR(hubConfiguration);
+
+            Debug.WriteLine("Mapping /tournament");
             app.Map("/tournament", spa =>
             {
                 spa.Use((context, next) =>
@@ -30,6 +39,7 @@ namespace RaceLaneManager
                 spa.UseFileServer(o);
             });
 
+            Debug.WriteLine("Mapping root");
             FileServerOptions options = new FileServerOptions();
             options.RequestPath = PathString.Empty;
             options.FileSystem = new PhysicalFileSystem(@"./website");
@@ -37,6 +47,7 @@ namespace RaceLaneManager
             options.DefaultFilesOptions.DefaultFileNames.Add("index.html");
             app.UseFileServer(options);
 
+            Debug.WriteLine("Mapping web api");
             HttpConfiguration httpConfiguration = new HttpConfiguration();
             WebApiConfig.Register(httpConfiguration);
             app.UseWebApi(httpConfiguration);

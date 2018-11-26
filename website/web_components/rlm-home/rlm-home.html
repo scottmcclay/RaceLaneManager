@@ -1,0 +1,93 @@
+﻿<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/paper-styles/typography.html" />
+<link rel="import" href="/bower_components/paper-styles/shadow.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html" />
+<link rel="import" href="/shared-styles.html" />
+<link rel="import" href="/web_components/rlm-standings-list/rlm-standings-list.html" />
+<link rel="import" href="/web_components/rlm-current-race-details/rlm-current-race-details.html" />
+<link rel="import" href="/web_components/rlm-up-next-list/rlm-up-next-list.html" />
+
+<dom-module id="rlm-home">
+    <template>
+        <style include="shared-styles iron-flex">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+        </style>
+
+        <div class="layout horizontal">
+            <div>
+                <rlm-standings-list tournament-id="{{tournamentId}}" hub="{{hub}}" style="background-color: #dbdbdb; margin-top: 100px; width: 215px;"></rlm-standings-list>
+            </div>
+            <div class="layout flex">
+                <rlm-current-race-details tournament-id="{{tournamentId}}" hub="{{hub}}"></rlm-current-race-details>
+            </div>
+            <div>
+                <rlm-up-next-list tournament-id="{{tournamentId}}" hub="{{hub}}" style="background-color: #dbdbdb; margin-top: 100px; width: 160px;"></rlm-up-next-list>
+            </div>
+        </div>
+    </template>
+
+    <!--
+    <script>
+    Polymer({
+        is: 'rlm-home',
+
+        properties: {
+            tournament: {
+                type: Object,
+                reflectToAttribute: true,
+                observer: '_tournamentChanged',
+            },
+
+            currentRace: {
+                type: Object,
+                value: {
+                    raceNum: 4,
+                    lanes: [
+                        {
+                            carName: 'Ghost',
+                            racerName: 'Brenden M.',
+                        }
+                    ]
+                }
+            },
+
+            hub: {
+                type: Object,
+                reflectToAttribute: false,
+            },
+        },
+
+        _tournamentChanged: function (tournament) {
+        },
+
+        ready: function () {
+            var connection = $.hubConnection();
+            this.hub = connection.createHubProxy("testHub");
+            this.hub.on("displayMessage", this.displayMessage);
+            connection.start()
+                .done(function () { console.log("Now connected to test hub: " + connection.id); })
+                .fail(function () { console.log("Unable to connect to hub"); });
+        },
+
+        _test: function() {
+            this.hub.invoke('Test', 'A message from the client.')
+                .done(function () { console.log('Invocation of Test method succeeded.'); })
+                .fail(function (error) { console.log('Invocation of Test method failed. Error: ' + error); });
+        },
+
+        displayMessage: function(message) {
+
+        }
+    });
+    </script>
+-->
+</dom-module>
+<script type="text/javascript" src="/models/publisher.js"></script>
+<script type="text/javascript" src="/models/rlm-hub.js"></script>
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/race.js"></script>
+<script type="text/javascript" src="rlm-home.js"></script>

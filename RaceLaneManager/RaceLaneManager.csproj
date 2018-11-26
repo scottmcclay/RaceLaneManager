@@ -33,6 +33,12 @@
     <OutputPath>bin\Test\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -56,6 +62,9 @@
     <Reference Include="Microsoft.Owin.Hosting, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Hosting.3.1.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.1.0\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
@@ -91,64 +100,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcreteConverter.cs" />
+    <Compile Include="Engines\RaceGenerator.cs" />
     <Compile Include="Model\Car.cs" />
+    <Compile Include="Model\GroupResults.cs" />
     <Compile Include="Model\Lane.cs" />
     <Compile Include="Model\Race.cs" />
-    <Compile Include="Model\RaceLaneAssignment.cs" />
+    <Compile Include="Model\LaneAssignment.cs" />
+    <Compile Include="Model\Standing.cs" />
     <Compile Include="Model\Tournament.cs" />
+    <Compile Include="Model\TournamentManager.cs" />
+    <Compile Include="Model\TournamentResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaceMonitor.cs" />
     <Compile Include="Repository\InMemoryRlmRepository.cs" />
     <Compile Include="Repository\IRlmRepository.cs" />
     <Compile Include="Repository\RepositoryManager.cs" />
+    <Compile Include="Repository\RlmFileRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TestApi.cs" />
     <Compile Include="WebApiConfig.cs" />
     <Compile Include="WebApi\AuthController.cs" />
-    <Compile Include="WebApi\CarsController.cs" />
-    <Compile Include="WebApi\TournamentsController.cs" />
+    <Compile Include="DTOs\RlmGetRacesResopnse.cs" />
+    <Compile Include="WebApi\RlmHub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="website\bower.json" />
-    <None Include="website\manifest.json" />
-    <None Include="website\package.json" />
-    <None Include="website\polymer.json" />
-    <None Include="website\README.md" />
-    <None Include="website\test\.eslintrc.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="website\images\favicon-polymer.ico" />
-    <Content Include="website\images\favicon.ico" />
-    <Content Include="website\images\manifest\icon-144x144.png" />
-    <Content Include="website\images\manifest\icon-192x192.png" />
-    <Content Include="website\images\manifest\icon-48x48.png" />
-    <Content Include="website\images\manifest\icon-512x512.png" />
-    <Content Include="website\images\manifest\icon-72x72.png" />
-    <Content Include="website\images\manifest\icon-96x96.png" />
-    <Content Include="website\index.html" />
-    <Content Include="website\service-worker.js" />
-    <Content Include="website\src\my-icons.html" />
-    <Content Include="website\src\rlm-app.html" />
-    <Content Include="website\src\rlm-cars.html" />
-    <Content Include="website\src\rlm-current-race-details.html" />
-    <Content Include="website\src\rlm-car-card.html" />
-    <Content Include="website\src\rlm-settings.html" />
-    <Content Include="website\src\rlm-races.html" />
-    <Content Include="website\src\rlm-home.html" />
-    <Content Include="website\src\rlm-up-next-list.html" />
-    <Content Include="website\src\rlm-standings-list.html" />
-    <Content Include="website\src\shared-styles.html" />
-    <Content Include="website\src\test-component.html" />
-    <Content Include="website\sw-precache-config.js" />
-    <Content Include="website\test\index.html" />
-    <Content Include="website\test\my-view1.html" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo Copying website files
-xcopy $(ProjectDir)website $(TargetDir)website /E /I /Y
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

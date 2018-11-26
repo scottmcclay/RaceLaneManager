@@ -1,37 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using System;
 
 namespace RaceLaneManager.Model
 {
-    public class Race
+    public enum RaceState
     {
-        private RaceLaneAssignment[] _assignments;
+        NotStarted,
+        Racing,
+        Done
+    }
 
-        public IList<RaceLaneAssignment> Assignments { get { return _assignments; } }
+    public interface IRace
+    {
+        int RaceNumber { get; }
+        RaceState State { get; }
+        IEnumerable<ILaneAssignment> LaneAssignments { get; }
+    }
 
-        public Race(int numLanes)
+    public class Race : IRace
+    {
+        [JsonIgnore]
+        public List<LaneAssignment> LaneAssignmentData { get; set; }
+        public int RaceNumber { get; set; }
+        public RaceState State { get; set; }
+        public IEnumerable<ILaneAssignment> LaneAssignments { get { return this.LaneAssignmentData; } }
+
+        public Race()
         {
-            _assignments = new RaceLaneAssignment[numLanes];
-        }
-
-        public void AssignLanes(IList<RaceLaneAssignment> assignments)
-        {
-            if (assignments.Count() != _assignments.Length)
-            {
-                throw new ArgumentException(
-                    string.Format("Number of assignments ({0}) does not match the number of lanes ({1})",
-                        assignments.Count(),
-                        _assignments.Length),
-                    "assignments");
-            }
-
-            for (int i = 0; i < _assignments.Length; i++)
-            {
-                _assignments[i] = assignments[i];
-            }
+            this.LaneAssignmentData = new List<LaneAssignment>();
         }
     }
 }

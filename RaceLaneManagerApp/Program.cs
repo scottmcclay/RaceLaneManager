@@ -15,6 +15,7 @@ namespace RaceLaneManagerApp
         {
             using (WebApp.Start<Startup>(url: "http://+:8000/"))
             {
+                Console.WriteLine("Race Lane Manager is available at http://localhost:8000");
                 Console.WriteLine("Press any key to exit.");
                 Console.Read();
             }

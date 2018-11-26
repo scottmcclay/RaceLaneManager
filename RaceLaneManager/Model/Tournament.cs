@@ -1,67 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RaceLaneManager.Model
 {
-    public class Tournament
+    public enum TournamentState
     {
-        private Lane[] _lanes;
-        private List<Car> _cars = new List<Car>();
-        private List<RaceLaneAssignment> _assignments = new List<RaceLaneAssignment>();
+        PreEvent,
+        EventReady,
+        ReadyToRace,
+        RaceInProgress,
+        RaceFinalized,
+        PostEvent
+    }
 
+    public interface ITournament
+    {
+        int ID { get; }
+        string Name { get; }
+        int NumLanes { get; }
+        int NumCars { get; }
+        int NumRaces { get; }
+        TournamentState State { get; }
+        IEnumerable<ICar> Cars { get; }
+        IEnumerable<IRace> Races { get; }
+        int CurrentRace { get; }
+    }
+
+    public class Tournament : ITournament
+    {
         public int ID { get; set; }
-        public DateTime Date { get; set; }
         public string Name { get; set; }
-        public IList<Lane> Lanes { get { return _lanes; } }
-        public int NumLanes { get { return _lanes.Length; } }
-        public IList<Car> Cars { get { return _cars; } }
-        public int NumRaces { get; private set; }
-        public IEnumerable<RaceLaneAssignment> Assignments { get; }
+        public int NumLanes { get; set; }
+        public int NumCars { get { return this.CarData.Count; } }
+        public int NumRaces { get { return this.RaceData.Count; } }
+        public TournamentState State { get; set; }
 
-        public Tournament(string name, int numLanes)
+        [JsonIgnore]
+        public List<Car> CarData { get; set; }
+        public IEnumerable<ICar> Cars { get { return this.CarData; } }
+
+        [JsonIgnore]
+        public List<Race> RaceData { get; set; }
+        public IEnumerable<IRace> Races { get { return this.RaceData; } }
+        public int CurrentRace { get; set; }
+
+        public Tournament()
         {
-            this.Name = name;
-            _lanes = new Lane[numLanes];
-
-            for (int i = 0; i < numLanes; i++)
-            {
-                _lanes[i] = new Lane(i + 1, true);
-            }
-        }
-
-        public void ClearAssignments()
-        {
-            _assignments.Clear();
-        }
-
-        public void AddCar(Car car)
-        {
-            if (_assignments.Count > 0)
-            {
-                throw new InvalidOperationException("Race Lane Assignments must be cleared before adding cars.");
-            }
-
-            _cars.Add(car);
-        }
-
-        public Car RemoveCar(int carId)
-        {
-            Car car = _cars.Where(r => r.ID == carId).SingleOrDefault();
-
-            if (car != null)
-            {
-                _cars.Remove(car);
-            }
-
-            return car;
-        }
-
-        public void RemoveCar(Car car)
-        {
-            _cars.Remove(car);
+            this.State = TournamentState.PreEvent;
+            this.CarData = new List<Car>();
+            this.RaceData = new List<Race>();
+            this.State = TournamentState.PreEvent;
+            this.CurrentRace = 0;
         }
     }
 }
