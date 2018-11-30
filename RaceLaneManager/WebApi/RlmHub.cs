@@ -16,6 +16,8 @@ namespace RaceLaneManager.WebApi
 
         public void RequestGetTournaments()
         {
+            Debug.WriteLine("Getting tournaments");
+
             Clients.Caller.getTournamentsResponse(TournamentManager.GetTournaments());
         }
 
@@ -122,7 +124,7 @@ namespace RaceLaneManager.WebApi
             Clients.All.currentRaceUpdated(tournamentID, TournamentManager.GetCurrentRace(tournamentID));
             Clients.All.nextRacesUpdated(tournamentID, TournamentManager.GetNextRaces(tournamentID));
 
-            RaceMonitor.Monitor("COM3", tournamentID, raceNum);
+            RaceMonitor.Monitor("COM4", tournamentID, raceNum);
         }
 
         public void RequestStopRace(int tournamentID, int raceNum)

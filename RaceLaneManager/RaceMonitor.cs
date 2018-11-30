@@ -55,12 +55,12 @@ namespace RaceLaneManager
                     string message = port.ReadLine();
                     Debug.WriteLine(message);
 
-                    Regex r = new Regex(@"L(?<laneNum>\d) (?<time>\d{4})");
+                    Regex r = new Regex(@"L(?<laneNum>\d) (?<time>\d+)");
                     Match m = r.Match(message);
                     if (m.Success)
                     {
                         // update the race
-                        TournamentManager.UpdateRaceTime(tournamentID, raceNum, int.Parse(m.Groups["laneNum"].Value) + 1, long.Parse(m.Groups["time"].Value));
+                        TournamentManager.UpdateRaceTime(tournamentID, raceNum, int.Parse(m.Groups["laneNum"].Value), long.Parse(m.Groups["time"].Value));
 
                         // notify clients
                         hub.Clients.All.racesUpdated(tournamentID, TournamentManager.GetRaces(tournamentID));
