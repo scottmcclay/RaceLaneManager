@@ -1,0 +1,14 @@
+{
+  "name": "Race Lane Manager",
+  "short_name": "RLM",
+  "start_url": "/?homescreen=1",
+  "display": "standalone",
+  "theme_color": "#3f51b5",
+  "background_color": "#3f51b5",
+  "icons": [
+    {
+      "src": "images/favicon.ico",
+      "sizes": "16x16 24x24 32x32 48x48 64x64 72x72 96x96 128x128 256x256"
+    }
+  ]
+}

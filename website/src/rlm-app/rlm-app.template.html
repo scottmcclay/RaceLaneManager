@@ -1,0 +1,136 @@
+<style>
+    :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+        display: block;
+    }
+
+    app-header {
+        @apply --layout-fixed-top;
+        color: #fff;
+        background-color: var(--app-primary-color);
+    }
+
+        app-header paper-icon-button {
+            --paper-icon-button-ink-color: white;
+        }
+
+    .drawer-list {
+        margin: 0 20px;
+    }
+
+    .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+    }
+</style>
+    
+<app-location route="{{route}}"></app-location>
+
+<app-route
+    route="{{route}}"
+    pattern="/tournament/:tournamentId"
+    data="{{routeData}}"
+    tail="{{subroute}}">
+</app-route>
+
+<app-route
+    route="{{subroute}}"
+    pattern="/:view"
+    data="{{subrouteData}}">
+</app-route>
+
+<app-drawer-layout force-narrow fullbleed>
+    <app-drawer id="drawer" slot="drawer">
+        <app-toolbar>
+            <div main-title>Tournaments</div>
+        </app-toolbar>
+        <iron-selector selected="{{routeData.tournamentId}}" attr-for-selected="tournament-id" class="drawer-list" role="navigation">
+            <template is="dom-repeat" items="{{tournaments}}">
+                <a tournament-id="{{item.id}}" href="/tournament/{{item.id}}/home">{{item.name}}</a>
+            </template>
+        </iron-selector>
+        <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signInTap">
+                <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
+                <div style="display: inline-block; vertical-align: middle;">Sign in</div>
+            </paper-button>
+        </paper-item>
+        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="newTournamentTap">
+                <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
+                <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
+            </paper-button>
+        </paper-item>
+        <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+            <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signOutTap">
+                <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
+                <div style="display: inline-block; vertical-align: middle;">Sign out</div>
+            </paper-button>
+        </paper-item>
+    </app-drawer>
+
+    <app-header-layout>
+        <app-header reveals condenses effects="waterfall" slot="header">
+            <app-toolbar>
+                <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+                <div>Pack 675</div>
+                <div main-title style="text-align: center;">[[selectedTournament.name]]</div>
+                <paper-icon-button icon="home" on-tap="homeTap"></paper-icon-button>
+                <paper-icon-button icon="notification:drive-eta" on-tap="carsTap"></paper-icon-button>
+                <paper-icon-button icon="icons:assignment" on-tap="racesTap"></paper-icon-button>
+                <paper-icon-button icon="icons:input" on-tap="editRaceTap"></paper-icon-button>
+                <paper-icon-button icon="icons:assessment" on-tap="resultsTap"></paper-icon-button>
+                <paper-icon-button icon="settings" on-tap="settingsTap"></paper-icon-button>
+            </app-toolbar>
+        </app-header>
+
+        <!-- Main content -->
+        <iron-pages
+            selected="[[subrouteData.view]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+
+            <rlm-home name="home" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-home>
+            <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
+            <rlm-races name="races" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-races>
+            <rlm-edit-race name="editrace" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-edit-race>
+            <rlm-results name="results" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-results>
+            <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
+        </iron-pages>
+    </app-header-layout>
+</app-drawer-layout>
+
+<paper-dialog id="signInDialog" modal>
+    <h2>Sign In</h2>
+    <paper-input id="authName" label="ID" autofocus required auto-validate error-message="ID cannot be blank"></paper-input>
+    <paper-input id="authPassword" label="Password:" required auto-validate error-message="Password cannot be blank"></paper-input>
+    <div id="authErrorMessage" style="color: red;"></div>
+    <div class="buttons">
+        <paper-button on-tap="doSignIn">Sign In</paper-button>
+        <paper-button dialog-dismiss>Cancel</paper-button>
+    </div>
+</paper-dialog>
+
+<iron-ajax
+    id="authAjax"
+    url="/api/auth/authenticate"
+    method="POST"
+    content-type="application/json"
+    body='{"name": "", "password": ""}'
+    on-response="authResponse"
+    on-error="authError">
+</iron-ajax>

@@ -1,0 +1,181 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="/bower_components/polymer/polymer.html" />
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html" />
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html" />
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html" />
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html" />
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html" />
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html" />
+<link rel="import" href="/bower_components/app-route/app-location.html" />
+<link rel="import" href="/bower_components/app-route/app-route.html" />
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html" />
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html" />
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html" />
+<link rel="import" href="/bower_components/paper-item/paper-item.html" />
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html" />
+<link rel="import" href="/bower_components/iron-icons/notification-icons.html" />
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="/bower_components/paper-button/paper-button.html" />
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html" />
+<link rel="import" href="/bower_components/neon-animation/web-animations.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="/my-icons.html" />
+<link rel="import" href="/web_components/rlm-cars/rlm-cars.html" />
+<link rel="import" href="/web_components/rlm-races/rlm-races.html" />
+<link rel="import" href="/web_components/rlm-home/rlm-home.html" />
+<link rel="import" href="/web_components/rlm-settings/rlm-settings.html" />
+<link rel="import" href="/web_components/rlm-edit-race/rlm-edit-race.html" />
+<link rel="import" href="/web_components/rlm-results/rlm-results.html" />
+
+<dom-module id="rlm-app">
+    <template>
+        <style>
+            :host {
+                --app-primary-color: #4285f4;
+                --app-secondary-color: black;
+                display: block;
+            }
+
+            app-header {
+                @apply --layout-fixed-top;
+                color: #fff;
+                background-color: var(--app-primary-color);
+            }
+
+                app-header paper-icon-button {
+                    --paper-icon-button-ink-color: white;
+                }
+
+            .drawer-list {
+                margin: 0 20px;
+            }
+
+            .drawer-list a {
+                display: block;
+                padding: 0 16px;
+                text-decoration: none;
+                color: var(--app-secondary-color);
+                line-height: 40px;
+            }
+
+            :focus {
+                outline: none;
+            }
+
+            .drawer-list a.iron-selected {
+                color: black;
+                font-weight: bold;
+            }
+        </style>
+
+        <app-location route="{{route}}"></app-location>
+        <app-route route="{{route}}"
+                   pattern="/tournament/:tournamentId"
+                   data="{{routeData}}"
+                   tail="{{subroute}}"></app-route>
+        <app-route route="{{subroute}}"
+                   pattern="/:view"
+                   data="{{subrouteData}}"></app-route>
+
+        <app-drawer-layout force-narrow fullbleed>
+            <app-drawer id="drawer" slot="drawer">
+                <app-toolbar>
+                    <div main-title>Tournaments</div>
+                </app-toolbar>
+                <iron-selector selected="{{routeData.tournamentId}}" attr-for-selected="tournament-id" class="drawer-list" role="navigation">
+                    <template is="dom-repeat" items="{{tournaments}}">
+                        <a tournament-id="{{item.id}}" href="/tournament/{{item.id}}/home">{{item.name}}</a>
+                    </template>
+                </iron-selector>
+                <paper-item style="white-space: nowrap;" hidden$="{{isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signInTap">
+                        <iron-icon icon="icons:lock-open" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Sign in</div>
+                    </paper-button>
+                </paper-item>
+                <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="newTournamentTap">
+                        <iron-icon icon="icons:add-circle-outline" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Create New Tournament</div>
+                    </paper-button>
+                </paper-item>
+                <paper-item style="white-space: nowrap;" hidden$="{{!isAdmin}}" tournamentId$="{{selectedTournament.id}}">
+                    <paper-button style="margin: 0; display: block; padding: 0px;" on-tap="signOutTap">
+                        <iron-icon icon="icons:lock-outline" style="color: grey;"></iron-icon>
+                        <div style="display: inline-block; vertical-align: middle;">Sign out</div>
+                    </paper-button>
+                </paper-item>
+            </app-drawer>
+
+           <app-header-layout>
+                <app-header reveals condenses effects="waterfall" slot="header">
+                    <app-toolbar>
+                        <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+                        <div>Pack 675</div>
+                        <div main-title style="text-align: center;">[[selectedTournament.name]]</div>
+                        <paper-icon-button icon="home" on-tap="homeTap"></paper-icon-button>
+                        <paper-icon-button icon="notification:drive-eta" on-tap="carsTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:assignment" on-tap="racesTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:input" on-tap="editRaceTap"></paper-icon-button>
+                        <paper-icon-button icon="icons:assessment" on-tap="resultsTap"></paper-icon-button>
+                        <paper-icon-button icon="settings" on-tap="settingsTap"></paper-icon-button>
+                    </app-toolbar>
+                </app-header>
+
+               <!-- Main content -->
+               <iron-pages selected="[[subrouteData.view]]"
+                           attr-for-selected="name"
+                           fallback-selection="view404"
+                           role="main">
+                   <rlm-home name="home" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-home>
+                   <rlm-cars name="cars" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-cars>
+                   <rlm-races name="races" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-races>
+                   <rlm-edit-race name="editrace" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-edit-race>
+                   <rlm-results name="results" tournament-id="{{selectedTournament.id}}" hub="{{hub}}"></rlm-results>
+                   <rlm-settings name="settings" tournament="{{selectedTournament}}" hub="{{hub}}"></rlm-settings>
+               </iron-pages>
+            </app-header-layout>
+        </app-drawer-layout>
+
+        <paper-dialog id="signInDialog" modal>
+            <h2>Sign In</h2>
+            <paper-input id="authName" label="ID" autofocus required auto-validate error-message="ID cannot be blank"></paper-input>
+            <paper-input id="authPassword" label="Password:" required auto-validate error-message="Password cannot be blank"></paper-input>
+            <div id="authErrorMessage" style="color: red;"></div>
+            <div class="buttons">
+                <paper-button on-tap="doSignIn">Sign In</paper-button>
+                <paper-button dialog-dismiss>Cancel</paper-button>
+            </div>
+        </paper-dialog>
+        
+        <iron-ajax
+                   id="authAjax"
+                   url="/api/auth/authenticate"
+                   method="POST"
+                   content-type="application/json"
+                   body='{"name": "", "password": ""}'
+                   on-response="authResponse"
+                   on-error="authError">
+        </iron-ajax>
+    </template>
+</dom-module>
+
+<script src="/Scripts/jquery-1.6.4.min.js"></script>
+<script src="/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script type="text/javascript" src="/models/publisher.js"></script>
+<script type="text/javascript" src="/models/rlm-hub.js"></script>
+<script type="text/javascript" src="/models/tournament.js"></script>
+<script type="text/javascript" src="/models/car.js"></script>
+<script type="text/javascript" src="rlm-app.js"></script>
