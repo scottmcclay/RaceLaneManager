@@ -31,12 +31,8 @@ namespace Rlm.App
         private void EditEvent_Click(object sender, RoutedEventArgs e)
         {
             TournamentViewModel vm = this.TournamentsListBox.SelectedItem as TournamentViewModel;
-
-            if (vm != null)
-            {
-                EditTournamentViewModel editVm = new EditTournamentViewModel(vm.Tournament);
-                var result = DialogHost.Show(editVm, "RootDialog");
-            }
+            vm?.EditTournament();
         }
+
     }
 }

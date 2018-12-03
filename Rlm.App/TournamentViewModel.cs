@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MaterialDesignThemes.Wpf;
 using Rlm.Core;
 
 namespace Rlm.App
@@ -34,8 +35,23 @@ namespace Rlm.App
 
         private void TournamentManager_TournamentUpdated(TournamentUpdatedEventArgs e)
         {
-            _tournament = e.Tournament;
-            OnPropertyChanged(nameof(this.Name));
+            if (e.Tournament.ID == this.Tournament.ID)
+            {
+                _tournament = e.Tournament;
+                OnPropertyChanged(nameof(this.Name));
+            }
+        }
+
+        public void EditTournament()
+        {
+            EditTournamentViewModel editVm = new EditTournamentViewModel(this.Tournament);
+            DialogHost.Show(editVm, "RootDialog", EditTournamentDialogClosingEventHandler);
+        }
+
+        private void EditTournamentDialogClosingEventHandler(object sender, DialogClosingEventArgs e)
+        {
+            EditTournamentViewModel vm = e.Content as EditTournamentViewModel;
+            TournamentManager.UpdateTournament(this.Tournament.ID, vm.Name, vm.NumLanes);
         }
     }
 }

@@ -19,7 +19,11 @@
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:EditTournamentViewModel}">
-            <Button IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Style="{DynamicResource MaterialDesignFlatButton}">Done</Button>
+            <StackPanel Orientation="Vertical" Margin="16">
+                <TextBox materialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
+                <TextBox materialDesign:HintAssist.Hint="Number of Lanes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding NumLanes}" />
+                <Button IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Style="{DynamicResource MaterialDesignFlatButton}">Done</Button>
+            </StackPanel>
         </DataTemplate>
     </Window.Resources>
     
@@ -50,13 +54,13 @@
                         <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton"/>
                         <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                             <StackPanel>
-                                <Button Content="Home" />
-                                <Button Content="Cars" />
-                                <Button Content="Lineup" />
-                                <Button Content="Edit Races" />
-                                <Button Content="Results" />
+                                <Button Content="Home" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Cars" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Lineup" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Edit Races" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Results" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
                                 <Separator/>
-                                <Button Content="Edit Event" Click="EditEvent_Click"/>
+                                <Button Content="Edit Event" Click="EditEvent_Click" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
                             </StackPanel>
                         </materialDesign:PopupBox>
                         <TextBlock 
