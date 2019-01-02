@@ -6,17 +6,35 @@
              xmlns:local="clr-namespace:Rlm.App"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <GroupBox
-                    Grid.Column="2"
-                    Header="Coming Up"
-                    FontSize="24 px"
-                    Margin="5"
-                    Style="{DynamicResource MaterialDesignGroupBox}"
-                    materialDesign:ColorZoneAssist.Mode="Accent"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth5"
-                    BorderThickness="0">
-        </GroupBox>
-    </Grid>
+             d:DesignHeight="450" d:DesignWidth="160">
+    <materialDesign:Card>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <materialDesign:ColorZone Mode="PrimaryLight" Padding="6">
+                <TextBlock Grid.Row="0" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Margin="5" HorizontalAlignment="Center">Coming Up</TextBlock>
+            </materialDesign:ColorZone>
+
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Standings}" Grid.IsSharedSizeScope="True" Margin="12 5 12 5">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Position" Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition SharedSizeGroup="Points" Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{Binding Position}" Margin="0 2 3 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
+                            <TextBlock Grid.Column="1" Text="{Binding Car}" Margin="0 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="2" Text="{Binding Points}" Margin="2 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>

@@ -22,7 +22,20 @@
             <StackPanel Orientation="Vertical" Margin="16">
                 <TextBox materialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
                 <TextBox materialDesign:HintAssist.Hint="Number of Lanes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding NumLanes}" />
-                <Button IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Style="{DynamicResource MaterialDesignFlatButton}">Done</Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">True</system:Boolean>
+                        </Button.CommandParameter>
+                        ACCEPT
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                        </Button.CommandParameter>
+                        CANCEL
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
@@ -52,15 +65,25 @@
                 <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryDark" DockPanel.Dock="Top">
                     <DockPanel>
                         <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton"/>
-                        <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                        <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}">
                             <StackPanel>
-                                <Button Content="Home" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
-                                <Button Content="Cars" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
-                                <Button Content="Lineup" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
-                                <Button Content="Edit Races" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
-                                <Button Content="Results" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <ListBox
+                                    x:Name="ViewsListBox"
+                                    ItemsSource="{Binding ElementName=TournamentsListBox, Path=SelectedItem.Views, NotifyOnTargetUpdated=True}"
+                                    TargetUpdated="ViewsListBox_TargetUpdated"
+                                    Grid.IsSharedSizeScope="True"
+                                    Margin="12 0 12 0"
+                                    PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp"
+                                    SelectedIndex="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:TournamentViewViewModel}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                                 <Separator/>
                                 <Button Content="Edit Event" Click="EditEvent_Click" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Conduct Races" Click="ConductRaces_Click" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
                             </StackPanel>
                         </materialDesign:PopupBox>
                         <TextBlock 
@@ -72,7 +95,7 @@
                         </TextBlock>
                     </DockPanel>
                 </materialDesign:ColorZone>
-                <ContentControl Content="{Binding ElementName=TournamentsListBox, Path=SelectedItem.TournamentControl}" />
+                <ContentControl Content="{Binding ElementName=ViewsListBox, Path=SelectedItem.Control}" />
             </DockPanel>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>

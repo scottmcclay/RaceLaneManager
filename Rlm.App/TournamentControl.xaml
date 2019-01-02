@@ -14,12 +14,12 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="215" />
+            <ColumnDefinition Width="225" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="160" />
         </Grid.ColumnDefinitions>
 
-        <local:StandingsControl Grid.Column="0"></local:StandingsControl>
+        <local:StandingsControl Grid.Column="0" Margin="5"></local:StandingsControl>
 
         <local:RaceDetailsControl Grid.Column="1"></local:RaceDetailsControl>
 

@@ -3,10 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Rlm.App"
              mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Cars}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:CarViewModel}">
+                        <materialDesign:Card Margin="15 5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100px" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="50px" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Number}" Margin="10" Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="10" Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                <TextBlock Grid.Column="2" Text="{Binding Owner}" Margin="10" Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                <TextBlock Grid.Column="3" Text="{Binding Den}" Margin="10" Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                <materialDesign:PopupBox Grid.Column="4" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Button Grid.Row="0" Content="Edit" Click="EditCar_Click" />
+                                        <Button Grid.Row="1" Content="Delete" Click="DeleteCar_Click" />
+                                    </Grid>
+                                </materialDesign:PopupBox>
+                            </Grid>
+                        </materialDesign:Card>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

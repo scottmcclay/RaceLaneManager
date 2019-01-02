@@ -24,5 +24,15 @@ namespace Rlm.App
         {
             InitializeComponent();
         }
+
+        private void EditCar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteCar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

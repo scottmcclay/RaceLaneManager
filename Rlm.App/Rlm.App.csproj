@@ -61,6 +61,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cars\CarsControlViewModel.cs" />
+    <Compile Include="ViewModels.Common\CarViewModel.cs" />
+    <Compile Include="ConductRacesWindow.xaml.cs">
+      <DependentUpon>ConductRacesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditRaces\EditRaceViewModel.cs" />
     <Compile Include="EditTournamentViewModel.cs" />
     <Compile Include="Home\RaceDetailsControlViewModel.cs" />
     <Compile Include="EditRaces\EditRacesControl.xaml.cs">
@@ -68,6 +73,7 @@
     </Compile>
     <Compile Include="EditRaces\EditRacesControlViewModel.cs" />
     <Compile Include="Home\HomeControlViewModel.cs" />
+    <Compile Include="Home\StandingViewModel.cs" />
     <Compile Include="Lineup\LineupControlViewModel.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="PropertyChangeNotifier.cs" />
@@ -92,7 +98,13 @@
     </Compile>
     <Compile Include="TournamentControlViewModel.cs" />
     <Compile Include="TournamentViewModel.cs" />
+    <Compile Include="TournamentViewViewModel.cs" />
+    <Compile Include="ViewModels.Common\LaneAssignmentViewModel.cs" />
     <Page Include="Cars\CarsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConductRacesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,20 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="245" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="180" />
+        </Grid.ColumnDefinitions>
+
+        <local:StandingsControl Grid.Column="0" DataContext="{Binding Standings}" Margin="10 100 10 10"></local:StandingsControl>
+
+        <local:RaceDetailsControl Grid.Column="1"></local:RaceDetailsControl>
+
+        <local:UpNextControl Grid.Column="2" Margin="10 100 10 10 "></local:UpNextControl>
     </Grid>
 </UserControl>

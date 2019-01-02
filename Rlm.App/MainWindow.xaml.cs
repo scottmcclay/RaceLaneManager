@@ -2,6 +2,8 @@
 using Rlm.Core;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Rlm.App
@@ -21,6 +23,20 @@ namespace Rlm.App
         private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             MenuToggleButton.IsChecked = false;
+            var selectedTournament = this.TournamentsListBox.SelectedItem;
+            if (selectedTournament != null)
+            {
+
+            }
+        }
+
+        private void ViewsListBox_TargetUpdated(object sender, DataTransferEventArgs e)
+        {
+            ListBox lb = sender as ListBox;
+            if ((lb != null) && (lb.HasItems))
+            {
+                lb.SelectedIndex = 0;
+            }
         }
 
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
@@ -34,5 +50,9 @@ namespace Rlm.App
             vm?.EditTournament();
         }
 
+        private void ConductRaces_Click(object sender, RoutedEventArgs e)
+        {
+            TournamentViewModel vm = this.TournamentsListBox.SelectedItem as TournamentViewModel;
+        }
     }
 }
