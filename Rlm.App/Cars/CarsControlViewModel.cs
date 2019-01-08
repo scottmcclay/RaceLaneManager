@@ -1,4 +1,5 @@
-﻿using Rlm.Core;
+﻿using MaterialDesignThemes.Wpf;
+using Rlm.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,15 +20,16 @@ namespace Rlm.App
         {
             this.TournamentID = tournamentID;
 
-            PopulateCars();
+            PopulateCars(TournamentManager.GetCars(this.TournamentID));
 
             TournamentManager.CarsUpdated += TournamentManager_CarsUpdated;
             TournamentManager.CarUpdated += TournamentManager_CarUpdated;
         }
 
-        private void PopulateCars()
+        private void PopulateCars(IEnumerable<ICar> cars)
         {
-            foreach (ICar car in TournamentManager.GetCars(this.TournamentID))
+            this.Cars.Clear();
+            foreach (ICar car in cars)
             {
                 _cars.Add(new CarViewModel(car));
             }
@@ -35,12 +37,27 @@ namespace Rlm.App
 
         private void TournamentManager_CarUpdated(int tournamentID, CarUpdatedEventArgs e)
         {
-            throw new NotImplementedException();
+            PopulateCars(TournamentManager.GetCars(this.TournamentID));
         }
 
         private void TournamentManager_CarsUpdated(int tournamentID, CarsUpdatedEventArgs e)
         {
-            throw new NotImplementedException();
+            PopulateCars(e.Cars);
+        }
+
+        public void AddCar(ICar car)
+        {
+            TournamentManager.AddCar(this.TournamentID, car);
+        }
+
+        public void UpdateCar(ICar car)
+        {
+            TournamentManager.UpdateCar(this.TournamentID, car);
+        }
+
+        public void DeleteCar(ICar car)
+        {
+            TournamentManager.DeleteCar(this.TournamentID, car.ID);
         }
     }
 }

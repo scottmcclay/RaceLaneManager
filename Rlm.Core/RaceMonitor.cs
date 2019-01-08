@@ -13,12 +13,13 @@ namespace Rlm.Core
     {
         public static LaneResultEventHandler LaneResultAdded;
 
+        private static ILogger _logger;
         private static Thread _monitorThread;
         private static Random _random;
         private static SerialPort _serialPort;
         private static bool _stopMonitoring = false;
 
-        public static void Monitor(string portName, int tournamentID, int raceNum, bool simulate = false)
+        public static void Monitor(string portName, int baudRate, int tournamentID, int raceNum, bool simulate = false)
         {
             if (_random == null)
             {
@@ -28,8 +29,8 @@ namespace Rlm.Core
             if (!simulate)
             {
                 // Open the serial port
-                Debug.WriteLine("Opening serial port {0}", portName);
-                _serialPort = new SerialPort(portName, 9600);
+                _logger?.LogMessage($"Opening serial port {portName}");
+                _serialPort = new SerialPort(portName, baudRate);
                 _serialPort.ReadTimeout = 100;
                 _serialPort.Open();
             }
@@ -50,7 +51,7 @@ namespace Rlm.Core
 
         private static void MonitorFunction(SerialPort port, int tournamentID, int raceNum)
         {
-            Debug.WriteLine("Monitor thread started");
+            _logger?.LogMessage("Monitor thread started");
 
             port.DiscardInBuffer();
 
@@ -59,9 +60,9 @@ namespace Rlm.Core
                 try
                 {
                     string message = port.ReadLine();
-                    Debug.WriteLine(message);
+                    _logger?.LogMessage(message);
 
-                    Regex r = new Regex(@"L(?<laneNum>\d) (?<time>\d{4})");
+                    Regex r = new Regex(@"L(?<laneNum>\d) (?<time>\d{6})");
                     Match m = r.Match(message);
                     if (m.Success)
                     {
@@ -74,23 +75,23 @@ namespace Rlm.Core
                 }
             }
 
-            Debug.WriteLine("Monitor thread ending");
+            _logger?.LogMessage("Monitor thread ending");
         }
 
         public static void Stop()
         {
             if (_monitorThread != null)
             {
-                Debug.WriteLine("Signaling monitor thread to end");
+                _logger?.LogMessage("Signaling monitor thread to end");
                 _stopMonitoring = true;
                 try
                 {
                     _monitorThread.Join(500);
-                    Debug.WriteLine("Detected termination of monitor thread");
+                    _logger?.LogMessage("Detected termination of monitor thread");
                 }
                 catch (TimeoutException ex)
                 {
-                    Debug.WriteLine("Unable to terminate monitor thread - {0}", ex.Message);
+                    _logger?.LogMessage("Unable to terminate monitor thread - {0}", ex.Message);
                 }
                 _monitorThread = null;
 
@@ -114,7 +115,7 @@ namespace Rlm.Core
             ITournament tournament = TournamentManager.GetTournament(tournamentID);
             for (int i = 0; i < tournament.NumLanes; i++)
             {
-                simLaneTimes.Add(i + 1, _random.Next(4500, 6000));
+                simLaneTimes.Add(i + 1, _random.Next(350000, 500000));
             }
 
             // identify the sleep times
@@ -133,7 +134,7 @@ namespace Rlm.Core
             for (int i = 0; i < orderedLaneTimes.Count; i++)
             {
                 // sleep until the car crosses the finish line
-                Thread.Sleep(sleepTimes[i]);
+                Thread.Sleep(sleepTimes[i] / 100);
 
                 // simulate DNF
                 int dnf = _random.Next(1, 20);
@@ -146,7 +147,7 @@ namespace Rlm.Core
                 }
             }
 
-            while (true)
+            while (!_stopMonitoring)
             {
                 Thread.Sleep(500);
             }

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Rlm.App
 {
@@ -34,11 +35,20 @@ namespace Rlm.App
 
         private void TournamentManager_StandingsUpdated(int tournamentID, StandingsUpdatedEventArgs e)
         {
-            this.Standings.Clear();
-
-            foreach (IStanding standing in e.Standings)
+            if (!Application.Current.Dispatcher.CheckAccess())
             {
-                this.Standings.Add(new StandingViewModel(standing));
+                Application.Current.Dispatcher.Invoke(() => this.TournamentManager_StandingsUpdated(tournamentID, e));
+            }
+            else
+            {
+                if (tournamentID != this.TournamentID) return;
+
+                this.Standings.Clear();
+
+                foreach (IStanding standing in e.Standings)
+                {
+                    this.Standings.Add(new StandingViewModel(standing));
+                }
             }
         }
     }

@@ -29,7 +29,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" Text="{Binding Position}" Margin="0 2 3 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Car}" Margin="0 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="1" Text="{Binding Car.Name}" Margin="5 2 5 2" Style="{StaticResource MaterialDesignButtonTextBlock}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Grid.Column="2" Text="{Binding Points}" Margin="2 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
                         </Grid>
                     </DataTemplate>

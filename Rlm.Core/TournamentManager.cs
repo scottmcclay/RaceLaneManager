@@ -10,7 +10,8 @@ namespace Rlm.Core
 
         public static event CarsUpdatedEventHandler CarsUpdated;
         public static event CarUpdatedEventHandler CarUpdated;
-        public static event CurrentRaceUpdatedEventHandler CurrentRaceUpdated;
+        public static event RaceUpdatedEventHandler RaceUpdated;
+        public static event CurrentRaceChangedEventHandler CurrentRaceChanged;
         public static event NextRacesUpdatedEventHandler NextRacesUpdated;
         public static event RacesUpdatedEventHandler RacesUpdated;
         public static event StandingsUpdatedEventHandler StandingsUpdated;
@@ -243,7 +244,8 @@ namespace Rlm.Core
             }
 
             RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(result));
-            CurrentRaceUpdated?.Invoke(tournamentID, new CurrentRaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
+            CurrentRaceChanged?.Invoke(tournamentID, new CurrentRaceChangedEventArgs(null, GetCurrentRace(tournamentID)));
+            //RaceUpdated?.Invoke(tournamentID, new RaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
             NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
             StandingsUpdated?.Invoke(tournamentID, new StandingsUpdatedEventArgs(GetStandings(tournamentID)));
 
@@ -350,6 +352,13 @@ namespace Rlm.Core
             return string.Format("{0}th", position);
         }
 
+        public static double CalculateSpeed(int trackLengthInches, double seconds)
+        {
+            double scaleMiles = trackLengthInches / 2217.6;
+            double scaleMph = (scaleMiles * 3600) / seconds;
+            return scaleMph;
+        }
+
         public static List<Standing> GetStandings(Tournament tournament, bool orderByPoints = true, string groupName = null)
         {
             List<Standing> result = new List<Standing>();
@@ -386,7 +395,9 @@ namespace Rlm.Core
 
                 if (carTimes[carID].Count > 0)
                 {
-                    carStandingsDictionary[carID].AverageTime = sum / carTimes[carID].Count;
+                    Standing standing = carStandingsDictionary[carID];
+                    standing.AverageTime = sum / carTimes[carID].Count;
+                    standing.AverageSpeed = CalculateSpeed(tournament.TrackLengthInches, standing.AverageTime / 100000);
                 }
             }
 
@@ -478,6 +489,8 @@ namespace Rlm.Core
         {
             IRlmRepository repo = RepositoryManager.GetDefaultRepository();
 
+            IRace previousRace = GetCurrentRace(tournamentID);
+
             lock (_lock)
             {
                 Tournament tournament = repo.LoadTournament(tournamentID);
@@ -486,7 +499,7 @@ namespace Rlm.Core
                 repo.SaveTournament(tournament);
             }
 
-            CurrentRaceUpdated?.Invoke(tournamentID, new CurrentRaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
+            CurrentRaceChanged?.Invoke(tournamentID, new CurrentRaceChangedEventArgs(previousRace, GetCurrentRace(tournamentID)));
             NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
         }
 
@@ -509,17 +522,21 @@ namespace Rlm.Core
                 repo.SaveTournament(tournament);
             }
 
-            RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
-            CurrentRaceUpdated?.Invoke(tournamentID, new CurrentRaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
-            NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
+            //RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
+            RaceUpdated?.Invoke(tournamentID, new RaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
+            //NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
 
             RaceMonitor.LaneResultAdded += RaceMonitor_LaneResultAdded;
-            RaceMonitor.Monitor("COM3", tournamentID, raceNum, true);
+            RaceMonitor.Monitor("COM3", 115200, tournamentID, raceNum, true);
         }
 
         public static void RaceMonitor_LaneResultAdded(LaneResultEventArgs e)
         {
             UpdateRaceTime(e.TournamentID, e.RaceNum, e.LaneNum, e.Time);
+
+            //RacesUpdated?.Invoke(e.TournamentID, new RacesUpdatedEventArgs(GetRaces(e.TournamentID)));
+            RaceUpdated?.Invoke(e.TournamentID, new RaceUpdatedEventArgs(GetCurrentRace(e.TournamentID)));
+            StandingsUpdated?.Invoke(e.TournamentID, new StandingsUpdatedEventArgs(GetStandings(e.TournamentID)));
         }
 
         public static void StopRace(int tournamentID, int raceNum)
@@ -538,12 +555,12 @@ namespace Rlm.Core
                 repo.SaveTournament(tournament);
             }
 
-            RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
-            CurrentRaceUpdated?.Invoke(tournamentID, new CurrentRaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
-            NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
+            //RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
+            RaceUpdated?.Invoke(tournamentID, new RaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
+            //NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
         }
 
-        public static IRace UpdateRace(int tournamentID, Race race)
+        public static IRace UpdateRace(int tournamentID, IRace race)
         {
             IRlmRepository repo = RepositoryManager.GetDefaultRepository();
             Race updatedRace = null;
@@ -554,16 +571,18 @@ namespace Rlm.Core
 
                 updatedRace = tournament.RaceData.Where(r => r.RaceNumber == race.RaceNumber).Single();
 
-                if (updatedRace.LaneAssignmentData.Count != race.LaneAssignmentData.Count)
+                if (updatedRace.LaneAssignmentData.Count != race.LaneAssignments.Count())
                 {
                     throw new ArgumentException("Races do not have the same number of lane assignments");
                 }
 
                 updatedRace.State = race.State;
+
+                ILaneAssignment[] laneAssignments = race.LaneAssignments.ToArray();
                 for (int i = 0; i < updatedRace.LaneAssignmentData.Count; i++)
                 {
                     LaneAssignment to = updatedRace.LaneAssignmentData[i];
-                    LaneAssignment from = race.LaneAssignmentData[i];
+                    ILaneAssignment from = laneAssignments[i];
                     to.ElapsedTime = from.ElapsedTime;
                     to.Points = from.Points;
                     to.Position = from.Position;
@@ -572,9 +591,9 @@ namespace Rlm.Core
                 repo.SaveTournament(tournament);
             }
 
-            RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
-            CurrentRaceUpdated?.Invoke(tournamentID, new CurrentRaceUpdatedEventArgs(GetCurrentRace(tournamentID)));
-            NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
+            //RacesUpdated?.Invoke(tournamentID, new RacesUpdatedEventArgs(GetRaces(tournamentID)));
+            RaceUpdated?.Invoke(tournamentID, new RaceUpdatedEventArgs(updatedRace));
+            //NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
             StandingsUpdated?.Invoke(tournamentID, new StandingsUpdatedEventArgs(GetStandings(tournamentID)));
 
             return updatedRace;
@@ -632,6 +651,7 @@ namespace Rlm.Core
                 }
 
                 race.LaneAssignmentData[lane - 1].ElapsedTime = elapsedTime;
+                race.LaneAssignmentData[lane - 1].ScaleSpeed = CalculateSpeed(tournament.TrackLengthInches, elapsedTime / 100000.0);
 
                 CalculatePoints(ref race);
 
@@ -648,7 +668,7 @@ namespace Rlm.Core
             overall.Standings = GetStandings(tournament);
             results.Add(overall);
 
-            foreach (string name in new string[] { "Tiger", "Wolf", "Bear", "Webelos I", "Webelos II" })
+            foreach (string name in new string[] { "Lion", "Tiger", "Wolf", "Bear", "Webelos I", "Webelos II" })
             {
                 GroupResults groupResult = new GroupResults();
                 groupResult.GroupName = name;

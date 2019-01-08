@@ -10,6 +10,7 @@ namespace Rlm.Core
     public interface ICar
     {
         int ID { get; }
+        int Number { get; }
         string Name { get; }
         string Owner { get; }
         string Den { get; }
@@ -18,6 +19,7 @@ namespace Rlm.Core
     public class Car : ICar
     {
         public int ID { get; set; }
+        public int Number { get; set; }
         public string Name { get; set; }
         public string Owner { get; set; }
         public string Den { get; set; }
@@ -27,6 +29,7 @@ namespace Rlm.Core
             return new Car()
             {
                 ID = car.ID,
+                Number = car.Number,
                 Name = car.Name,
                 Owner = car.Owner,
                 Den = car.Den
@@ -36,6 +39,7 @@ namespace Rlm.Core
         public void CopyFrom(ICar car)
         {
             this.ID = car.ID;
+            this.Number = car.Number;
             this.Name = car.Name;
             this.Owner = car.Owner;
             this.Den = car.Den;

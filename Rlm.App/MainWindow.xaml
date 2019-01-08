@@ -15,7 +15,8 @@
         Height="800"
         Width="1600"
         BorderBrush="Black"
-        d:DataContext="{d:DesignInstance local:MainWindowViewModel,IsDesignTimeCreatable=True}">
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel,IsDesignTimeCreatable=True}"
+        Closing="Window_Closing">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:EditTournamentViewModel}">

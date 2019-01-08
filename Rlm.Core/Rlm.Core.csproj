@@ -101,7 +101,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcreteConverter.cs" />
+    <Compile Include="Events\CurrentRaceChangedEventArgs.cs" />
     <Compile Include="Events\LaneResultEventArgs.cs" />
+    <Compile Include="Loggers\EventLogger.cs" />
+    <Compile Include="Loggers\ILogger.cs" />
+    <Compile Include="Loggers\LogMessageEventArgs.cs" />
     <Compile Include="Model\RlmGetRacesResopnse.cs" />
     <Compile Include="Engines\RaceGenerator.cs" />
     <Compile Include="Events\CarsUpdatedEventArgs.cs" />

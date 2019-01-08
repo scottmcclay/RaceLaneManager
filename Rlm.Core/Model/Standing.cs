@@ -12,6 +12,7 @@ namespace Rlm.Core
         int Points { get; }
         string Position { get; }
         long AverageTime { get; }
+        double AverageSpeed { get; }
     }
 
     public class Standing : IStanding
@@ -20,5 +21,6 @@ namespace Rlm.Core
         public int Points { get; set; }
         public string Position { get; set; }
         public long AverageTime { get; set; }
+        public double AverageSpeed { get; set; }
     }
 }

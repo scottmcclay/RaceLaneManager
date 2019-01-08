@@ -7,18 +7,27 @@ using System.Threading.Tasks;
 
 namespace Rlm.App
 {
-    class CarViewModel
+    class CarViewModel : ICar
     {
-        private ICar _car;
+        public int ID { get; set; }
+        public int Number { get; set; }
+        public string Name { get; set; }
+        public string Owner { get; set; }
+        public string Den { get; set; }
+        public bool Edit { get; set; }
 
-        public int Number => 100;
-        public string Name => _car.Name;
-        public string Owner => _car.Owner;
-        public string Den => _car.Den;
+        public string[] Dens => new string[] { "Lion", "Tiger", "Wolf", "Bear", "Webelos I", "Webelos II" };
 
-        public CarViewModel(ICar car)
+        public CarViewModel(ICar car = null)
         {
-            _car = car;
+            if (car != null)
+            {
+                this.ID = car.ID;
+                this.Number = car.Number;
+                this.Name = String.IsNullOrEmpty(car.Name) ? car.Owner : car.Name;
+                this.Owner = car.Owner;
+                this.Den = car.Den;
+            }
         }
     }
 }

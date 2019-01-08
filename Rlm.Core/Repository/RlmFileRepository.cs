@@ -8,6 +8,8 @@ namespace Rlm.Core
 {
     public class RlmFileRepository : IRlmRepository
     {
+        private ILogger _logger;
+
         private Object _lock = new Object();
         private string _dataPath;
         private readonly string _tournamentsDirectoryName = "RlmTournaments";
@@ -17,12 +19,12 @@ namespace Rlm.Core
             string environmentVariableName = "LocalAppData";
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                Debug.WriteLine("Platform is Unix");
+                _logger?.LogMessage(this, "Platform is Unix");
                 environmentVariableName = "HOME";
             }
 
             string rootPath = Environment.GetEnvironmentVariable(environmentVariableName);
-            Debug.WriteLine("RlmFileRepository: Using environment variable {0}: {1}", environmentVariableName, rootPath);
+            _logger?.LogMessage(this, $"RlmFileRepository: Using environment variable {environmentVariableName}: {rootPath}");
 
             CreateTournamentsDirectory(rootPath);
         }
@@ -32,7 +34,7 @@ namespace Rlm.Core
             lock (_lock)
             {
                 this._dataPath = Path.Combine(rootPath, this._tournamentsDirectoryName);
-                Debug.WriteLine(string.Format("Data path: {0}", this._dataPath));
+                _logger?.LogMessage(this, string.Format("Data path: {0}", this._dataPath));
 
                 if (!Directory.Exists(_dataPath))
                 {

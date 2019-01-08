@@ -1,6 +1,8 @@
 ﻿using Rlm.Core;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,82 +10,94 @@ using System.Windows;
 
 namespace Rlm.App
 {
-    class EditRaceViewModel : IDisposable
+    class EditRaceViewModel : IRace, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private int _tournamentID;
-        private IRace _race;
-        private static readonly string RaceStateRacingDisplayText = "Racing";
-        private static readonly string RaceStateDoneDisplayText = "Done";
-        private static readonly string RaceStateNotStartedDisplayText = "Not Started";
 
-        public int? RaceNumber => _race?.RaceNumber;
-        public string RaceName => $"Race {_race?.RaceNumber}";
-        public Visibility CurrentRaceVisibility { get; private set; }
-
-        public string RaceState
+        private static readonly Dictionary<RaceState, string> _raceStateStringMap = new Dictionary<RaceState, string>
         {
-            get
+            { RaceState.NotStarted, "Not Started" },
+            { RaceState.Racing, "Racing" },
+            { RaceState.Done, "Done" }
+        };
+
+        public int RaceNumber { get; set; }
+        public string RaceName => $"Race {this.RaceNumber}";
+
+        private bool _currentRace = false;
+
+
+        public bool CurrentRace
+        {
+            get => _currentRace;
+            set
             {
-                string result = "Unknown";
+                _currentRace = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentRace)));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentRaceVisibility)));
+            }
+        }
+        public Visibility CurrentRaceVisibility => this.CurrentRace ? Visibility.Visible : Visibility.Hidden;
 
-                if (_race != null)
+        public ObservableCollection<LaneAssignmentViewModel> LaneAssignmentViewModels { get; private set; }
+        public IEnumerable<ILaneAssignment> LaneAssignments => this.LaneAssignmentViewModels;
+
+        private RaceState _raceState;
+        public RaceState State
+        {
+            get => _raceState;
+            set
+            {
+                if (_raceState != value)
                 {
-                    switch (_race.State)
+                    _raceState = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.State)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.RaceStateText)));
+                }
+            }
+        }
+        public string RaceStateText
+        {
+            get => _raceStateStringMap[this.State];
+            set
+            {
+                foreach (var pair in _raceStateStringMap)
+                {
+                    if (value == pair.Value)
                     {
-                        case Core.RaceState.Racing:
-                            result = RaceStateRacingDisplayText;
-                            break;
-
-                        case Core.RaceState.Done:
-                            result = RaceStateDoneDisplayText;
-                            break;
-
-                        case Core.RaceState.NotStarted:
-                            result = RaceStateNotStartedDisplayText;
-                            break;
+                        this.State = pair.Key;
+                        return;
                     }
                 }
 
-                return result;
+                throw new ArgumentException($"{value} is not a valid RaceState");
             }
         }
 
-        public IEnumerable<string> PossibleRaceStates => new string[]
-        {
-            RaceStateNotStartedDisplayText,
-            RaceStateRacingDisplayText,
-            RaceStateDoneDisplayText
-        };
+        public IEnumerable<string> PossibleRaceStates => _raceStateStringMap.Values;
 
         public EditRaceViewModel(int tournamentID, IRace race)
         {
             _tournamentID = tournamentID;
-            _race = race;
-            UpdateCurrentRaceVisibility(TournamentManager.GetCurrentRace(_tournamentID)?.RaceNumber);
-        }
+            this.RaceNumber = race.RaceNumber;
+            this.State = race.State;
 
-        public void Dispose()
-        {
-            TournamentManager.CurrentRaceUpdated -= TournamentManager_CurrentRaceUpdated;
-        }
-
-        private void UpdateCurrentRaceVisibility(int? currentRaceNumber)
-        {
-            if (currentRaceNumber.HasValue && (currentRaceNumber.Value == _race.RaceNumber))
+            this.LaneAssignmentViewModels = new ObservableCollection<LaneAssignmentViewModel>();
+            foreach (ILaneAssignment laneAssignment in race.LaneAssignments)
             {
-                this.CurrentRaceVisibility = Visibility.Visible;
-            }
-            else
-            {
-                this.CurrentRaceVisibility = Visibility.Hidden;
+                this.LaneAssignmentViewModels.Add(new LaneAssignmentViewModel(laneAssignment));
             }
         }
 
-        private void TournamentManager_CurrentRaceUpdated(int tournamentID, CurrentRaceUpdatedEventArgs e)
+        public void Update(IRace race)
         {
-            if (_tournamentID == tournamentID)
+            this.State = race.State;
+            this.LaneAssignmentViewModels.Clear();
+            foreach (ILaneAssignment laneAssignment in race.LaneAssignments)
             {
-                UpdateCurrentRaceVisibility(e.CurrentRace?.RaceNumber);
+                this.LaneAssignmentViewModels.Add(new LaneAssignmentViewModel(laneAssignment));
             }
         }
     }

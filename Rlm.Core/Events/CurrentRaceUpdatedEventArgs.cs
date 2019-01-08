@@ -2,14 +2,14 @@
 
 namespace Rlm.Core
 {
-    public delegate void CurrentRaceUpdatedEventHandler(int tournamentID, CurrentRaceUpdatedEventArgs e);
+    public delegate void RaceUpdatedEventHandler(int tournamentID, RaceUpdatedEventArgs e);
 
-    public class CurrentRaceUpdatedEventArgs : EventArgs
+    public class RaceUpdatedEventArgs : EventArgs
     {
-        public IRace CurrentRace { get; set; }
-        public CurrentRaceUpdatedEventArgs(IRace currentRace)
+        public IRace Race { get; set; }
+        public RaceUpdatedEventArgs(IRace currentRace)
         {
-            this.CurrentRace = currentRace;
+            this.Race = currentRace;
         }
     }
 }

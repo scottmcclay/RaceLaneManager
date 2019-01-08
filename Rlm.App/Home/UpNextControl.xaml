@@ -18,20 +18,34 @@
                 <TextBlock Grid.Row="0" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Margin="5" HorizontalAlignment="Center">Coming Up</TextBlock>
             </materialDesign:ColorZone>
 
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Standings}" Grid.IsSharedSizeScope="True" Margin="12 5 12 5">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding NextRaces}" Grid.IsSharedSizeScope="True" Margin="12 5 12 5">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Position" Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition SharedSizeGroup="Points" Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <materialDesign:Card Margin="2 6">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="{Binding Position}" Margin="0 2 3 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Car}" Margin="0 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Grid.Column="2" Text="{Binding Points}" Margin="2 2 0 2" Style="{StaticResource MaterialDesignButtonTextBlock}" />
-                        </Grid>
+                                <TextBlock Grid.Row="0" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{Binding RaceName}" Margin="5" />
+
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Cars}" Margin="10 0 3 10">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="20" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="2" Text="{Binding Number, StringFormat=D2}" />
+                                                <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="2" Text="{Binding Owner}" TextTrimming="CharacterEllipsis" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </materialDesign:Card>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

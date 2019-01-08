@@ -29,6 +29,8 @@ namespace Rlm.Core
 {
     public class RaceGenerator
     {
+        private ILogger _logger;
+
         private static Random _rand = new Random();
 
         public int MinSteps { get; set; }
@@ -70,7 +72,7 @@ namespace Rlm.Core
             if (candidates.Count() <= 0)
             {
                 // no available candidates
-                Debug.WriteLine("No candidates available for race {0} lane {1} - backtracking", raceNum, laneNum);
+                _logger?.LogMessage(this, $"No candidates available for race {raceNum} lane {laneNum} - backtracking");
                 return false;
             }
 
@@ -81,10 +83,10 @@ namespace Rlm.Core
                 StringBuilder sb = new StringBuilder();
                 sb.AppendFormat(string.Format("Candidates for race {0} lane {1}: ", raceNum, laneNum));
                 foreach (int candidate in candidates) { sb.AppendFormat(" {0}", candidate); }
-                Debug.WriteLine(sb.ToString());
+                _logger?.LogMessage(this, sb.ToString());
 
                 int racer = candidates[racersAttempted];
-                Debug.WriteLine("Race {0}: assigning racer {1} to lane {2}", raceNum, racer, laneNum);
+                _logger?.LogMessage(this, $"Race {raceNum}: assigning racer {racer} to lane {laneNum}");
                 races[raceNum - 1, laneNum - 1] = racer;
 
                 this.ActualSteps++;
@@ -111,14 +113,14 @@ namespace Rlm.Core
                 }
 
                 // can't solve the problem with the selected racer, try the next candidate
-                Debug.WriteLine("Race {0}: Racer {1} in lane {2} did not work", raceNum, racer, laneNum);
+                _logger?.LogMessage(this, $"Race {raceNum}: Racer {racer} in lane {laneNum} did not work");
                 this.Backtracks++;
 
                 racersAttempted++;
             } while (racersAttempted < candidates.Count());
 
             // all candidates have been exhausted and a solution was not found
-            Debug.WriteLine("No more candidates available for race {0} lane {1} - backtracking", raceNum, laneNum);
+            _logger?.LogMessage(this, $"No more candidates available for race {raceNum} lane {laneNum} - backtracking");
             return false;
         }
 

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Rlm.App
 {
@@ -12,21 +13,39 @@ namespace Rlm.App
     {
         public int TournamentID { get; private set; }
 
-        public ObservableCollection<StandingViewModel> Standings { get; private set; }
+        public ObservableCollection<UpNextRaceViewModel> NextRaces { get; private set; }
 
         public UpNextControlViewModel(int tournamentID)
         {
             this.TournamentID = tournamentID;
-            this.Standings = new ObservableCollection<StandingViewModel>();
+            this.NextRaces = new ObservableCollection<UpNextRaceViewModel>();
 
-            PopulateStandings();
+            TournamentManager.NextRacesUpdated += TournamentManager_NextRacesUpdated;
+
+            PopulateNextRaces(TournamentManager.GetNextRaces(this.TournamentID));
         }
 
-        private void PopulateStandings()
+        private void TournamentManager_NextRacesUpdated(int tournamentID, NextRacesUpdatedEventArgs e)
         {
-            foreach (IStanding standing in TournamentManager.GetStandings(this.TournamentID))
+            if (!Application.Current.Dispatcher.CheckAccess())
             {
-                Standings.Add(new StandingViewModel(standing));
+                Application.Current.Dispatcher.Invoke(() => this.TournamentManager_NextRacesUpdated(tournamentID, e));
+            }
+            else
+            {
+                if (tournamentID != this.TournamentID) return;
+
+                PopulateNextRaces(e.NextRaces);
+            }
+        }
+
+        private void PopulateNextRaces(IEnumerable<IRace> races)
+        {
+            this.NextRaces.Clear();
+
+            foreach (IRace race in races)
+            {
+                this.NextRaces.Add(new UpNextRaceViewModel(race));
             }
         }
     }

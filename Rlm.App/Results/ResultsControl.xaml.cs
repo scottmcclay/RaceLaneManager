@@ -24,5 +24,11 @@ namespace Rlm.App
         {
             InitializeComponent();
         }
+
+        private void GetResultsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResultsControlViewModel vm = this.DataContext as ResultsControlViewModel;
+            vm.DisplayResults();
+        }
     }
 }

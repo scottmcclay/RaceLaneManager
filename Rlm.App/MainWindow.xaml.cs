@@ -1,6 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Rlm.Core;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,6 +15,8 @@ namespace Rlm.App
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ConductRacesWindow _conductRacesWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,10 +27,21 @@ namespace Rlm.App
         private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             MenuToggleButton.IsChecked = false;
-            var selectedTournament = this.TournamentsListBox.SelectedItem;
-            if (selectedTournament != null)
-            {
 
+            TournamentViewModel selectedTournament = this.TournamentsListBox.SelectedItem as TournamentViewModel;
+            EditRacesControlViewModel vm = _conductRacesWindow?.DataContext as EditRacesControlViewModel;
+            vm?.Dispose();
+
+            if (_conductRacesWindow != null)
+            {
+                vm = null;
+
+                if (selectedTournament != null)
+                {
+                    vm = new EditRacesControlViewModel(selectedTournament.TournamentID);
+                }
+
+                _conductRacesWindow.DataContext = vm;
             }
         }
 
@@ -52,7 +67,43 @@ namespace Rlm.App
 
         private void ConductRaces_Click(object sender, RoutedEventArgs e)
         {
+            if (_conductRacesWindow != null)
+            {
+                if (_conductRacesWindow.IsLoaded)
+                {
+                    _conductRacesWindow.Close();
+                }
+
+                _conductRacesWindow = null;
+            }
+
             TournamentViewModel vm = this.TournamentsListBox.SelectedItem as TournamentViewModel;
+
+            _conductRacesWindow = new ConductRacesWindow
+            {
+                Owner = this,
+                DataContext = new EditRacesControlViewModel(vm.TournamentID)
+            };
+
+            _conductRacesWindow.Closed += ConductRacesWindows_Closed;
+
+            _conductRacesWindow.Show();
+        }
+
+        private void ConductRacesWindows_Closed(object sender, EventArgs e)
+        {
+            if (_conductRacesWindow != null)
+            {
+                EditRacesControlViewModel vm = _conductRacesWindow.DataContext as EditRacesControlViewModel;
+                vm?.Dispose();
+
+                _conductRacesWindow.Closed -= ConductRacesWindows_Closed;
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            RaceMonitor.Stop();
         }
     }
 }

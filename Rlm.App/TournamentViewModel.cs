@@ -25,31 +25,30 @@ namespace Rlm.App
 
         public string Name => _tournament?.Name;
 
-        public TournamentControl TournamentControl { get; private set; }
-
         public TournamentViewModel(ITournament tournament)
         {
             _tournament = tournament;
             TournamentManager.TournamentUpdated += TournamentManager_TournamentUpdated;
-            this.TournamentControl = new TournamentControl();
 
             _views.Add(new TournamentViewViewModel("Home", new HomeControl
-                {
-                    DataContext = new HomeControlViewModel(_tournament.ID)
-                }));
-
-            _views.Add(new TournamentViewViewModel("Cars", new CarsControl
-                {
-                    DataContext = new CarsControlViewModel(_tournament.ID)
-                }));
-
-            _views.Add(new TournamentViewViewModel("Lineup", new LineupControl()));
-            _views.Add(new TournamentViewViewModel("Edit Races", new EditRacesControl
             {
-                DataContext = new EditRacesControlViewModel(_tournament.ID)
+                DataContext = new HomeControlViewModel(_tournament.ID)
             }));
 
-            _views.Add(new TournamentViewViewModel("Results", new ResultsControl()));
+            _views.Add(new TournamentViewViewModel("Cars", new CarsControl
+            {
+                DataContext = new CarsControlViewModel(_tournament.ID)
+            }));
+
+            _views.Add(new TournamentViewViewModel("Lineup", new LineupControl
+            {
+                DataContext = new LineupControlViewModel(_tournament.ID)
+            }));
+
+            _views.Add(new TournamentViewViewModel("Results", new ResultsControl
+            {
+                DataContext = new ResultsControlViewModel(_tournament.ID)
+            }));
         }
 
         private void TournamentManager_TournamentUpdated(TournamentUpdatedEventArgs e)

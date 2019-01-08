@@ -11,7 +11,7 @@ namespace RaceLaneManager.WebApi
         {
             TournamentManager.CarsUpdated += TournamentManager_CarsUpdated;
             TournamentManager.CarUpdated += TournamentManager_CarUpdated;
-            TournamentManager.CurrentRaceUpdated += TournamentManager_CurrentRaceUpdated;
+            TournamentManager.RaceUpdated += TournamentManager_RaceUpdated;
             TournamentManager.NextRacesUpdated += TournamentManager_NextRacesUpdated;
             TournamentManager.RacesUpdated += TournamentManager_RacesUpdated;
             TournamentManager.StandingsUpdated += TournamentManager_StandingsUpdated;
@@ -29,9 +29,9 @@ namespace RaceLaneManager.WebApi
             Clients.All.carUpdated(tournamentID, e.Car);
         }
 
-        private void TournamentManager_CurrentRaceUpdated(int tournamentID, CurrentRaceUpdatedEventArgs e)
+        private void TournamentManager_RaceUpdated(int tournamentID, RaceUpdatedEventArgs e)
         {
-            Clients.All.currentRaceUpdated(tournamentID, e.CurrentRace);
+            Clients.All.currentRaceUpdated(tournamentID, e.Race);
         }
 
         private void TournamentManager_NextRacesUpdated(int tournamentID, NextRacesUpdatedEventArgs e)

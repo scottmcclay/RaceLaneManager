@@ -19,8 +19,8 @@
 
         <local:StandingsControl Grid.Column="0" DataContext="{Binding Standings}" Margin="10 100 10 10"></local:StandingsControl>
 
-        <local:RaceDetailsControl Grid.Column="1"></local:RaceDetailsControl>
+        <local:RaceDetailsControl Grid.Column="1" DataContext="{Binding RaceDetails}"></local:RaceDetailsControl>
 
-        <local:UpNextControl Grid.Column="2" Margin="10 100 10 10 "></local:UpNextControl>
+        <local:UpNextControl Grid.Column="2" DataContext="{Binding UpNext}" Margin="10 100 10 10 "></local:UpNextControl>
     </Grid>
 </UserControl>

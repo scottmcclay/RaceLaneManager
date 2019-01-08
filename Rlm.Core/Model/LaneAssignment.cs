@@ -13,6 +13,7 @@ namespace Rlm.Core
         int Lane { get; }
         ICar Car { get; }
         long ElapsedTime { get; }
+        double ScaleSpeed { get; }
         int Position { get; }
         int Points { get; }
     }
@@ -23,6 +24,7 @@ namespace Rlm.Core
         [JsonConverter(typeof(ConcreteConverter<Car>))]
         public ICar Car { get; set; }
         public long ElapsedTime { get; set; }
+        public double ScaleSpeed { get; set; }
         public int Position { get; set; }
         public int Points { get; set; }
 

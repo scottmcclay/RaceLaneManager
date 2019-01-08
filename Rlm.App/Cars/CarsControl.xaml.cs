@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,12 +28,41 @@ namespace Rlm.App
 
         private void EditCar_Click(object sender, RoutedEventArgs e)
         {
-
+            Button editButton = sender as Button;
+            CarViewModel carVM = editButton.DataContext as CarViewModel;
+            carVM.Edit = true;
+            DialogHost.Show(carVM, "CarsDialogHost", EditCarDialogClosingEventHandler);
         }
 
         private void DeleteCar_Click(object sender, RoutedEventArgs e)
         {
+            Button editButton = sender as Button;
+            CarViewModel carVM = editButton.DataContext as CarViewModel;
+            CarsControlViewModel vm = this.DataContext as CarsControlViewModel;
+            vm.DeleteCar(carVM);
+        }
 
+        private void AddCar_Click(object sender, RoutedEventArgs e)
+        {
+            CarViewModel vm = new CarViewModel();
+            DialogHost.Show(vm, "CarsDialogHost", EditCarDialogClosingEventHandler);
+        }
+
+        private void EditCarDialogClosingEventHandler(object sender, DialogClosingEventArgs e)
+        {
+            if ((e.Parameter as bool?) == true)
+            {
+                CarsControlViewModel vm = this.DataContext as CarsControlViewModel;
+                CarViewModel carVM = e.Content as CarViewModel;
+                if (carVM.Edit)
+                {
+                    vm.UpdateCar(carVM);
+                }
+                else
+                {
+                    vm.AddCar(carVM);
+                }
+            }
         }
     }
 }

@@ -61,6 +61,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cars\CarsControlViewModel.cs" />
+    <Compile Include="Home\UpNextRaceViewModel.cs" />
+    <Compile Include="Lineup\CarRacesViewModel.cs" />
+    <Compile Include="Lineup\CarRaceViewModel.cs" />
+    <Compile Include="Lineup\RaceViewModel.cs" />
     <Compile Include="ViewModels.Common\CarViewModel.cs" />
     <Compile Include="ConductRacesWindow.xaml.cs">
       <DependentUpon>ConductRacesWindow.xaml</DependentUpon>
@@ -73,10 +77,9 @@
     </Compile>
     <Compile Include="EditRaces\EditRacesControlViewModel.cs" />
     <Compile Include="Home\HomeControlViewModel.cs" />
-    <Compile Include="Home\StandingViewModel.cs" />
+    <Compile Include="ViewModels.Common\StandingViewModel.cs" />
     <Compile Include="Lineup\LineupControlViewModel.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="PropertyChangeNotifier.cs" />
     <Compile Include="Results\ResultsControl.xaml.cs">
       <DependentUpon>ResultsControl.xaml</DependentUpon>
     </Compile>
@@ -93,10 +96,6 @@
       <DependentUpon>UpNextControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Home\UpNextControlViewModel.cs" />
-    <Compile Include="TournamentControl.xaml.cs">
-      <DependentUpon>TournamentControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TournamentControlViewModel.cs" />
     <Compile Include="TournamentViewModel.cs" />
     <Compile Include="TournamentViewViewModel.cs" />
     <Compile Include="ViewModels.Common\LaneAssignmentViewModel.cs" />
@@ -161,10 +160,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Home\UpNextControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TournamentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

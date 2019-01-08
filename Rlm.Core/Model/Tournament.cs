@@ -21,6 +21,7 @@ namespace Rlm.Core
         int ID { get; }
         string Name { get; }
         int NumLanes { get; }
+        int TrackLengthInches { get; }
         int NumCars { get; }
         int NumRaces { get; }
         TournamentState State { get; }
@@ -71,6 +72,21 @@ namespace Rlm.Core
                 if (_numLanes != value)
                 {
                     _numLanes = value;
+                    OnPropertyChanged(nameof(this.NumLanes));
+                }
+            }
+        }
+
+        [JsonIgnore]
+        private int _trackLengthInches = 480;
+        public int TrackLengthInches
+        {
+            get => _trackLengthInches;
+            set
+            {
+                if (_trackLengthInches != value)
+                {
+                    _trackLengthInches = value;
                     OnPropertyChanged(nameof(this.NumLanes));
                 }
             }
