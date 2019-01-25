@@ -20,8 +20,9 @@ namespace Rlm.App
             this.Position = standing.Position;
             this.Car = new CarViewModel(standing.Car);
             this.Points = $"{standing.Points} pts";
-            this.AverageTime = $"Avg {standing.AverageTime / 100000} sec";
-            this.AverageSpeed = $"Avg {standing.AverageSpeed} mph";
+            double averageTime = ((double)standing.AverageTime) / 100000;
+            this.AverageTime = $"Avg {averageTime.ToString("N3")} sec";
+            this.AverageSpeed = $"Avg {standing.AverageSpeed.ToString("N1")} mph";
         }
     }
 }

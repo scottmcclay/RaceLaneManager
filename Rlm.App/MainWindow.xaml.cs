@@ -59,6 +59,24 @@ namespace Rlm.App
             TournamentManager.AddTournament("New Tournament", 4);
         }
 
+        public void EditSettings_Click(object sender, RoutedEventArgs e)
+        {
+            EditSettingsViewModel editVm = new EditSettingsViewModel();
+            DialogHost.Show(editVm, "RootDialog", EditSettingsDialogClosingEventHandler);
+        }
+
+        private void EditSettingsDialogClosingEventHandler(object sender, DialogClosingEventArgs e)
+        {
+            if ((e.Parameter as bool?) == true)
+            {
+                EditSettingsViewModel vm = e.Content as EditSettingsViewModel;
+                TournamentManager.ComPort = vm.ComPort;
+                TournamentManager.Simulate = vm.Simulate;
+            }
+
+            MenuToggleButton.IsChecked = false;
+        }
+
         private void EditEvent_Click(object sender, RoutedEventArgs e)
         {
             TournamentViewModel vm = this.TournamentsListBox.SelectedItem as TournamentViewModel;
@@ -104,6 +122,13 @@ namespace Rlm.App
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             RaceMonitor.Stop();
+        }
+
+        private void ComPortRefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            EditSettingsViewModel vm = button.DataContext as EditSettingsViewModel;
+            vm.RefreshComPorts();
         }
     }
 }

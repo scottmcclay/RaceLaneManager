@@ -12,8 +12,8 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         Title="Race Lane Manager - Pack 675"
-        Height="800"
-        Width="1600"
+        Height="768"
+        Width="1280"
         BorderBrush="Black"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel,IsDesignTimeCreatable=True}"
         Closing="Window_Closing">
@@ -39,6 +39,44 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:EditSettingsViewModel}">
+            <Grid Margin="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignCheckBox}" Margin="6" Content="Simulate" IsChecked="{Binding Simulate}" />
+                <ComboBox Grid.Row="1" Grid.Column="0" materialDesign:HintAssist.Hint="COM Port" Margin="6" ItemsSource="{Binding ComPorts}" SelectedValue="{Binding ComPort}" IsEnabled="{Binding EnableHWOptions}" />
+                <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" Margin="5" Height="24" Width="24" Click="ComPortRefreshButton_Click" IsEnabled="{Binding EnableHWOptions}">
+                    <materialDesign:PackIcon Kind="Refresh" Height="20" Width="20" />
+                </Button>
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="6">Baud Rate: 115200</TextBlock>
+                <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">True</system:Boolean>
+                        </Button.CommandParameter>
+                        ACCEPT
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                        </Button.CommandParameter>
+                        CANCEL
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
     </Window.Resources>
     
     <materialDesign:DialogHost Identifier="RootDialog">
@@ -60,6 +98,7 @@
                     </ListBox>
                     <Separator />
                     <Button HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFlatButton}" Click="CreateNewTournament_Click">Create New Tournament</Button>
+                    <Button HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFlatButton}" Click="EditSettings_Click">App Settings</Button>
                 </StackPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
             <DockPanel>

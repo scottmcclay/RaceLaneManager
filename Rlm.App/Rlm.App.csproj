@@ -61,6 +61,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Cars\CarsControlViewModel.cs" />
+    <Compile Include="EditSettingsViewModel.cs" />
     <Compile Include="Home\UpNextRaceViewModel.cs" />
     <Compile Include="Lineup\CarRacesViewModel.cs" />
     <Compile Include="Lineup\CarRaceViewModel.cs" />

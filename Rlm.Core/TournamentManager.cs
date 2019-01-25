@@ -18,6 +18,10 @@ namespace Rlm.Core
         public static event TournamentsUpdatedEventHandler TournamentsUpdated;
         public static event TournamentUpdatedEventHandler TournamentUpdated;
 
+        public static bool Simulate { get; set; } = false;
+        public static string ComPort { get; set; }
+        public static int BaudRate { get; set; } = 115200;
+
         public static IEnumerable<ITournament> GetTournaments()
         {
             List<Tournament> result = new List<Tournament>();
@@ -367,10 +371,12 @@ namespace Rlm.Core
             Dictionary<int, List<long>> carTimes = new Dictionary<int, List<long>>();
             foreach (Car car in tournament.CarData)
             {
-                Standing standing = new Standing();
-                standing.Car = car;
-                standing.Points = 0;
-                standing.AverageTime = 0;
+                Standing standing = new Standing
+                {
+                    Car = car,
+                    Points = 0,
+                    AverageTime = 0
+                };
                 carStandingsDictionary.Add(car.ID, standing);
                 carTimes.Add(car.ID, new List<long>());
             }
@@ -396,8 +402,8 @@ namespace Rlm.Core
                 if (carTimes[carID].Count > 0)
                 {
                     Standing standing = carStandingsDictionary[carID];
-                    standing.AverageTime = sum / carTimes[carID].Count;
-                    standing.AverageSpeed = CalculateSpeed(tournament.TrackLengthInches, standing.AverageTime / 100000);
+                    standing.AverageTime = (long)((double)sum / carTimes[carID].Count);
+                    standing.AverageSpeed = CalculateSpeed(tournament.TrackLengthInches, ((double)standing.AverageTime) / 100000);
                 }
             }
 
@@ -517,6 +523,7 @@ namespace Rlm.Core
                     assignment.ElapsedTime = 0;
                     assignment.Points = 0;
                     assignment.Position = 0;
+                    assignment.ScaleSpeed = 0.0;
                 }
                 race.State = RaceState.Racing;
                 repo.SaveTournament(tournament);
@@ -527,7 +534,7 @@ namespace Rlm.Core
             //NextRacesUpdated?.Invoke(tournamentID, new NextRacesUpdatedEventArgs(GetNextRaces(tournamentID)));
 
             RaceMonitor.LaneResultAdded += RaceMonitor_LaneResultAdded;
-            RaceMonitor.Monitor("COM3", 115200, tournamentID, raceNum, true);
+            RaceMonitor.Monitor(TournamentManager.ComPort, TournamentManager.BaudRate, tournamentID, raceNum, TournamentManager.Simulate);
         }
 
         public static void RaceMonitor_LaneResultAdded(LaneResultEventArgs e)

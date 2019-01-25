@@ -146,11 +146,12 @@ namespace Rlm.Core
             List<RacerAssignmentState> minAssignmentRacers = availableForLane.Where(r => r.AssignedRaces == minRaceAssignments).ToList();
 
             // Favor racers that have not been assigned a recent race, to reduce their wait time between races
-            int minLastRace = minAssignmentRacers.Select(r => r.LastRace).Min();
+            //int minLastRace = minAssignmentRacers.Select(r => r.LastRace).Min();
 
-            List<RacerAssignmentState> candidates = minAssignmentRacers.Where(r => r.LastRace == minLastRace).ToList();
+            //List<RacerAssignmentState> candidates = minAssignmentRacers.Where(r => r.LastRace == minLastRace).ToList();
 
-            result.AddRange(candidates.Select(c => c.Number).ToList());
+            //result.AddRange(candidates.Select(c => c.Number).ToList());
+            result.AddRange(minAssignmentRacers.Select(c => c.Number).ToList());
             result.Randomize(_rand);
             return result;
         }
