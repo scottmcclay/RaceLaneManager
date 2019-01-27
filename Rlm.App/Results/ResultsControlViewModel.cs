@@ -1,6 +1,7 @@
 ﻿using Rlm.Core;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,26 +12,13 @@ namespace Rlm.App
     {
         public int TournamentID { get; private set; }
 
-        private List<StandingViewModel> _overallResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> OverallResults => _overallResults;
-
-        private List<StandingViewModel> _lionResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> LionResults => _lionResults;
-
-        private List<StandingViewModel> _tigerResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> TigerResults => _tigerResults;
-
-        private List<StandingViewModel> _wolfResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> WolfResults => _wolfResults;
-
-        private List<StandingViewModel> _bearResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> BearResults => _bearResults;
-
-        private List<StandingViewModel> _webelosIResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> WebelosIResults => _webelosIResults;
-
-        private List<StandingViewModel> _webelosIIResults = new List<StandingViewModel>();
-        public IEnumerable<StandingViewModel> WebelosIIResults => _webelosIIResults;
+        public ObservableCollection<StandingViewModel> OverallResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> LionResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> TigerResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> WolfResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> BearResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> WebelosIResults { get; } = new ObservableCollection<StandingViewModel>();
+        public ObservableCollection<StandingViewModel> WebelosIIResults { get; } = new ObservableCollection<StandingViewModel>();
 
         public ResultsControlViewModel(int tournamentID)
         {
@@ -48,42 +36,61 @@ namespace Rlm.App
                 switch (groupResults.GroupName)
                 {
                     case "Overall":
-                        PopulateResults(groupResults.Standings, ref _overallResults);
+                        this.OverallResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.OverallResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Lion":
-                        PopulateResults(groupResults.Standings, ref _lionResults);
+                        this.LionResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.LionResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Tiger":
-                        PopulateResults(groupResults.Standings, ref _tigerResults);
+                        this.TigerResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.TigerResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Wolf":
-                        PopulateResults(groupResults.Standings, ref _wolfResults);
+                        this.WolfResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.WolfResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Bear":
-                        PopulateResults(groupResults.Standings, ref _bearResults);
+                        this.BearResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.BearResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Webelos I":
-                        PopulateResults(groupResults.Standings, ref _webelosIResults);
+                        this.WebelosIResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.WebelosIResults.Add(new StandingViewModel(standing));
+                        }
                         break;
 
                     case "Webelos II":
-                        PopulateResults(groupResults.Standings, ref _webelosIIResults);
+                        this.WebelosIIResults.Clear();
+                        foreach (IStanding standing in groupResults.Standings)
+                        {
+                            this.WebelosIIResults.Add(new StandingViewModel(standing));
+                        }
                         break;
                 }
-            }
-        }
-
-        private void PopulateResults(IEnumerable<IStanding> standings, ref List<StandingViewModel> results)
-        {
-            results.Clear();
-            foreach (IStanding standing in standings)
-            {
-                results.Add(new StandingViewModel(standing));
             }
         }
     }

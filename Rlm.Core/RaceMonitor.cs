@@ -66,7 +66,7 @@ namespace Rlm.Core
                     Match m = r.Match(message);
                     if (m.Success)
                     {
-                        LaneResultAdded?.Invoke(new LaneResultEventArgs(tournamentID, raceNum, int.Parse(m.Groups["laneNum"].Value) + 1, long.Parse(m.Groups["time"].Value)));
+                        LaneResultAdded?.Invoke(new LaneResultEventArgs(tournamentID, raceNum, int.Parse(m.Groups["laneNum"].Value), long.Parse(m.Groups["time"].Value)));
                     }
                 }
                 catch (TimeoutException)
