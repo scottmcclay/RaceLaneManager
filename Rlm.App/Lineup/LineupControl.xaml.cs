@@ -171,32 +171,41 @@ namespace Rlm.App
                     if ((row == 0) && (column != 0))
                     {
                         // header row
-                        ContentControl c = new ContentControl();
-                        c.Content = vm.LaneNames[column - 1];
-                        c.SetValue(Grid.RowProperty, row);
-                        c.SetValue(Grid.ColumnProperty, column);
-                        c.ContentTemplate = this.Resources["RowHeaderCell"] as DataTemplate;
-                        RacesByCarGrid.Children.Add(c);
+                        if (vm.LaneNames.Length > (column - 1))
+                        {
+                            ContentControl c = new ContentControl();
+                            c.Content = vm.LaneNames[column - 1];
+                            c.SetValue(Grid.RowProperty, row);
+                            c.SetValue(Grid.ColumnProperty, column);
+                            c.ContentTemplate = this.Resources["RowHeaderCell"] as DataTemplate;
+                            RacesByCarGrid.Children.Add(c);
+                        }
                     }
                     else if ((row != 0) && (column == 0))
                     {
                         // header column
-                        ContentControl c = new ContentControl();
-                        c.Content = vm.CarNames[row - 1];
-                        c.SetValue(Grid.RowProperty, row);
-                        c.SetValue(Grid.ColumnProperty, column);
-                        //c.SetValue(Grid.ColumnSpanProperty, RacesByCarGrid.ColumnDefinitions.Count);
-                        c.ContentTemplate = this.Resources["ColumnHeaderCell"] as DataTemplate;
-                        RacesByCarGrid.Children.Add(c);
+                        if (vm.CarNames.Length > (row - 1))
+                        {
+                            ContentControl c = new ContentControl();
+                            c.Content = vm.CarNames[row - 1];
+                            c.SetValue(Grid.RowProperty, row);
+                            c.SetValue(Grid.ColumnProperty, column);
+                            //c.SetValue(Grid.ColumnSpanProperty, RacesByCarGrid.ColumnDefinitions.Count);
+                            c.ContentTemplate = this.Resources["ColumnHeaderCell"] as DataTemplate;
+                            RacesByCarGrid.Children.Add(c);
+                        }
                     }
                     else if ((row != 0) && (column != 0))
                     {
-                        ContentControl c = new ContentControl();
-                        c.Content = vm.Cars[row - 1].Races[column - 1];
-                        c.SetValue(Grid.RowProperty, row);
-                        c.SetValue(Grid.ColumnProperty, column);
-                        c.ContentTemplate = this.Resources["RaceLaneCell"] as DataTemplate;
-                        RacesByCarGrid.Children.Add(c);
+                        if ((vm.Cars.Count > (row - 1)) && (vm.Cars[row - 1].Races.Length > column - 1))
+                        {
+                            ContentControl c = new ContentControl();
+                            c.Content = vm.Cars[row - 1].Races[column - 1];
+                            c.SetValue(Grid.RowProperty, row);
+                            c.SetValue(Grid.ColumnProperty, column);
+                            c.ContentTemplate = this.Resources["RaceLaneCell"] as DataTemplate;
+                            RacesByCarGrid.Children.Add(c);
+                        }
                     }
                 }
             }

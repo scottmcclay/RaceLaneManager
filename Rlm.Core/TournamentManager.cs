@@ -317,7 +317,7 @@ namespace Rlm.Core
                 Tournament tournament = repo.LoadTournament(tournamentID);
 
                 // CurrentRace starts at 1
-                if (tournament.CurrentRace >= 1)
+                if ((tournament.CurrentRace >= 1) && (tournament.RaceData.Count > (tournament.CurrentRace - 1)))
                 {
                     result = tournament.RaceData[tournament.CurrentRace - 1];
                 }
