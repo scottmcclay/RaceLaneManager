@@ -1,0 +1,142 @@
+﻿<Window x:Class="Rlm.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rlm.App"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        Title="Race Lane Manager - Pack 675"
+        Height="768"
+        Width="1280"
+        BorderBrush="Black"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel,IsDesignTimeCreatable=True}"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:EditTournamentViewModel}">
+            <StackPanel Orientation="Vertical" Margin="16">
+                <TextBox materialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
+                <TextBox materialDesign:HintAssist.Hint="Number of Lanes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding NumLanes}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">True</system:Boolean>
+                        </Button.CommandParameter>
+                        ACCEPT
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                        </Button.CommandParameter>
+                        CANCEL
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:EditSettingsViewModel}">
+            <Grid Margin="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignCheckBox}" Margin="6" Content="Simulate" IsChecked="{Binding Simulate}" />
+                <ComboBox Grid.Row="1" Grid.Column="0" materialDesign:HintAssist.Hint="COM Port" Margin="6" ItemsSource="{Binding ComPorts}" SelectedValue="{Binding ComPort}" IsEnabled="{Binding EnableHWOptions}" />
+                <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" Margin="5" Height="24" Width="24" Click="ComPortRefreshButton_Click" IsEnabled="{Binding EnableHWOptions}">
+                    <materialDesign:PackIcon Kind="Refresh" Height="20" Width="20" />
+                </Button>
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="6">Baud Rate: 115200</TextBlock>
+                <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">True</system:Boolean>
+                        </Button.CommandParameter>
+                        ACCEPT
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True" Margin="0 8 8 0" Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                        </Button.CommandParameter>
+                        CANCEL
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <StackPanel Margin="16">
+                    <TextBlock FontSize="20" Margin="5">Tournaments</TextBlock>
+                    <ListBox
+                             x:Name="TournamentsListBox"
+                             ItemsSource="{Binding Tournaments}"
+                             Grid.IsSharedSizeScope="True"
+                             Margin="12 0 12 0"
+                             PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:TournamentViewModel}">
+                                <TextBlock HorizontalAlignment="Left" Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Separator />
+                    <Button HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFlatButton}" Click="CreateNewTournament_Click">Create New Tournament</Button>
+                    <Button HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFlatButton}" Click="EditSettings_Click">App Settings</Button>
+                </StackPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryDark" DockPanel.Dock="Top">
+                    <DockPanel>
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton"/>
+                        <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}">
+                            <StackPanel>
+                                <ListBox
+                                    x:Name="ViewsListBox"
+                                    ItemsSource="{Binding ElementName=TournamentsListBox, Path=SelectedItem.Views, NotifyOnTargetUpdated=True}"
+                                    TargetUpdated="ViewsListBox_TargetUpdated"
+                                    Grid.IsSharedSizeScope="True"
+                                    Margin="12 0 12 0"
+                                    PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp"
+                                    SelectedIndex="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:TournamentViewViewModel}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Separator/>
+                                <Button Content="Edit Event" Click="EditEvent_Click" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                                <Button Content="Conduct Races" Click="ConductRaces_Click" IsEnabled="{Binding ElementName=TournamentsListBox, Path=SelectedItems.Count}" />
+                            </StackPanel>
+                        </materialDesign:PopupBox>
+                        <TextBlock 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            x:Name="EventNameTextBlock"
+                            Text="{Binding ElementName=TournamentsListBox, Path=SelectedItem.Name}">
+                        </TextBlock>
+                    </DockPanel>
+                </materialDesign:ColorZone>
+                <ContentControl Content="{Binding ElementName=ViewsListBox, Path=SelectedItem.Control}" />
+            </DockPanel>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
+</Window>

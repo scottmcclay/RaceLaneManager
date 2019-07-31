@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="Rlm.App.RaceDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Rlm.App"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="400" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Style="{StaticResource MaterialDesignDisplay4TextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentRace}" FontSize="50 px" />
+                <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignDisplay4TextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding RaceState}" FontSize="90 px" />
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="10 30 10 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="6 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="75" />
+                        <ColumnDefinition Width="75" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center">Car</TextBlock>
+                    <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Time</TextBlock>
+                    <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Speed</TextBlock>
+                    <TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Position</TextBlock>
+                    <TextBlock Grid.Column="5" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Points</TextBlock>
+                </Grid>
+                
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding LaneAssignments}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Margin="0 11 0 5" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding LaneText}" />
+
+                                <materialDesign:Card Grid.Column="1" Margin="6 6 6 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="75" />
+                                            <ColumnDefinition Width="75" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0" Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{Binding Car.Number, StringFormat=D2}" VerticalAlignment="Center" Margin="3" />
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Style="{StaticResource MaterialDesignHeadlineTextBlock}" Text="{Binding Car.Name}" Margin="3" />
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="{Binding Car.Owner}" Margin="3 0" />
+                                        </Grid>
+
+                                        <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ElapsedSeconds, StringFormat=N3}" />
+                                        <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ScaleSpeedText}" />
+                                        <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Position}" />
+                                        <TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Points}" />
+                                    </Grid>
+                                </materialDesign:Card>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
