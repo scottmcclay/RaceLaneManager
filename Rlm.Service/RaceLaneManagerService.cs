@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ServiceProcess;
-using RaceLaneManager;
+using Rlm.Web;
 
 namespace Rlm.Service
 {

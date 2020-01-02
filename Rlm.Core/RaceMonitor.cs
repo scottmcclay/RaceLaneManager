@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNet.SignalR;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ChaoticRotation.Core;
 
 namespace Rlm.Core
 {

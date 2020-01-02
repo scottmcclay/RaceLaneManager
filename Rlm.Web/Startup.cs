@@ -8,9 +8,9 @@ using System.Web.Http;
 using System.Diagnostics;
 using Microsoft.AspNet.SignalR;
 
-[assembly: OwinStartup(typeof(RaceLaneManager.Startup))]
+[assembly: OwinStartup(typeof(Rlm.Web.Startup))]
 
-namespace RaceLaneManager
+namespace Rlm.Web
 {
     public class Startup
     {

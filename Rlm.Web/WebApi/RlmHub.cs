@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Rlm.Core;
 using System.Collections.Generic;
 
-namespace RaceLaneManager.WebApi
+namespace Rlm.Web.WebApi
 {
     public class RlmHub: Hub
     {

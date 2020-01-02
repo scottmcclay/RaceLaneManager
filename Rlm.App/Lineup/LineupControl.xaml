@@ -29,7 +29,7 @@
         <DataTemplate x:Key="RaceLaneCell">
             <StackPanel>
                 <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="5 5 5 1" Text="{Binding RaceName}" TextTrimming="CharacterEllipsis" />
-                <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="5 0 5 5" Text="{Binding LaneName}" TextTrimming="CharacterEllipsis" />
+                <!--<TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="5 0 5 5" Text="{Binding LaneName}" TextTrimming="CharacterEllipsis" />-->
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>

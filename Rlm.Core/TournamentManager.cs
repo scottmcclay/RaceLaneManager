@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ChaoticRotation.Core;
 
 namespace Rlm.Core
 {
@@ -198,7 +199,7 @@ namespace Rlm.Core
         {
             tournament.RaceData = new List<Race>();
 
-            RaceGenerator generator = new RaceGenerator();
+            RaceGenerator generator = new RaceGenerator(null);
 
             // rawRaces has a format of [race,lane] where race and lane are 0 based
             // the number at [race,lane] is the 1-based racer number
@@ -218,7 +219,15 @@ namespace Rlm.Core
                     LaneAssignment laneAssignment = new LaneAssignment();
                     laneAssignment.Lane = laneNum + 1;
                     laneAssignment.ElapsedTime = 0;
-                    laneAssignment.Car = Car.From(cars[rawRaces[raceNum, laneNum] - 1]);
+                    int rawRacer = rawRaces[raceNum, laneNum];
+                    if (rawRacer <= 0)
+                    {
+                        laneAssignment.Car = null;
+                    }
+                    else
+                    {
+                        laneAssignment.Car = Car.From(cars[rawRacer - 1]);
+                    }
                     race.LaneAssignmentData.Add(laneAssignment);
                 }
 
@@ -270,6 +279,11 @@ namespace Rlm.Core
             {
                 foreach (ILaneAssignment assignment in race.LaneAssignments)
                 {
+                    if (assignment.Car == null)
+                    {
+                        continue;
+                    }
+
                     if (!carRaceDictionary.ContainsKey(assignment.Car.ID))
                     {
                         carRaceDictionary.Add(assignment.Car.ID, new List<RlmGetRacesResponse.CarRaces.CarLaneAssignment>());
@@ -385,8 +399,11 @@ namespace Rlm.Core
             {
                 foreach (LaneAssignment assignment in race.LaneAssignmentData)
                 {
-                    carStandingsDictionary[assignment.Car.ID].Points += assignment.Points;
-                    carTimes[assignment.Car.ID].Add(assignment.ElapsedTime);
+                    if (assignment.Car != null)
+                    {
+                        carStandingsDictionary[assignment.Car.ID].Points += assignment.Points;
+                        carTimes[assignment.Car.ID].Add(assignment.ElapsedTime);
+                    }
                 }
             }
 

@@ -200,7 +200,7 @@ namespace Rlm.App
                         if ((vm.Cars.Count > (row - 1)) && (vm.Cars[row - 1].Races.Length > column - 1))
                         {
                             ContentControl c = new ContentControl();
-                            c.Content = vm.Cars[row - 1].Races[column - 1];
+                            c.Content = vm.Cars[row - 1].Races.Single(r => r.LaneNum == column);
                             c.SetValue(Grid.RowProperty, row);
                             c.SetValue(Grid.ColumnProperty, column);
                             c.ContentTemplate = this.Resources["RaceLaneCell"] as DataTemplate;

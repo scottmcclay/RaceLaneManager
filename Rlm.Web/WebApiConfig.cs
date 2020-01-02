@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace RaceLaneManager
+namespace Rlm.Web
 {
     public class WebApiConfig
     {

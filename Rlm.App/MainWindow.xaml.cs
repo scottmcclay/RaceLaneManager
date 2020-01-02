@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Rlm.Core;
+using Rlm.Web;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Microsoft.Owin.Hosting;
 
 namespace Rlm.App
 {
@@ -16,12 +18,14 @@ namespace Rlm.App
     public partial class MainWindow : Window
     {
         private ConductRacesWindow _conductRacesWindow;
+        private IDisposable _webApp;
 
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = new MainWindowViewModel();
+            _webApp = WebApp.Start<Rlm.Web.Startup>("http://+:80");
         }
 
         private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -122,6 +126,7 @@ namespace Rlm.App
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             RaceMonitor.Stop();
+            _webApp?.Dispose();
         }
 
         private void ComPortRefreshButton_Click(object sender, RoutedEventArgs e)
