@@ -253,4 +253,4 @@ paket-files/
 .gitignore
 
 mobile-clients/
-mobile-clients-routing/
+/RaceLaneManager.zip

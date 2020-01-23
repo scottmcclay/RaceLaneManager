@@ -1,0 +1,41 @@
+<mat-sidenav-container style="display: contents;">
+    <mat-sidenav #sidenav>
+        <div style="margin: 10px 15px; font-size: x-large; font-weight: bold;">Tournaments</div>
+        <div style="margin: 5px 20px; cursor: pointer;">
+        <mat-list>
+            <a href="/tournament/{{tournament.id}}" mat-list-item *ngFor="let tournament of tournaments">{{tournament.name}}</a>
+        </mat-list>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar>
+        <span>
+            <button mat-icon-button (click)="sidenav.toggle()">
+            <svg style="vertical-align: text-top; width: 24px; height: 24px;">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
+            </button>
+        </span>
+        <span style="flex: 1 1 auto;"><div main-title style="text-align: center;">{{selectedTournamentName}}</div></span>
+        <span></span>
+        </mat-toolbar>
+        <section class="race-section" *ngFor="let race of races">
+            <div><b>Race {{race.raceNum}}: {{race.state}}</b></div>
+
+            <div class="table">
+                <div class="row header">
+                    <div class="lane-cell header">Lane</div>
+                    <div class="car-cell header">Car</div>
+                    <div class="name-cell header">Name</div>
+                    <div class="owner-cell header">Owner</div>
+                </div>
+                <div class="row alternate" *ngFor="let laneAssignment of race.laneAssignments" >
+                    <div class="lane-cell">Lane {{laneAssignment?.lane}}</div>
+                    <div class="car-cell">{{laneAssignment?.car?.number}}</div>
+                    <div class="name-cell">{{laneAssignment?.car?.name}}</div>
+                    <div class="owner-cell">{{laneAssignment?.car?.owner}}</div>
+                </div>
+            </div>
+        </section>
+    </mat-sidenav-content>
+</mat-sidenav-container>

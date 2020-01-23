@@ -39,17 +39,17 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="75" />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="75" />
-                        <ColumnDefinition Width="75" />
+                        <!--<ColumnDefinition Width="75" />-->
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center">Car</TextBlock>
-                    <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Time</TextBlock>
-                    <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Speed</TextBlock>
-                    <TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Position</TextBlock>
-                    <TextBlock Grid.Column="5" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Points</TextBlock>
+                    <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Position</TextBlock>
+                    <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Time</TextBlock>
+                    <TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Speed</TextBlock>
+                    <!--<TextBlock Grid.Column="5" Style="{StaticResource MaterialDesignSubheadingTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center">Points</TextBlock>-->
                 </Grid>
                 
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding LaneAssignments}">
@@ -67,10 +67,10 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="75" />
                                             <ColumnDefinition Width="100" />
                                             <ColumnDefinition Width="100" />
-                                            <ColumnDefinition Width="75" />
-                                            <ColumnDefinition Width="75" />
+                                            <!--<ColumnDefinition Width="75" />-->
                                         </Grid.ColumnDefinitions>
 
                                         <Grid Grid.Column="0" Margin="5">
@@ -89,10 +89,10 @@
                                             <TextBlock Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="{Binding Car.Owner}" Margin="3 0" />
                                         </Grid>
 
-                                        <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ElapsedSeconds, StringFormat=N3}" />
-                                        <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ScaleSpeedText}" />
-                                        <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Position}" />
-                                        <TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Points}" />
+                                        <TextBlock Grid.Column="1" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Position}" />
+                                        <TextBlock Grid.Column="2" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ElapsedSeconds, StringFormat=N3}" />
+                                        <TextBlock Grid.Column="3" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ScaleSpeedText}" />
+                                        <!--<TextBlock Grid.Column="4" Style="{StaticResource MaterialDesignTitleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Points}" />-->
                                     </Grid>
                                 </materialDesign:Card>
                             </Grid>

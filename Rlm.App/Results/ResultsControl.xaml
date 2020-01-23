@@ -41,7 +41,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Binding="{Binding Car.Owner}" FontSize="15" FontWeight="Light" />
-                                <DataGridTextColumn Binding="{Binding Points}" FontSize="15" />
+                                <!--<DataGridTextColumn Binding="{Binding Points}" FontSize="15" />-->
                                 <DataGridTextColumn Binding="{Binding AverageTime}" FontSize="15" FontWeight="Light" />
                                 <DataGridTextColumn Binding="{Binding AverageSpeed}" FontSize="15" FontWeight="Light" />
                             </DataGrid.Columns>

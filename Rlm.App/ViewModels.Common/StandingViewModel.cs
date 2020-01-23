@@ -12,6 +12,7 @@ namespace Rlm.App
         public string Position { get; private set; }
         public CarViewModel Car { get; private set; }
         public string Points { get; private set; }
+        public string AverageTimeShort { get; private set; }
         public string AverageTime { get; private set; }
         public string AverageSpeed { get; private set; }
 
@@ -21,6 +22,7 @@ namespace Rlm.App
             this.Car = new CarViewModel(standing.Car);
             this.Points = $"{standing.Points} pts";
             double averageTime = ((double)standing.AverageTime) / 100000;
+            this.AverageTimeShort = averageTime.ToString("N3");
             this.AverageTime = $"Avg {averageTime.ToString("N3")} sec";
             this.AverageSpeed = $"Avg {standing.AverageSpeed.ToString("N1")} mph";
         }

@@ -1,0 +1,14 @@
+<p>lineup works!</p>
+<p>{{lineupResult}}</p>
+<p>Number of races: {{races.length}}</p>
+
+<ul>
+    <li *ngFor="let race of races">
+        <b>Race {{race.raceNum}}: {{race.state}}</b>
+        <ol>
+            <li *ngFor="let laneAssignment of race.laneAssignments">
+                Lane {{laneAssignment.lane}}: {{laneAssignment.car.owner}}
+            </li>
+        </ol>
+    </li>
+</ul>

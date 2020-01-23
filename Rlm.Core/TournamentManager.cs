@@ -402,7 +402,10 @@ namespace Rlm.Core
                     if (assignment.Car != null)
                     {
                         carStandingsDictionary[assignment.Car.ID].Points += assignment.Points;
-                        carTimes[assignment.Car.ID].Add(assignment.ElapsedTime);
+                        if (assignment.ElapsedTime > 0)
+                        {
+                            carTimes[assignment.Car.ID].Add(assignment.ElapsedTime);
+                        }
                     }
                 }
             }
@@ -475,7 +478,7 @@ namespace Rlm.Core
             lock (_lock)
             {
                 Tournament tournament = repo.LoadTournament(tournamentID);
-                result = GetStandings(tournament);
+                result = GetStandings(tournament, false);
             }
 
             return result;
@@ -689,7 +692,7 @@ namespace Rlm.Core
 
             GroupResults overall = new GroupResults();
             overall.GroupName = "Overall";
-            overall.Standings = GetStandings(tournament);
+            overall.Standings = GetStandings(tournament, false);
             results.Add(overall);
 
             foreach (string name in new string[] { "Lion", "Tiger", "Wolf", "Bear", "Webelos I", "Webelos II" })

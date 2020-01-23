@@ -1,0 +1,41 @@
+.race-section {
+    margin: 20px;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.row.header {
+    background-color: slategray;
+}
+
+.row.alternate:nth-child(odd) {
+    background-color: lightgrey;
+}
+
+.lane-cell {
+    flex: 2;
+}
+
+.car-cell {
+    flex: 1;
+}
+
+.name-cell {
+    flex: 4;
+}
+
+.owner-cell {
+    flex: 4;
+}
+
+.cell.header {
+    font-weight: bolder;
+}
+

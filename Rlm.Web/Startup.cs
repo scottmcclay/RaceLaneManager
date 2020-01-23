@@ -39,6 +39,23 @@ namespace Rlm.Web
                 spa.UseFileServer(o);
             });
 
+            Debug.WriteLine("Mapping /lineup");
+            app.Map("/lineup", spa =>
+            {
+                spa.Use((context, next) =>
+                {
+                    context.Request.Path = new PathString("/index.html");
+                    context.Request.PathBase = new PathString("");
+
+                    return next();
+                });
+
+                FileServerOptions o = new FileServerOptions();
+                o.RequestPath = PathString.Empty;
+                o.FileSystem = new PhysicalFileSystem(@"./website");
+                spa.UseFileServer(o);
+            });
+
             Debug.WriteLine("Mapping root");
             FileServerOptions options = new FileServerOptions();
             options.RequestPath = PathString.Empty;
